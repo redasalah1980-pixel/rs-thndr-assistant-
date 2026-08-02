@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>مساعد ثاندر — RS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+  :root {
+    --navy: #0a1628; --navy-mid: #112240; --navy-light: #1a3458;
+    --gold: #c9a84c; --gold-light: #e8c97a; --gold-dim: #8a6f2e;
+    --white: #f0f4ff; --gray: #8899aa;
+    --green: #22c55e; --red: #ef4444; --orange: #f59e0b;
+    --radius: 16px; --radius-sm: 10px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:'Cairo',sans-serif; background:var(--navy); color:var(--white); min-height:100vh; max-width:480px; margin:0 auto; padding-bottom:80px; }
+  .header { background:linear-gradient(135deg,var(--navy-mid),var(--navy-light)); padding:20px 20px 16px; border-bottom:2px solid var(--gold-dim); position:sticky; top:0; z-index:100; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:900; color:var(--navy); }
+  .logo-text { font-size:18px; font-weight:900; color:var(--gold); }
+  .logo-sub { font-size:11px; color:var(--gray); margin-top:1px; }
+  .market-badge { background:var(--navy); border:1px solid var(--gold-dim); border-radius:20px; padding:4px 10px; font-size:11px; color:var(--gray); }
+  .sync-bar { display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding:6px 10px; background:rgba(201,168,76,0.08); border-radius:8px; }
+  .sync-status { font-size:11px; color:var(--gray); display:flex; align-items:center; gap:5px; }
+  .sync-dot { width:7px; height:7px; border-radius:50%; background:var(--gray); }
+  .sync-dot.connected { background:var(--green); }
+  .sync-dot.error { background:var(--red); }
+  .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:var(--navy-mid); border-top:1px solid var(--gold-dim); display:flex; z-index:100; }
+  .nav-btn { flex:1; padding:10px 4px 12px; background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--gray); font-family:'Cairo',sans-serif; transition:all 0.2s; }
+  .nav-btn.active { color:var(--gold); }
+  .nav-btn .nav-icon { font-size:22px; }
+  .nav-btn .nav-label { font-size:10px; font-weight:600; }
+  .page { display:none; padding:16px; }
+  .page.active { display:block; }
+  .card { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius); padding:18px; margin-bottom:14px; }
+  .card-title { font-size:14px; font-weight:700; color:var(--gold); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .input-group { margin-bottom:12px; }
+  .input-label { font-size:12px; color:var(--gray); margin-bottom:6px; display:block; }
+  .input-field { width:100%; padding:13px 14px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:var(--radius-sm); color:var(--white); font-family:'Cairo',sans-serif; font-size:15px; outline:none; transition:border 0.2s; }
+  .input-field:focus { border-color:var(--gold); }
+  .input-field::placeholder { color:var(--gray); font-size:13px; }
+  select.input-field { cursor:pointer; }
+  select.input-field option { background:var(--navy-mid); }
+  .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; border-radius:var(--radius-sm); color:var(--navy); font-family:'Cairo',sans-serif; font-size:16px; font-weight:900; cursor:pointer; transition:opacity 0.2s; margin-top:4px; }
+  .btn-primary:active { opacity:0.85; }
+  .btn-secondary { padding:10px 18px; background:transparent; border:1px solid var(--gold-dim); border-radius:var(--radius-sm); color:var(--gold); font-family:'Cairo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; }
+  .btn-danger { padding:8px 14px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius-sm); color:var(--red); font-family:'Cairo',sans-serif; font-size:12px; cursor:pointer; }
+  .result-box { background:var(--navy); border-radius:var(--radius-sm); padding:16px; margin-top:14px; border:1px solid rgba(201,168,76,0.15); }
+  .result-hidden { display:none; }
+  .score-badge { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:30px; font-size:15px; font-weight:900; margin-bottom:14px; }
+  .score-buy { background:rgba(34,197,94,0.15); color:var(--green); border:1px solid rgba(34,197,94,0.3); }
+  .score-wait { background:rgba(245,158,11,0.15); color:var(--orange); border:1px solid rgba(245,158,11,0.3); }
+  .score-avoid { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
+  .info-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; }
+  .info-row:last-child { border-bottom:none; }
+  .info-label { color:var(--gray); }
+  .info-value { font-weight:700; color:var(--white); }
+  .info-value.green { color:var(--green); }
+  .info-value.red { color:var(--red); }
+  .info-value.gold { color:var(--gold); }
+  .info-value.orange { color:var(--orange); }
+  .strategy-step { display:flex; align-items:center; gap:12px; padding:11px 12px; margin-bottom:8px; background:var(--navy-light); border-radius:var(--radius-sm); }
+  .step-num { width:28px; height:28px; flex-shrink:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
+  .step-1 { background:rgba(34,197,94,0.2); color:var(--green); }
+  .step-2 { background:rgba(245,158,11,0.2); color:var(--orange); }
+  .step-3 { background:rgba(201,168,76,0.2); color:var(--gold); }
+  .step-info { flex:1; }
+  .step-label { font-size:11px; color:var(--gray); }
+  .step-price { font-size:15px; font-weight:700; color:var(--white); }
+  .step-shares { font-size:11px; color:var(--gold); margin-top:1px; }
+  .stock-card { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.15); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
+  .stock-header { display:flex; justify-content:space-between; align-items:flex-start; }
+  .stock-symbol { font-size:18px; font-weight:900; color:var(--gold); }
+  .stock-name { font-size:12px; color:var(--gray); margin-top:2px; }
+  .stock-pnl { text-align:left; }
+  .pnl-value { font-size:16px; font-weight:900; }
+  .pnl-pct { font-size:11px; margin-top:2px; }
+  .stock-footer { display:flex; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.05); font-size:12px; color:var(--gray); flex-wrap:wrap; gap:8px; }
+  .stock-footer span { display:flex; flex-direction:column; gap:2px; }
+  .stock-footer strong { color:var(--white); font-size:13px; }
+  .portfolio-summary { background:linear-gradient(135deg,var(--navy-light),var(--navy-mid)); border:1px solid var(--gold-dim); border-radius:var(--radius); padding:18px; margin-bottom:16px; text-align:center; }
+  .summary-label { font-size:12px; color:var(--gray); margin-bottom:4px; }
+  .summary-total { font-size:28px; font-weight:900; color:var(--gold); }
+  .summary-pnl { font-size:14px; font-weight:700; margin-top:6px; }
+  .summary-row { display:flex; justify-content:space-around; margin-top:14px; }
+  .summary-item { text-align:center; }
+  .summary-item-val { font-size:15px; font-weight:700; }
+  .summary-item-lbl { font-size:10px; color:var(--gray); margin-top:2px; }
+  .journal-entry { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.15); border-radius:var(--radius); padding:14px; margin-bottom:10px; }
+  .journal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .journal-symbol { font-size:16px; font-weight:900; color:var(--gold); }
+  .journal-date { font-size:11px; color:var(--gray); }
+  .journal-decision { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; margin-bottom:8px; }
+  .decision-buy { background:rgba(34,197,94,0.15); color:var(--green); }
+  .decision-sell { background:rgba(239,68,68,0.15); color:var(--red); }
+  .decision-watch { background:rgba(245,158,11,0.15); color:var(--orange); }
+  .journal-note { font-size:13px; color:var(--gray); line-height:1.6; }
+  .empty-state { text-align:center; padding:40px 20px; color:var(--gray); }
+  .empty-icon { font-size:48px; margin-bottom:12px; }
+  .empty-text { font-size:14px; }
+  .divider { height:1px; background:rgba(201,168,76,0.1); margin:16px 0; }
+  .tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; background:rgba(201,168,76,0.1); color:var(--gold); border:1px solid rgba(201,168,76,0.2); }
+  .tag.green { background:rgba(34,197,94,0.1); color:var(--green); border-color:rgba(34,197,94,0.2); }
+  .tag.red { background:rgba(239,68,68,0.1); color:var(--red); border-color:rgba(239,68,68,0.2); }
+  .section-title { font-size:13px; font-weight:700; color:var(--gray); margin-bottom:12px; margin-top:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--navy); padding:10px 24px; border-radius:30px; font-size:13px; font-weight:700; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+  .toast.show { opacity:1; }
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; display:none; align-items:flex-end; }
+  .modal-overlay.open { display:flex; }
+  .modal-box { background:var(--navy-mid); width:100%; max-width:480px; margin:0 auto; border-radius:24px 24px 0 0; padding:20px 20px 40px; max-height:85vh; overflow-y:auto; border-top:2px solid var(--gold-dim); }
+  .modal-title { font-size:16px; font-weight:900; color:var(--gold); margin-bottom:16px; text-align:center; }
+  .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .calc-item { background:var(--navy-light); border-radius:var(--radius-sm); padding:12px; text-align:center; }
+  .calc-item-label { font-size:11px; color:var(--gray); margin-bottom:4px; }
+  .calc-item-value { font-size:16px; font-weight:900; }
+  .page-title { font-size:20px; font-weight:900; color:var(--white); margin-bottom:4px; }
+  .page-subtitle { font-size:13px; color:var(--gray); margin-bottom:16px; }
+  .update-price-input { width:90px; padding:6px 8px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:8px; color:var(--white); font-family:'Cairo',sans-serif; font-size:13px; text-align:center; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">RS</div>
+      <div>
+        <div class="logo-text">مساعد ثاندر</div>
+        <div class="logo-sub">RS Investment Assistant v2</div>
+      </div>
+    </div>
+    <div class="market-badge">EGX <span id="marketStatus">—</span></div>
+  </div>
+  <div class="sync-bar">
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncText">جاري الاتصال...</span>
+    </div>
+    <span style="font-size:10px; color:var(--gray);" id="lastSync"></span>
+  </div>
+</div>
+
+<!-- PAGE: تحليل -->
+<div class="page active" id="page-analyze">
+  <div>
+    <div class="page-title">🔍 حلل سهم</div>
+    <div class="page-subtitle">أدخل بيانات السهم من ثاندر</div>
+    <div class="card">
+      <div class="card-title">📋 بيانات السهم</div>
+      <div class="input-group">
+        <label class="input-label">رمز السهم</label>
+        <input type="text" class="input-field" id="a-symbol" placeholder="مثال: ADIB أو TMGH" style="text-transform:uppercase;direction:ltr;text-align:right;">
+      </div>
+      <div class="input-group">
+        <label class="input-label">اسم الشركة</label>
+        <input type="text" class="input-field" id="a-name" placeholder="مثال: مصرف أبو ظبي الإسلامي">
+      </div>
+      <div class="input-group">
+        <label class="input-label">السعر الحالي (جنيه)</label>
+        <input type="number" class="input-field" id="a-price" placeholder="53.20" step="0.01">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="input-group">
+          <label class="input-label">أعلى سنوياً</label>
+          <input type="number" class="input-field" id="a-high" placeholder="52.88" step="0.01">
+        </div>
+        <div class="input-group">
+          <label class="input-label">أدنى سنوياً</label>
+          <input type="number" class="input-field" id="a-low" placeholder="20.01" step="0.01">
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">العائد من 5 سنين (%)</label>
+        <input type="number" class="input-field" id="a-5y" placeholder="1157" step="0.01">
+      </div>
+      <div class="input-group">
+        <label class="input-label">متوافق مع الشريعة؟</label>
+        <select class="input-field" id="a-sharia">
+          <option value="">اختر...</option>
+          <option value="yes">✅ نعم — متوافق</option>
+          <option value="no">❌ لأ — غير متوافق</option>
+          <option value="check">⚠️ محتاج تتحقق</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label class="input-label">المبلغ المتاح (جنيه)</label>
+        <input type="number" class="input-field" id="a-budget" placeholder="500">
+      </div>
+      <button class="btn-primary" onclick="analyzeStock()">⚡ حلل دلوقتي</button>
+    </div>
+    <div class="result-box result-hidden" id="analyze-result">
+      <div id="result-score-badge"></div>
+      <div class="section-title">موقف السهم</div>
+      <div id="result-position"></div>
+      <div class="divider"></div>
+      <div class="section-title">استراتيجية الشراء</div>
+      <div id="result-strategy"></div>
+      <div class="divider"></div>
+      <div class="section-title">أهداف الربح ووقف الخسارة</div>
+      <div id="result-targets"></div>
+      <div class="divider"></div>
+      <div id="result-sharia-note"></div>
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button class="btn-secondary" onclick="saveToPortfolio()" style="flex:1;">💼 أضف للمحفظة</button>
+        <button class="btn-secondary" onclick="saveToJournal()" style="flex:1;">📓 سجل</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: محفظة -->
+<div class="page" id="page-portfolio">
+  <div>
+    <div class="page-title">💼 محفظتي</div>
+    <div class="page-subtitle">تتبع استثماراتك في الوقت الحقيقي</div>
+    <div class="portfolio-summary">
+      <div class="summary-label">إجمالي المحفظة</div>
+      <div class="summary-total" id="p-total">0 ج.م</div>
+      <div class="summary-pnl" id="p-pnl">—</div>
+      <div class="summary-row">
+        <div class="summary-item"><div class="summary-item-val" id="p-count">0</div><div class="summary-item-lbl">سهم</div></div>
+        <div class="summary-item"><div class="summary-item-val green" id="p-winners">0</div><div class="summary-item-lbl">رابح</div></div>
+        <div class="summary-item"><div class="summary-item-val red" id="p-losers">0</div><div class="summary-item-lbl">خاسر</div></div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="openAddStockModal()" style="margin-bottom:16px;">+ أضف صفقة جديدة</button>
+    <div id="portfolio-list"></div>
+  </div>
+</div>
+
+<!-- PAGE: حاسبة -->
+<div class="page" id="page-calc">
+  <div>
+    <div class="page-title">🧮 حاسبة الصفقة</div>
+    <div class="page-subtitle">احسب أهدافك قبل ما تشتري</div>
+    <div class="card">
+      <div class="card-title">📥 بيانات الصفقة</div>
+      <div class="input-group">
+        <label class="input-label">سعر الشراء (جنيه)</label>
+        <input type="number" class="input-field" id="c-price" placeholder="53.20" step="0.01" oninput="calcLive()">
+      </div>
+      <div class="input-group">
+        <label class="input-label">المبلغ المتاح (جنيه)</label>
+        <input type="number" class="input-field" id="c-budget" placeholder="500" oninput="calcLive()">
+      </div>
+    </div>
+    <div class="result-box result-hidden" id="calc-result">
+      <div class="section-title">📊 ملخص الصفقة</div>
+      <div class="calc-grid">
+        <div class="calc-item"><div class="calc-item-label">عدد الأسهم</div><div class="calc-item-value gold" id="c-shares">—</div></div>
+        <div class="calc-item"><div class="calc-item-label">التكلفة الكلية</div><div class="calc-item-value" id="c-cost">—</div></div>
+        <div class="calc-item"><div class="calc-item-label">الرسوم (~0.15%)</div><div class="calc-item-value red" id="c-fees">—</div></div>
+        <div class="calc-item"><div class="calc-item-label">المبلغ الفعلي</div><div class="calc-item-value" id="c-net">—</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="section-title">🎯 أهداف الربح</div>
+      <div id="c-targets"></div>
+      <div class="divider"></div>
+      <div class="section-title">🛑 وقف الخسارة</div>
+      <div id="c-stops"></div>
+      <div class="divider"></div>
+      <div class="section-title">📈 استراتيجية التدرج</div>
+      <div id="c-ladder"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: يوميات -->
+<div class="page" id="page-journal">
+  <div>
+    <div class="page-title">📓 يومياتي</div>
+    <div class="page-subtitle">سجل قراراتك وتعلم منها</div>
+    <div class="card">
+      <div class="card-title">✍️ إضافة تسجيل جديد</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="input-group">
+          <label class="input-label">رمز السهم</label>
+          <input type="text" class="input-field" id="j-symbol" placeholder="ADIB" style="direction:ltr;text-align:right;text-transform:uppercase;">
+        </div>
+        <div class="input-group">
+          <label class="input-label">القرار</label>
+          <select class="input-field" id="j-decision">
+            <option value="buy">🟢 شراء</option>
+            <option value="sell">🔴 بيع</option>
+            <option value="watch">🟡 مراقبة</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">السعر</label>
+        <input type="number" class="input-field" id="j-price" placeholder="53.20" step="0.01">
+      </div>
+      <div class="input-group">
+        <label class="input-label">ليه اتخذت القرار ده؟</label>
+        <textarea class="input-field" id="j-reason" rows="3" placeholder="مثال: السهم في قاع، ارتفع +160% في سنة..." style="resize:none;line-height:1.6;"></textarea>
+      </div>
+      <div class="input-group">
+        <label class="input-label">هدفك من الصفقة</label>
+        <input type="text" class="input-field" id="j-goal" placeholder="مثال: ربح 20% خلال 3 شهور">
+      </div>
+      <button class="btn-primary" onclick="addJournalEntry()">💾 سجل القرار</button>
+    </div>
+    <div id="journal-list"></div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="showPage('analyze',this)"><span class="nav-icon">🔍</span><span class="nav-label">تحليل</span></button>
+  <button class="nav-btn" onclick="showPage('portfolio',this)"><span class="nav-icon">💼</span><span class="nav-label">محفظتي</span></button>
+  <button class="nav-btn" onclick="showPage('calc',this)"><span class="nav-icon">🧮</span><span class="nav-label">الحاسبة</span></button>
+  <button class="nav-btn" onclick="showPage('journal',this)"><span class="nav-icon">📓</span><span class="nav-label">يومياتي</span></button>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="addStockModal">
+  <div class="modal-box">
+    <div class="modal-title">➕ إضافة صفقة للمحفظة</div>
+    <div class="input-group"><label class="input-label">رمز السهم</label><input type="text" class="input-field" id="m-symbol" placeholder="ADIB" style="direction:ltr;text-align:right;text-transform:uppercase;"></div>
+    <div class="input-group"><label class="input-label">اسم الشركة</label><input type="text" class="input-field" id="m-name" placeholder="مصرف أبو ظبي الإسلامي"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="input-group"><label class="input-label">سعر الشراء</label><input type="number" class="input-field" id="m-buy-price" placeholder="53.20" step="0.01"></div>
+      <div class="input-group"><label class="input-label">عدد الأسهم</label><input type="number" class="input-field" id="m-shares" placeholder="10"></div>
+    </div>
+    <div class="input-group"><label class="input-label">السعر الحالي</label><input type="number" class="input-field" id="m-current-price" placeholder="53.20" step="0.01"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="input-group"><label class="input-label">هدف الربح (%)</label><input type="number" class="input-field" id="m-target" placeholder="20" value="20"></div>
+      <div class="input-group"><label class="input-label">وقف الخسارة (%)</label><input type="number" class="input-field" id="m-stop" placeholder="10" value="10"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="btn-secondary" onclick="closeModal()" style="flex:1;">إلغاء</button>
+      <button class="btn-primary" onclick="addToPortfolio()" style="flex:2;">💾 أضف</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCWuM1SkV34i-KHCTEtIkMASwC1DilhGE4",
+  authDomain: "rs-thndr-assistant.firebaseapp.com",
+  databaseURL: "https://rs-thndr-assistant-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "rs-thndr-assistant",
+  storageBucket: "rs-thndr-assistant.firebasestorage.app",
+  messagingSenderId: "991980810205",
+  appId: "1:991980810205:web:2a18349a22ca3d0af4d034"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Connection status
+const connRef = ref(db, '.info/connected');
+onValue(connRef, (snap) => {
+  var connected = snap.val();
+  var dot = document.getElementById('syncDot');
+  var text = document.getElementById('syncText');
+  if (connected) {
+    dot.className = 'sync-dot connected';
+    text.textContent = 'متصل بـ Firebase ✓';
+    document.getElementById('lastSync').textContent = 'آخر تزامن: ' + new Date().toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'});
+  } else {
+    dot.className = 'sync-dot error';
+    text.textContent = 'غير متصل — وضع offline';
+  }
+});
+
+// Listen portfolio realtime
+const portfolioRef = ref(db, 'portfolio');
+onValue(portfolioRef, (snap) => {
+  var data = snap.val();
+  window._portfolio = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})) : [];
+  renderPortfolio();
+});
+
+// Listen journal realtime
+const journalRef = ref(db, 'journal');
+onValue(journalRef, (snap) => {
+  var data = snap.val();
+  window._journal = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})).reverse() : [];
+  renderJournal();
+});
+
+// ADD TO PORTFOLIO
+window.addToPortfolio = function() {
+  var symbol = document.getElementById('m-symbol').value.trim().toUpperCase();
+  var name = document.getElementById('m-name').value.trim();
+  var buyPrice = parseFloat(document.getElementById('m-buy-price').value);
+  var shares = parseFloat(document.getElementById('m-shares').value);
+  var currentPrice = parseFloat(document.getElementById('m-current-price').value) || buyPrice;
+  var target = parseFloat(document.getElementById('m-target').value) || 20;
+  var stop = parseFloat(document.getElementById('m-stop').value) || 10;
+  if (!symbol || !buyPrice || !shares) { showToast('⚠️ أدخل البيانات المطلوبة'); return; }
+  var newRef = push(portfolioRef);
+  set(newRef, { symbol, name, buyPrice, shares, currentPrice, target, stop, date: new Date().toLocaleDateString('ar-EG') })
+    .then(() => { closeModal(); showToast('✅ تمت الإضافة'); })
+    .catch(() => showToast('❌ خطأ في الحفظ'));
+};
+
+// DELETE FROM PORTFOLIO
+window.deleteStock = function(key) {
+  remove(ref(db, 'portfolio/' + key))
+    .then(() => showToast('🗑️ تم الحذف'))
+    .catch(() => showToast('❌ خطأ في الحذف'));
+};
+
+// UPDATE CURRENT PRICE
+window.updatePrice = function(key, newPrice) {
+  newPrice = parseFloat(newPrice);
+  if (!newPrice) return;
+  set(ref(db, 'portfolio/' + key + '/currentPrice'), newPrice)
+    .then(() => showToast('✅ تم تحديث السعر'))
+    .catch(() => showToast('❌ خطأ'));
+};
+
+// ADD JOURNAL
+window.addJournalEntry = function() {
+  var symbol = document.getElementById('j-symbol').value.trim().toUpperCase();
+  var decision = document.getElementById('j-decision').value;
+  var price = document.getElementById('j-price').value;
+  var reason = document.getElementById('j-reason').value.trim();
+  var goal = document.getElementById('j-goal').value.trim();
+  if (!symbol || !reason) { showToast('⚠️ أدخل الرمز والسبب'); return; }
+  var newRef = push(journalRef);
+  set(newRef, { symbol, decision, price, reason, goal, date: new Date().toLocaleDateString('ar-EG'), time: new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) })
+    .then(() => {
+      document.getElementById('j-symbol').value = '';
+      document.getElementById('j-reason').value = '';
+      document.getElementById('j-goal').value = '';
+      document.getElementById('j-price').value = '';
+      showToast('✅ تم التسجيل');
+    })
+    .catch(() => showToast('❌ خطأ في الحفظ'));
+};
+
+// DELETE JOURNAL
+window.deleteJournal = function(key) {
+  remove(ref(db, 'journal/' + key))
+    .then(() => showToast('🗑️ تم الحذف'))
+    .catch(() => showToast('❌ خطأ'));
+};
+
+</script>
+
+<script>
+// Init
+window._portfolio = [];
+window._journal = [];
+var lastAnalysis = null;
+
+// Market Status
+function updateMarketStatus() {
+  var now = new Date();
+  var day = now.getDay();
+  var utc = now.getUTCHours() + now.getUTCMinutes()/60;
+  var cairo = (utc + 3) % 24;
+  var isWeekday = day >= 0 && day <= 4;
+  var isOpen = isWeekday && cairo >= 10 && cairo < 14.5;
+  var el = document.getElementById('marketStatus');
+  if(el){ el.textContent = isOpen ? 'مفتوح' : 'مغلق'; el.style.color = isOpen ? 'var(--green)' : 'var(--red)'; }
+}
+updateMarketStatus();
+setInterval(updateMarketStatus, 60000);
+
+// Navigation
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='portfolio') renderPortfolio();
+  if(name==='journal') renderJournal();
+}
+window.showPage = showPage;
+
+// Analyze
+window.analyzeStock = function() {
+  var symbol = document.getElementById('a-symbol').value.trim().toUpperCase();
+  var name = document.getElementById('a-name').value.trim();
+  var price = parseFloat(document.getElementById('a-price').value);
+  var high = parseFloat(document.getElementById('a-high').value);
+  var low = parseFloat(document.getElementById('a-low').value);
+  var fiveY = parseFloat(document.getElementById('a-5y').value);
+  var sharia = document.getElementById('a-sharia').value;
+  var budget = parseFloat(document.getElementById('a-budget').value);
+  if(!symbol||!price||!high||!low){ showToast('⚠️ أدخل البيانات الأساسية'); return; }
+  var rangePos = (price-low)/(high-low)*100;
+  var posText='', score='', scoreClass='';
+  if(rangePos>=85){ posText='⚠️ في قمة — '+rangePos.toFixed(0)+'% من النطاق'; score='⚠️ انتظر تصحيح'; scoreClass='score-wait'; }
+  else if(rangePos>=50){ posText='🟡 منتصف النطاق — '+rangePos.toFixed(0)+'%'; score='🟡 فرصة متوسطة'; scoreClass='score-wait'; }
+  else if(rangePos>=25){ posText='✅ قريب من القاع — '+rangePos.toFixed(0)+'%'; score='✅ فرصة كويسة'; scoreClass='score-buy'; }
+  else { posText='🟢 في القاع — '+rangePos.toFixed(0)+'%'; score='🟢 فرصة ممتازة'; scoreClass='score-buy'; }
+  if(!fiveY||fiveY<0){ score='🔴 تجنب'; scoreClass='score-avoid'; }
+  var buy1=price, buy2=price*0.9, buy3=price*0.8;
+  var s1=budget?Math.floor(budget*0.33/buy1):'—';
+  var s2=budget?Math.floor(budget*0.33/buy2):'—';
+  var s3=budget?Math.floor(budget*0.34/buy3):'—';
+  var t1=(price*1.15).toFixed(2), t2=(price*1.25).toFixed(2), t3=(price*1.40).toFixed(2);
+  var st1=(price*0.90).toFixed(2), st2=(price*0.85).toFixed(2);
+  var shariaHTML='';
+  if(sharia==='yes') shariaHTML='<div class="tag green">✅ متوافق مع الشريعة</div>';
+  else if(sharia==='no') shariaHTML='<div class="tag red">❌ غير متوافق — راجع قرارك</div>';
+  else if(sharia==='check') shariaHTML='<div class="tag">⚠️ تحقق من kasheif.com</div>';
+  document.getElementById('result-score-badge').innerHTML='<div class="score-badge '+scoreClass+'">'+score+'</div><div style="font-size:13px;color:var(--gray);margin-bottom:12px;">'+symbol+' — '+(name||'السهم')+'</div>';
+  document.getElementById('result-position').innerHTML='<div class="info-row"><span class="info-label">السعر الحالي</span><span class="info-value gold">'+price.toFixed(2)+' ج.م</span></div><div class="info-row"><span class="info-label">أعلى سنوياً</span><span class="info-value">'+high.toFixed(2)+'</span></div><div class="info-row"><span class="info-label">أدنى سنوياً</span><span class="info-value">'+low.toFixed(2)+'</span></div><div class="info-row"><span class="info-label">عائد 5 سنين</span><span class="info-value green">+'+(fiveY||'—')+'%</span></div><div class="info-row"><span class="info-label">الموقف</span><span class="info-value orange">'+posText+'</span></div>';
+  document.getElementById('result-strategy').innerHTML='<div class="strategy-step"><div class="step-num step-1">1</div><div class="step-info"><div class="step-label">الشراء الأول — دلوقتي</div><div class="step-price">'+buy1.toFixed(2)+' ج.م</div><div class="step-shares">'+s1+' سهم ≈ '+(budget?Math.round(budget*0.33):'—')+' ج.م</div></div></div><div class="strategy-step"><div class="step-num step-2">2</div><div class="step-info"><div class="step-label">الشراء الثاني — لو نزل 10%</div><div class="step-price">'+buy2.toFixed(2)+' ج.م</div><div class="step-shares">'+s2+' سهم</div></div></div><div class="strategy-step"><div class="step-num step-3">3</div><div class="step-info"><div class="step-label">الشراء الثالث — لو نزل 20%</div><div class="step-price">'+buy3.toFixed(2)+' ج.م</div><div class="step-shares">'+s3+' سهم</div></div></div>';
+  document.getElementById('result-targets').innerHTML='<div class="info-row"><span class="info-label">🎯 هدف 1 (+15%)</span><span class="info-value green">'+t1+' ج.م</span></div><div class="info-row"><span class="info-label">🎯 هدف 2 (+25%)</span><span class="info-value green">'+t2+' ج.م</span></div><div class="info-row"><span class="info-label">🎯 هدف 3 (+40%)</span><span class="info-value green">'+t3+' ج.م</span></div><div class="info-row"><span class="info-label">🛑 وقف (-10%)</span><span class="info-value red">'+st1+' ج.م</span></div><div class="info-row"><span class="info-label">🛑 وقف (-15%)</span><span class="info-value red">'+st2+' ج.م</span></div>';
+  document.getElementById('result-sharia-note').innerHTML=shariaHTML;
+  document.getElementById('analyze-result').classList.remove('result-hidden');
+  lastAnalysis={symbol,name,price,high,low,fiveY,sharia,budget,shares1:s1,buy1};
+  document.getElementById('analyze-result').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+window.saveToPortfolio = function() {
+  if(!lastAnalysis) return;
+  document.getElementById('m-symbol').value=lastAnalysis.symbol;
+  document.getElementById('m-name').value=lastAnalysis.name;
+  document.getElementById('m-buy-price').value=lastAnalysis.buy1;
+  document.getElementById('m-shares').value=lastAnalysis.shares1||1;
+  document.getElementById('m-current-price').value=lastAnalysis.price;
+  openAddStockModal();
+};
+
+window.saveToJournal = function() {
+  if(!lastAnalysis) return;
+  showPage('journal', document.querySelectorAll('.nav-btn')[3]);
+  document.getElementById('j-symbol').value=lastAnalysis.symbol;
+  document.getElementById('j-price').value=lastAnalysis.buy1;
+  document.getElementById('j-decision').value='buy';
+  showToast('✅ اكتب سبب قرارك وسجل');
+};
+
+// Calculator
+window.calcLive = function() {
+  var price=parseFloat(document.getElementById('c-price').value);
+  var budget=parseFloat(document.getElementById('c-budget').value);
+  if(!price||!budget) return;
+  var shares=Math.floor(budget/price);
+  var cost=shares*price;
+  var fees=cost*0.0015+2;
+  var net=cost+fees;
+  document.getElementById('c-shares').textContent=shares+' سهم';
+  document.getElementById('c-cost').textContent=cost.toFixed(2)+' ج.م';
+  document.getElementById('c-fees').textContent=fees.toFixed(2)+' ج.م';
+  document.getElementById('c-net').textContent=net.toFixed(2)+' ج.م';
+  document.getElementById('c-targets').innerHTML='<div class="info-row"><span class="info-label">هدف 1 (+15%)</span><span class="info-value green">'+(price*1.15).toFixed(2)+' = ربح '+(shares*price*0.15).toFixed(0)+' ج.م</span></div><div class="info-row"><span class="info-label">هدف 2 (+25%)</span><span class="info-value green">'+(price*1.25).toFixed(2)+' = ربح '+(shares*price*0.25).toFixed(0)+' ج.م</span></div><div class="info-row"><span class="info-label">هدف 3 (+40%)</span><span class="info-value green">'+(price*1.40).toFixed(2)+' = ربح '+(shares*price*0.40).toFixed(0)+' ج.م</span></div>';
+  document.getElementById('c-stops').innerHTML='<div class="info-row"><span class="info-label">وقف (-10%)</span><span class="info-value red">'+(price*0.90).toFixed(2)+' = خسارة '+(shares*price*0.10).toFixed(0)+' ج.م</span></div><div class="info-row"><span class="info-label">وقف (-15%)</span><span class="info-value red">'+(price*0.85).toFixed(2)+' = خسارة '+(shares*price*0.15).toFixed(0)+' ج.م</span></div>';
+  var l1=Math.floor(budget*0.33/price), l2=Math.floor(budget*0.33/(price*0.9)), l3=Math.floor(budget*0.34/(price*0.8));
+  document.getElementById('c-ladder').innerHTML='<div class="info-row"><span class="info-label">مرحلة 1</span><span class="info-value gold">'+l1+' سهم بـ '+price.toFixed(2)+'</span></div><div class="info-row"><span class="info-label">مرحلة 2 (-10%)</span><span class="info-value gold">'+l2+' سهم بـ '+(price*0.9).toFixed(2)+'</span></div><div class="info-row"><span class="info-label">مرحلة 3 (-20%)</span><span class="info-value gold">'+l3+' سهم بـ '+(price*0.8).toFixed(2)+'</span></div>';
+  document.getElementById('calc-result').classList.remove('result-hidden');
+};
+
+// Portfolio render
+window.renderPortfolio = function() {
+  var port = window._portfolio || [];
+  var list = document.getElementById('portfolio-list');
+  if(!list) return;
+  if(port.length===0){
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">💼</div><div class="empty-text">محفظتك فاضية<br>ابدأ بإضافة أول صفقة</div></div>';
+    document.getElementById('p-total').textContent='0 ج.م';
+    document.getElementById('p-pnl').textContent='—';
+    document.getElementById('p-count').textContent='0';
+    document.getElementById('p-winners').textContent='0';
+    document.getElementById('p-losers').textContent='0';
+    return;
+  }
+  var totalCost=0, totalValue=0, winners=0, losers=0, html='';
+  port.forEach(function(s){
+    var cost=s.buyPrice*s.shares, value=s.currentPrice*s.shares;
+    var pnl=value-cost, pct=cost>0?pnl/cost*100:0;
+    totalCost+=cost; totalValue+=value;
+    if(pnl>=0) winners++; else losers++;
+    var tp=(s.buyPrice*(1+s.target/100)).toFixed(2);
+    var sp=(s.buyPrice*(1-s.stop/100)).toFixed(2);
+    html+='<div class="stock-card">'+
+      '<div class="stock-header">'+
+        '<div><div class="stock-symbol">'+s.symbol+'</div><div class="stock-name">'+(s.name||'')+'</div></div>'+
+        '<div class="stock-pnl"><div class="pnl-value '+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+pnl.toFixed(2)+' ج.م</div><div class="pnl-pct '+(pnl>=0?'green':'red')+'">'+(pct>=0?'+':'')+pct.toFixed(2)+'%</div></div>'+
+      '</div>'+
+      '<div class="stock-footer">'+
+        '<span><div>شراء</div><strong>'+s.buyPrice.toFixed(2)+'</strong></span>'+
+        '<span><div>الأسهم</div><strong>'+s.shares+'</strong></span>'+
+        '<span><div>الهدف</div><strong class="green">'+tp+'</strong></span>'+
+        '<span><div>الوقف</div><strong class="red">'+sp+'</strong></span>'+
+      '</div>'+
+      '<div style="margin-top:12px;">'+
+        '<div class="input-label" style="margin-bottom:6px;">تحديث السعر الحالي:</div>'+
+        '<div style="display:flex;gap:8px;align-items:center;">'+
+          '<input type="number" class="update-price-input" id="up-'+s._key+'" value="'+s.currentPrice+'" step="0.01">'+
+          '<button class="btn-secondary" style="padding:8px 14px;font-size:12px;" onclick="updatePrice(\''+s._key+'\',document.getElementById(\'up-'+s._key+'\').value)">تحديث</button>'+
+          '<button class="btn-danger" onclick="deleteStock(\''+s._key+'\')">🗑️</button>'+
+        '</div>'+
+      '</div>'+
+      '<div style="margin-top:8px;"><span class="tag">'+s.date+'</span></div>'+
+    '</div>';
+  });
+  list.innerHTML=html;
+  var tp=totalValue-totalCost, tpct=totalCost>0?tp/totalCost*100:0;
+  document.getElementById('p-total').textContent=totalValue.toFixed(0)+' ج.م';
+  document.getElementById('p-pnl').innerHTML='<span class="'+(tp>=0?'green':'red')+'">'+(tp>=0?'+':'')+tp.toFixed(2)+' ج.م ('+(tpct>=0?'+':'')+tpct.toFixed(1)+'%)</span>';
+  document.getElementById('p-count').textContent=port.length;
+  document.getElementById('p-winners').textContent=winners;
+  document.getElementById('p-losers').textContent=losers;
+};
+
+// Journal render
+window.renderJournal = function() {
+  var j = window._journal || [];
+  var list = document.getElementById('journal-list');
+  if(!list) return;
+  if(j.length===0){
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">📓</div><div class="empty-text">ما فيش تسجيلات لسه</div></div>';
+    return;
+  }
+  var dl={buy:'🟢 شراء',sell:'🔴 بيع',watch:'🟡 مراقبة'};
+  var dc={buy:'decision-buy',sell:'decision-sell',watch:'decision-watch'};
+  var html='';
+  j.forEach(function(e){
+    html+='<div class="journal-entry">'+
+      '<div class="journal-header"><div class="journal-symbol">'+e.symbol+(e.price?' — '+e.price+' ج.م':'')+'</div><div class="journal-date">'+e.date+' '+e.time+'</div></div>'+
+      '<div class="journal-decision '+(dc[e.decision]||'decision-watch')+'">'+(dl[e.decision]||e.decision)+'</div>'+
+      '<div class="journal-note">💬 '+e.reason+'</div>'+
+      (e.goal?'<div class="journal-note" style="margin-top:6px;">🎯 '+e.goal+'</div>':'')+
+      '<div style="margin-top:10px;text-align:left;"><button class="btn-danger" onclick="deleteJournal(\''+e._key+'\')">🗑️ حذف</button></div>'+
+    '</div>';
+  });
+  list.innerHTML=html;
+};
+
+// Modal
+window.openAddStockModal = function(){ document.getElementById('addStockModal').classList.add('open'); };
+window.closeModal = function(){ document.getElementById('addStockModal').classList.remove('open'); };
+
+// Toast
+window.showToast = function(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+};
+</script>
+</body>
+</html>
