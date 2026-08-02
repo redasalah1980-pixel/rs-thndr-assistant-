@@ -134,6 +134,16 @@
   .nav-badge { position:absolute; top:6px; right:50%; transform:translateX(14px); background:var(--red); color:white; font-size:9px; font-weight:900; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
   .nav-btn { position:relative; }
   @keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* Smart Search */
+  .search-wrapper { position:relative; }
+  .search-results { position:absolute; top:100%; right:0; left:0; background:var(--navy-light); border:1px solid var(--gold-dim); border-radius:var(--radius-sm); z-index:50; max-height:200px; overflow-y:auto; margin-top:4px; }
+  .search-item { padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s; }
+  .search-item:last-child { border-bottom:none; }
+  .search-item:active { background:rgba(201,168,76,0.1); }
+  .search-symbol { font-size:13px; font-weight:900; color:var(--gold); direction:ltr; }
+  .search-name { font-size:12px; color:var(--gray); }
+  .search-hidden { display:none; }
 </style>
 </head>
 <body>
@@ -169,8 +179,11 @@
     <div class="card">
       <div class="card-title">📋 بيانات السهم</div>
       <div class="input-group">
-        <label class="input-label">رمز السهم</label>
-        <input type="text" class="input-field" id="a-symbol" placeholder="مثال: ADIB أو TMGH" style="text-transform:uppercase;direction:ltr;text-align:right;">
+        <label class="input-label">ابحث عن السهم (اسم أو رمز)</label>
+        <div class="search-wrapper">
+          <input type="text" class="input-field" id="a-symbol" placeholder="مثال: أبو ظبي أو ADIB" oninput="searchStocks(this.value,'a')" autocomplete="off">
+          <div class="search-results search-hidden" id="a-results"></div>
+        </div>
       </div>
       <div class="input-group">
         <label class="input-label">اسم الشركة</label>
@@ -295,8 +308,11 @@
       <div class="card-title">✍️ إضافة تسجيل جديد</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div class="input-group">
-          <label class="input-label">رمز السهم</label>
-          <input type="text" class="input-field" id="j-symbol" placeholder="ADIB" style="direction:ltr;text-align:right;text-transform:uppercase;">
+          <label class="input-label">ابحث عن السهم</label>
+          <div class="search-wrapper">
+            <input type="text" class="input-field" id="j-symbol" placeholder="مثال: CIB أو بنك" oninput="searchStocks(this.value,'j')" autocomplete="off">
+            <div class="search-results search-hidden" id="j-results"></div>
+          </div>
         </div>
         <div class="input-group">
           <label class="input-label">القرار</label>
@@ -337,7 +353,13 @@
 <div class="modal-overlay" id="addStockModal">
   <div class="modal-box">
     <div class="modal-title">➕ إضافة صفقة للمحفظة</div>
-    <div class="input-group"><label class="input-label">رمز السهم</label><input type="text" class="input-field" id="m-symbol" placeholder="ADIB" style="direction:ltr;text-align:right;text-transform:uppercase;"></div>
+    <div class="input-group">
+      <label class="input-label">ابحث عن السهم (اسم أو رمز)</label>
+      <div class="search-wrapper">
+        <input type="text" class="input-field" id="m-symbol" placeholder="مثال: طلعت أو TMGH" oninput="searchStocks(this.value,'m')" autocomplete="off">
+        <div class="search-results search-hidden" id="m-results"></div>
+      </div>
+    </div>
     <div class="input-group"><label class="input-label">اسم الشركة</label><input type="text" class="input-field" id="m-name" placeholder="مصرف أبو ظبي الإسلامي"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div class="input-group"><label class="input-label">سعر الشراء</label><input type="number" class="input-field" id="m-buy-price" placeholder="53.20" step="0.01"></div>
@@ -484,6 +506,86 @@ window.deleteJournal = function(key) {
 </script>
 
 <script>
+// ===== EGX STOCKS DATABASE =====
+var EGX_STOCKS = [
+  {symbol:'COMI',name:'البنك التجاري الدولي CIB'},
+  {symbol:'ADIB',name:'مصرف أبو ظبي الإسلامي مصر'},
+  {symbol:'TMGH',name:'مجموعة طلعت مصطفى القابضة'},
+  {symbol:'PHDC',name:'بالم هيلز للتعمير'},
+  {symbol:'EMFD',name:'إعمار مصر للتطوير'},
+  {symbol:'MNHD',name:'مدينة نصر للإسكان والتعمير'},
+  {symbol:'OCDI',name:'أوراسكوم للتنمية'},
+  {symbol:'SWDY',name:'السويدي إليكتريك'},
+  {symbol:'EAST',name:'الشرقية إيسترن كومباني'},
+  {symbol:'JUFO',name:'جهينة للصناعات الغذائية'},
+  {symbol:'EDITA',name:'إيديتا للصناعات الغذائية'},
+  {symbol:'SKPC',name:'سيدي كرير للبتروكيماويات'},
+  {symbol:'ORWE',name:'النساجون الشرقيون'},
+  {symbol:'RAYA',name:'راية القابضة للاستثمارات المالية'},
+  {symbol:'FWRY',name:'فوري للتكنولوجيا'},
+  {symbol:'VFCO',name:'فودافون مصر'},
+  {symbol:'ORAN',name:'أورنج مصر'},
+  {symbol:'ETEL',name:'المصرية للاتصالات'},
+  {symbol:'ESRS',name:'عز الدخيلة'},
+  {symbol:'IRON',name:'حديد عز'},
+  {symbol:'NSGB',name:'بنك قطر الوطني الأهلي'},
+  {symbol:'ABUK',name:'أبو قير للأسمدة'},
+  {symbol:'ISPH',name:'ابن سينا فارما'},
+  {symbol:'EIPICO',name:'إيبيكو للأدوية'},
+  {symbol:'POUL',name:'كايرو للدواجن'},
+  {symbol:'SUGR',name:'مصر للسكر'},
+  {symbol:'TYCN',name:'تايكون'},
+  {symbol:'DLTA',name:'الدلتا للتأمين'},
+  {symbol:'MISR',name:'مصر للتأمين'},
+  {symbol:'BLTC',name:'بلتون المالية القابضة'},
+  {symbol:'EFGD',name:'إي إف جي هيرميس'},
+  {symbol:'ETRS',name:'المصرية لخدمات النقل'},
+  {symbol:'SVCE',name:'سيماف للصناعات الهندسية'},
+  {symbol:'DOMN',name:'دومتي'},
+  {symbol:'GTHE',name:'جنوب الوادي للبترول'},
+  {symbol:'ALCN',name:'الكابلات المصرية'},
+  {symbol:'AMOC',name:'أنابيب البترول'},
+  {symbol:'EKHO',name:'إيكو للمشروبات'},
+  {symbol:'EGTS',name:'مصر للسياحة'},
+  {symbol:'MFPC',name:'المصرية للمنتجات الكيماوية'},
+  {symbol:'CIVC',name:'سيتي كورب فينتشرز'},
+];
+
+window.searchStocks = function(query, prefix) {
+  var resultsEl = document.getElementById(prefix+'-results');
+  if (!query || query.length < 1) { resultsEl.classList.add('search-hidden'); return; }
+  var q = query.toLowerCase();
+  var matches = EGX_STOCKS.filter(function(s) {
+    return s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q);
+  }).slice(0, 8);
+  if (matches.length === 0) { resultsEl.classList.add('search-hidden'); return; }
+  var html = '';
+  matches.forEach(function(s) {
+    html += '<div class="search-item" onclick="selectStock(\''+s.symbol+'\',\''+s.name+'\',\''+prefix+'\')">' +
+      '<span class="search-name">'+s.name+'</span>' +
+      '<span class="search-symbol">'+s.symbol+'</span>' +
+    '</div>';
+  });
+  resultsEl.innerHTML = html;
+  resultsEl.classList.remove('search-hidden');
+};
+
+window.selectStock = function(symbol, name, prefix) {
+  document.getElementById(prefix+'-symbol').value = symbol;
+  document.getElementById(prefix+'-results').classList.add('search-hidden');
+  if (prefix === 'a') document.getElementById('a-name').value = name;
+  if (prefix === 'm') document.getElementById('m-name').value = name;
+  showToast('✅ تم اختيار ' + symbol);
+};
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-wrapper')) {
+    document.querySelectorAll('.search-results').forEach(function(el) {
+      el.classList.add('search-hidden');
+    });
+  }
+});
+
 // Init
 window._portfolio = [];
 window._journal = [];
