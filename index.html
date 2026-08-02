@@ -244,14 +244,29 @@
     </div>
     <div class="login-card">
       <div class="login-error" id="login-error">❌ اسم المستخدم أو الباسورد غلط</div>
+
+      <!-- اسم المستخدم ثابت -->
       <div class="input-group">
         <label class="input-label">اسم المستخدم</label>
-        <input type="text" class="input-field" id="login-username" placeholder="أدخل اسم المستخدم" autocomplete="username">
+        <div style="display:flex;align-items:center;gap:10px;background:var(--navy);border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:13px 14px;">
+          <span style="font-size:18px;">👤</span>
+          <span style="font-size:15px;font-weight:700;color:var(--gold);">Reda Salah</span>
+        </div>
       </div>
+
+      <!-- الباسورد مع show/hide -->
       <div class="input-group">
         <label class="input-label">الباسورد</label>
-        <input type="password" class="input-field" id="login-password" placeholder="أدخل الباسورد" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
+        <div style="position:relative;">
+          <input type="password" class="input-field" id="login-password" placeholder="أدخل الباسورد" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin(); checkCapsLock(event);" onkeyup="checkCapsLock(event);" style="padding-left:48px;">
+          <button onclick="togglePassword()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray);padding:0;" id="toggle-pass-btn">👁️</button>
+        </div>
+        <!-- Caps Lock Warning -->
+        <div id="caps-warning" style="display:none;margin-top:6px;font-size:11px;color:var(--orange);display:none;align-items:center;gap:4px;">
+          ⚠️ Caps Lock شغال — تأكد من حالة الأحرف
+        </div>
       </div>
+
       <button class="btn-primary" onclick="doLogin()">🔐 دخول</button>
     </div>
     <div class="login-footer">RS Suite © 2026 — Reda Salah</div>
@@ -915,14 +930,38 @@ async function hashPassword(password) {
   return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
+// Toggle Password Visibility
+window.togglePassword = function() {
+  var input = document.getElementById('login-password');
+  var btn = document.getElementById('toggle-pass-btn');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+};
+
+// Caps Lock Check
+window.checkCapsLock = function(e) {
+  var warning = document.getElementById('caps-warning');
+  if (!warning) return;
+  if (e.getModifierState && e.getModifierState('CapsLock')) {
+    warning.style.display = 'flex';
+  } else {
+    warning.style.display = 'none';
+  }
+};
+
 window.doLogin = async function() {
-  var username = document.getElementById('login-username').value.trim();
+  var username = 'Reda Salah';
   var password = document.getElementById('login-password').value;
   var errorEl = document.getElementById('login-error');
   errorEl.style.display = 'none';
-  if (!username || !password) {
+  if (!password) {
     errorEl.style.display = 'block';
-    errorEl.textContent = '⚠️ أدخل اسم المستخدم والباسورد';
+    errorEl.textContent = '⚠️ أدخل الباسورد';
     return;
   }
   var hashed = await hashPassword(password);
@@ -934,8 +973,10 @@ window.doLogin = async function() {
     checkOnboarding();
   } else {
     errorEl.style.display = 'block';
-    errorEl.textContent = '❌ اسم المستخدم أو الباسورد غلط';
+    errorEl.textContent = '❌ الباسورد غلط — جرب تاني';
     document.getElementById('login-password').value = '';
+    document.getElementById('toggle-pass-btn').textContent = '👁️';
+    document.getElementById('login-password').type = 'password';
   }
 };
 
