@@ -454,55 +454,65 @@
           <span id="extra-toggle-icon" style="color:var(--gold);font-size:16px;">＋</span>
         </div>
         <div id="extra-data-section" style="display:none;padding:14px;background:var(--navy);border:1px solid rgba(201,168,76,0.1);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);">
-          <div style="font-size:11px;color:var(--gray);margin-bottom:12px;">اختيارية — كلما أضفت أكتر كلما التوصية أدق 🎯</div>
+          <div style="font-size:11px;color:var(--gray);margin-bottom:12px;">من تبويب "الإحصائيات" في ثاندر — كلما أضفت أكتر كلما التوصية أدق 🎯</div>
 
+          <!-- اليوميات -->
+          <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px;text-transform:uppercase;">📅 اليوميات</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div class="input-group">
-              <label class="input-label">الافتتاح اليومي</label>
-              <input type="number" class="input-field" id="a-open" placeholder="52.85" step="0.01">
+              <label class="input-label">الافتتاح</label>
+              <input type="number" class="input-field" id="a-open" placeholder="53.20" step="0.01">
             </div>
             <div class="input-group">
               <label class="input-label">الإغلاق السابق</label>
-              <input type="number" class="input-field" id="a-prev-close" placeholder="52.80" step="0.01">
+              <input type="number" class="input-field" id="a-prev-close" placeholder="53.20" step="0.01">
             </div>
-          </div>
-
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div class="input-group">
               <label class="input-label">الأعلى اليومي</label>
               <input type="number" class="input-field" id="a-day-high" placeholder="53.40" step="0.01">
             </div>
             <div class="input-group">
               <label class="input-label">الأدنى اليومي</label>
-              <input type="number" class="input-field" id="a-day-low" placeholder="52.50" step="0.01">
+              <input type="number" class="input-field" id="a-day-low" placeholder="52.25" step="0.01">
             </div>
-          </div>
-
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div class="input-group">
               <label class="input-label">حجم التداول</label>
-              <input type="text" class="input-field" id="a-volume" placeholder="3.97m">
+              <input type="text" class="input-field" id="a-volume" placeholder="985.07k">
             </div>
             <div class="input-group">
               <label class="input-label">متوسط قيمة التداول</label>
-              <input type="text" class="input-field" id="a-avg-volume" placeholder="3.84m">
+              <input type="text" class="input-field" id="a-avg-volume" placeholder="2.65m">
             </div>
           </div>
 
+          <!-- ضغط الشراء والبيع -->
+          <div style="font-size:11px;font-weight:700;color:var(--gold);margin:12px 0 8px;text-transform:uppercase;">📊 ضغط الشراء/البيع</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div class="input-group">
-              <label class="input-label">الأرباح الموزعة (جنيه)</label>
-              <input type="number" class="input-field" id="a-dividend" placeholder="2.50" step="0.01">
+              <label class="input-label">🟢 إجمالي الشراء</label>
+              <input type="text" class="input-field" id="a-buy-vol" placeholder="20.52m">
             </div>
             <div class="input-group">
-              <label class="input-label">رأس المال السوقي</label>
-              <input type="text" class="input-field" id="a-market-cap" placeholder="مثال: 15B">
+              <label class="input-label">🔴 إجمالي البيع</label>
+              <input type="text" class="input-field" id="a-sell-vol" placeholder="31.45m">
             </div>
           </div>
 
+          <!-- المالية -->
+          <div style="font-size:11px;font-weight:700;color:var(--gold);margin:12px 0 8px;text-transform:uppercase;">💰 المالية</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="input-group">
+              <label class="input-label">P/E العائد على السعر</label>
+              <input type="number" class="input-field" id="a-pe" placeholder="6.33" step="0.01">
+            </div>
+            <div class="input-group">
+              <label class="input-label">العائد على السهم</label>
+              <input type="number" class="input-field" id="a-eps" placeholder="8.40" step="0.01">
+            </div>
+          </div>
           <div class="input-group">
-            <label class="input-label">التغيير اليومي (%)</label>
-            <input type="number" class="input-field" id="a-day-change" placeholder="مثال: +2.3 أو -1.5" step="0.01">
+            <label class="input-label">الأرباح الموزعة (جنيه للسهم)</label>
+            <input type="number" class="input-field" id="a-dividend" placeholder="2.50" step="0.01">
           </div>
         </div>
       </div>
@@ -1181,7 +1191,27 @@ window.watchlistRef = watchlistRef;
 onValue(watchlistRef, (snap) => {
   var data = snap.val();
   window._watchlist = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})) : [];
-  renderWatchlist();
+  // تحديث المراقبة لو التبويب ظاهر
+  var watchSection = document.getElementById('section-watchlist');
+  if (watchSection && watchSection.style.display !== 'none') {
+    renderWatchlist();
+  }
+  // تحديث الشارة على التبويب
+  var badge = document.getElementById('watch-badge');
+  if (!badge) {
+    var tabBtn = document.getElementById('tab-watchlist');
+    if (tabBtn) {
+      badge = document.createElement('span');
+      badge.id = 'watch-badge';
+      badge.style.cssText = 'background:var(--green);color:white;font-size:9px;font-weight:900;padding:1px 5px;border-radius:10px;margin-right:4px;';
+      tabBtn.prepend(badge);
+    }
+  }
+  if (badge) {
+    var count = (window._watchlist||[]).length;
+    badge.textContent = count > 0 ? count : '';
+    badge.style.display = count > 0 ? 'inline' : 'none';
+  }
 });
 
 // ADD TO WATCHLIST
@@ -1194,7 +1224,15 @@ window.addToWatchlist = function() {
   if (!symbol || !current || !target) { showToast('⚠️ أدخل السهم والأسعار'); return; }
   var newRef = push(watchlistRef);
   set(newRef, { symbol, name, current, target, note, date: new Date().toLocaleDateString('ar-EG') })
-    .then(() => { closeWatchModal(); showToast('⭐ تمت الإضافة للمراقبة'); })
+    .then(() => {
+      closeWatchModal();
+      showToast('⭐ تمت الإضافة للمراقبة');
+      // انتقل لتبويب المراقبة تلقائياً
+      var portfolioPage = document.getElementById('page-portfolio');
+      if (portfolioPage && portfolioPage.classList.contains('active')) {
+        switchPortTab('watchlist');
+      }
+    })
     .catch(() => showToast('❌ خطأ في الحفظ'));
 };
 
@@ -2385,15 +2423,29 @@ window.getAIRecommendation = async function() {
   var extraText = '';
   if (Object.keys(extra).length > 0) {
     extraText = '\n\nبيانات إضافية من ثاندر:\n';
-    if (extra.open) extraText += `• الافتتاح اليومي: ${extra.open} جنيه\n`;
+    if (extra.open) extraText += `• الافتتاح: ${extra.open} جنيه\n`;
     if (extra.prevClose) extraText += `• الإغلاق السابق: ${extra.prevClose} جنيه\n`;
     if (extra.dayHigh) extraText += `• الأعلى اليومي: ${extra.dayHigh} جنيه\n`;
     if (extra.dayLow) extraText += `• الأدنى اليومي: ${extra.dayLow} جنيه\n`;
-    if (extra.dayChange) extraText += `• التغيير اليومي: ${extra.dayChange}%\n`;
     if (extra.volume) extraText += `• حجم التداول: ${extra.volume}\n`;
     if (extra.avgVolume) extraText += `• متوسط قيمة التداول: ${extra.avgVolume}\n`;
-    if (extra.dividend) extraText += `• الأرباح الموزعة: ${extra.dividend} جنيه للسهم\n`;
-    if (extra.marketCap) extraText += `• رأس المال السوقي: ${extra.marketCap}\n`;
+    if (extra.buyVol || extra.sellVol) {
+      extraText += `\nضغط الشراء/البيع:\n`;
+      if (extra.buyVol) extraText += `• إجمالي الشراء: ${extra.buyVol}\n`;
+      if (extra.sellVol) extraText += `• إجمالي البيع: ${extra.sellVol}\n`;
+      if (extra.buyVol && extra.sellVol) {
+        var buyNum = parseFloat(extra.buyVol);
+        var sellNum = parseFloat(extra.sellVol);
+        if (sellNum > buyNum) extraText += `• ⚠️ البيع أكتر من الشراء — ضغط بيعي!\n`;
+        else extraText += `• ✅ الشراء أكتر من البيع — ضغط شرائي!\n`;
+      }
+    }
+    if (extra.pe || extra.eps || extra.dividend) {
+      extraText += `\nالبيانات المالية:\n`;
+      if (extra.pe) extraText += `• P/E نسبة السعر للربح: ${extra.pe}x\n`;
+      if (extra.eps) extraText += `• العائد على السهم: ${extra.eps} جنيه\n`;
+      if (extra.dividend) extraText += `• الأرباح الموزعة: ${extra.dividend} جنيه\n`;
+    }
   }
 
   // عرض مؤشر التقدم
@@ -2818,18 +2870,22 @@ function getExtraData() {
   var dayLow = document.getElementById('a-day-low')?.value;
   var volume = document.getElementById('a-volume')?.value;
   var avgVolume = document.getElementById('a-avg-volume')?.value;
+  var buyVol = document.getElementById('a-buy-vol')?.value;
+  var sellVol = document.getElementById('a-sell-vol')?.value;
+  var pe = document.getElementById('a-pe')?.value;
+  var eps = document.getElementById('a-eps')?.value;
   var dividend = document.getElementById('a-dividend')?.value;
-  var marketCap = document.getElementById('a-market-cap')?.value;
-  var dayChange = document.getElementById('a-day-change')?.value;
   if (open) extra.open = open;
   if (prevClose) extra.prevClose = prevClose;
   if (dayHigh) extra.dayHigh = dayHigh;
   if (dayLow) extra.dayLow = dayLow;
   if (volume) extra.volume = volume;
   if (avgVolume) extra.avgVolume = avgVolume;
+  if (buyVol) extra.buyVol = buyVol;
+  if (sellVol) extra.sellVol = sellVol;
+  if (pe) extra.pe = pe;
+  if (eps) extra.eps = eps;
   if (dividend) extra.dividend = dividend;
-  if (marketCap) extra.marketCap = marketCap;
-  if (dayChange) extra.dayChange = dayChange;
   return extra;
 }
 
