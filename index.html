@@ -815,6 +815,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// Make Firebase functions globally available
+window._fbPush = push;
+window._fbSet = set;
+window._fbRemove = remove;
+window._fbRef = (path) => ref(db, path);
+
 // Connection status
 const connRef = ref(db, '.info/connected');
 onValue(connRef, (snap) => {
@@ -1702,9 +1708,8 @@ window.getAIRecommendation = async function() {
 
     // حفظ التوصية تلقائياً في اليوميات
     try {
-      var journalRef = ref(db, 'journal');
-      var newRef = push(journalRef);
-      await set(newRef, {
+      var jRef = window._fbPush(window._fbRef('journal'));
+      await window._fbSet(jRef, {
         symbol: lastAnalysis.symbol,
         decision: 'watch',
         price: lastAnalysis.price,
@@ -1815,8 +1820,8 @@ window.addAIWatchAlert = async function() {
     return;
   }
   try {
-    var newRef = push(watchlistRef);
-    await set(newRef, {
+    var newRef = window._fbPush(window._fbRef('watchlist'));
+    await window._fbSet(newRef, {
       symbol: lastAnalysis.symbol,
       name: lastAnalysis.name || '',
       current: lastAnalysis.price,
