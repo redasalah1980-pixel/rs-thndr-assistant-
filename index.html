@@ -1374,7 +1374,6 @@ window.doLogin = async function() {
     localStorage.setItem('rs_username', username);
     document.getElementById('login-screen').classList.remove('show');
     showToast('أهلاً '+username+' 👋');
-    checkOnboarding();
   } else {
     errorEl.style.display = 'block';
     errorEl.textContent = '❌ الباسورد غلط — جرب تاني';
@@ -1387,8 +1386,6 @@ window.doLogin = async function() {
 function checkLogin() {
   if (!localStorage.getItem('rs_logged_in')) {
     document.getElementById('login-screen').classList.add('show');
-  } else {
-    checkOnboarding();
   }
 }
 
