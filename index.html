@@ -391,8 +391,17 @@
 <!-- PAGE: تحليل -->
 <div class="page active" id="page-analyze">
   <div>
-    <div class="page-title">🔍 حلل سهم</div>
-    <div class="page-subtitle">أدخل بيانات السهم من ثاندر</div>
+    <div class="page-title">🔍 تحليل</div>
+    <div class="page-subtitle">أدخل البيانات من ثاندر</div>
+
+    <!-- تبويبين -->
+    <div class="port-tabs" style="margin-bottom:16px;">
+      <button class="port-tab active" id="tab-stocks" onclick="switchAnalyzeTab('stocks')">📈 أسهم</button>
+      <button class="port-tab" id="tab-gold" onclick="switchAnalyzeTab('gold')">🥇 ذهب</button>
+    </div>
+
+    <!-- قسم الأسهم -->
+    <div id="section-stocks">
     <div class="card">
       <div class="card-title">📋 بيانات السهم</div>
       <div class="input-group">
@@ -540,6 +549,59 @@
         <button class="btn-secondary" onclick="saveToJournal()" style="flex:1;">📓 سجل</button>
       </div>
     </div>
+    </div> <!-- end section-stocks -->
+
+    <!-- قسم الذهب -->
+    <div id="section-gold" style="display:none;">
+      <div class="card">
+        <div class="card-title">🥇 تحليل الذهب</div>
+        <div style="font-size:12px;color:var(--gray);margin-bottom:14px;">أدخل بيانات Thndr Gold من ثاندر</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="input-group">
+            <label class="input-label">سعر الجرام دلوقتي (ج.م)</label>
+            <input type="number" class="input-field" id="g-price" placeholder="3200" step="0.01">
+          </div>
+          <div class="input-group">
+            <label class="input-label">التغيير اليومي (%)</label>
+            <input type="number" class="input-field" id="g-change" placeholder="+0.75" step="0.01">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="input-group">
+            <label class="input-label">أعلى سعر في السنة</label>
+            <input type="number" class="input-field" id="g-high" placeholder="3500" step="0.01">
+          </div>
+          <div class="input-group">
+            <label class="input-label">أدنى سعر في السنة</label>
+            <input type="number" class="input-field" id="g-low" placeholder="2800" step="0.01">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">المبلغ المتاح للاستثمار (ج.م)</label>
+          <input type="number" class="input-field" id="g-budget" placeholder="1000">
+        </div>
+
+        <button class="btn-primary" onclick="analyzeGold()" style="background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0a1628;">🥇 حلل الذهب دلوقتي</button>
+      </div>
+
+      <!-- نتيجة تحليل الذهب -->
+      <div class="result-box result-hidden" id="gold-result">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div style="font-size:13px;font-weight:700;color:var(--gold);">نتيجة تحليل الذهب</div>
+          <button onclick="clearGoldAnalysis()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-family:Cairo,sans-serif;font-size:12px;cursor:pointer;">🗑️ مسح</button>
+        </div>
+        <div id="gold-basic-result"></div>
+        <div class="divider"></div>
+        <div class="section-title">🤖 تحليل AI للذهب</div>
+        <div id="gold-ai-result">
+          <button class="btn-primary" onclick="analyzeGoldAI()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">🤖 اطلب تحليل AI مع أسعار عالمية</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2133,6 +2195,152 @@ window.showPage = function(name, btn) {
     updateSettingsStatus();
     var input = document.getElementById('settings-api-key');
     if (input) input.placeholder = key ? '*** محفوظ — اكتب جديد لو عايز تغيير ***' : 'sk-ant-api03-...';
+  }
+};
+
+// ===== ANALYZE TAB SWITCH =====
+window.switchAnalyzeTab = function(tab) {
+  document.getElementById('section-stocks').style.display = tab==='stocks' ? 'block' : 'none';
+  document.getElementById('section-gold').style.display = tab==='gold' ? 'block' : 'none';
+  document.getElementById('tab-stocks').classList.toggle('active', tab==='stocks');
+  document.getElementById('tab-gold').classList.toggle('active', tab==='gold');
+};
+
+// ===== GOLD ANALYSIS =====
+window.analyzeGold = function() {
+  var price = parseFloat(document.getElementById('g-price').value);
+  var change = parseFloat(document.getElementById('g-change').value);
+  var high = parseFloat(document.getElementById('g-high').value);
+  var low = parseFloat(document.getElementById('g-low').value);
+  var budget = parseFloat(document.getElementById('g-budget').value);
+  if (!price) { showToast('⚠️ أدخل سعر الجرام الأول'); return; }
+
+  var rangePos = (high && low) ? ((price-low)/(high-low)*100) : null;
+  var posText = '', posColor = 'var(--gray)';
+  if (rangePos !== null) {
+    if (rangePos >= 85) { posText = '⚠️ في قمة السنة'; posColor = 'var(--orange)'; }
+    else if (rangePos >= 50) { posText = '🟡 في منتصف النطاق'; posColor = 'var(--orange)'; }
+    else if (rangePos >= 25) { posText = '✅ قريب من القاع'; posColor = 'var(--green)'; }
+    else { posText = '🟢 في قاع السنة — فرصة ممتازة'; posColor = 'var(--green)'; }
+  }
+
+  var grams = budget ? (Math.floor(budget / price * 10) / 10).toFixed(2) : null;
+
+  var html =
+    '<div class="info-row"><span class="info-label">سعر الجرام</span><span class="info-value gold">' + price.toFixed(2) + ' ج.م</span></div>' +
+    (change ? '<div class="info-row"><span class="info-label">التغيير اليومي</span><span class="info-value '+(change>=0?'green':'red')+'">'+(change>=0?'+':'')+change+'%</span></div>' : '') +
+    (high ? '<div class="info-row"><span class="info-label">أعلى سنوياً</span><span class="info-value">'+high.toFixed(2)+' ج.م</span></div>' : '') +
+    (low ? '<div class="info-row"><span class="info-label">أدنى سنوياً</span><span class="info-value">'+low.toFixed(2)+' ج.م</span></div>' : '') +
+    (rangePos !== null ? '<div class="info-row"><span class="info-label">الموقف</span><span class="info-value" style="color:'+posColor+'">'+posText+'</span></div>' : '') +
+    (budget && grams ?
+      '<div class="divider"></div>' +
+      '<div class="section-title">💰 بمبلغ '+budget+' ج.م تقدر تشتري</div>' +
+      '<div style="text-align:center;padding:16px;background:var(--navy-light);border-radius:var(--radius-sm);">' +
+        '<div style="font-size:32px;font-weight:900;color:var(--gold);">'+grams+'</div>' +
+        '<div style="font-size:13px;color:var(--gray);">جرام ذهب</div>' +
+      '</div>' : '') +
+    '<div class="divider"></div>' +
+    '<div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--gray);line-height:1.7;">' +
+      '<strong style="color:var(--gold);">💡 نصيحة الذهب:</strong><br>' +
+      'الذهب استثمار تأمين مش مضاربة — أحسن استراتيجية هي الشراء الشهري المنتظم بغض النظر عن السعر (DCA)' +
+    '</div>';
+
+  document.getElementById('gold-basic-result').innerHTML = html;
+  document.getElementById('gold-result').classList.remove('result-hidden');
+  document.getElementById('gold-result').scrollIntoView({behavior:'smooth', block:'start'});
+  window._lastGold = { price, change, high, low, budget, rangePos };
+};
+
+window.clearGoldAnalysis = function() {
+  document.getElementById('gold-result').classList.add('result-hidden');
+  ['g-price','g-change','g-high','g-low','g-budget'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('gold-ai-result').innerHTML = '<button class="btn-primary" onclick="analyzeGoldAI()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">🤖 اطلب تحليل AI مع أسعار عالمية</button>';
+  window._lastGold = null;
+  showToast('✅ تم المسح');
+};
+
+// ===== GOLD AI ANALYSIS =====
+window.analyzeGoldAI = async function() {
+  var apiKey = localStorage.getItem('rs_claude_key') || CLAUDE_API_KEY;
+  if (!apiKey) { showToast('⚠️ أضف API Key في الإعدادات'); return; }
+  if (!window._lastGold) { showToast('⚠️ حلل الذهب الأول'); return; }
+  var g = window._lastGold;
+
+  document.getElementById('gold-ai-result').innerHTML =
+    '<div style="text-align:center;padding:16px;background:rgba(99,102,241,0.1);border-radius:var(--radius-sm);">' +
+      '<div style="font-size:20px;margin-bottom:8px;">🤖</div>' +
+      '<div style="font-size:12px;color:#a78bfa;">AI بيبحث عن أسعار الذهب العالمية...</div>' +
+    '</div>';
+
+  var prompt = `أنت مستشار استثماري متخصص. قم بتحليل شامل للذهب كاستثمار في مصر.
+
+ابحث في الإنترنت عن:
+1. سعر الذهب العالمي دلوقتي (بالدولار للأوقية)
+2. سعر الدولار مقابل الجنيه المصري
+3. توقعات الذهب للأشهر القادمة
+4. تأثير سعر الفايدة على الذهب
+
+بيانات المستثمر:
+سعر جرام الذهب في ثاندر: ${g.price} جنيه
+التغيير اليومي: ${g.change || 'غير محدد'}%
+أعلى سنوي: ${g.high || 'غير محدد'} ج.م
+أدنى سنوي: ${g.low || 'غير محدد'} ج.م
+المبلغ المتاح: ${g.budget || 'غير محدد'} جنيه
+
+قدم التحليل باللغة العربية:
+
+🌍 أسعار عالمية:
+سعر الذهب العالمي: [X] دولار للأوقية
+سعر الدولار/جنيه: [X] جنيه
+سعر الجرام بالجنيه: [X] ج.م (مقارنة بـ ${g.price} في ثاندر)
+
+📊 التحليل:
+[جملتين عن وضع الذهب دلوقتي]
+
+🔮 التوقعات:
+[توقعات قصيرة للأشهر القادمة]
+
+🎯 التوصية: [زيد استثمارك / احتفظ / انتظر]
+
+💡 الخطة المثلى:
+[كيف تستثمر ${g.budget || 'مبلغك'} في الذهب بشكل ذكي]
+
+⚠️ أهم مخاطرة: [جملة واحدة]`;
+
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 800,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await response.json();
+    var text = '';
+    if (data.content) {
+      data.content.forEach(function(block) {
+        if (block.type === 'text') text += block.text;
+      });
+    }
+    if (!text) text = 'مش قادر أحلل دلوقتي';
+
+    document.getElementById('gold-ai-result').innerHTML =
+      '<div style="background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(232,201,122,0.1));border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:14px;">' +
+        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">🤖 Claude AI — تحليل الذهب</div>' +
+        '<div style="font-size:13px;color:var(--white);line-height:1.9;">' + text.replace(/\n/g, '<br>') + '</div>' +
+        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ تحليل استرشادي — القرار النهائي ليك أنت</div>' +
+      '</div>';
+  } catch(e) {
+    document.getElementById('gold-ai-result').innerHTML =
+      '<div style="color:var(--red);font-size:13px;">❌ خطأ — جرب تاني</div>';
   }
 };
 
