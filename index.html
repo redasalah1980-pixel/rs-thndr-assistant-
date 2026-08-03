@@ -615,6 +615,7 @@
     <div class="port-tabs">
       <button class="port-tab active" id="tab-portfolio" onclick="switchPortTab('portfolio')">💼 المحفظة</button>
       <button class="port-tab" id="tab-watchlist" onclick="switchPortTab('watchlist')">⭐ المراقبة</button>
+      <button class="port-tab" id="tab-gold-port" onclick="switchPortTab('gold-port')">🥇 ذهب</button>
     </div>
 
     <!-- Portfolio Section -->
@@ -638,6 +639,13 @@
     <div id="section-watchlist" style="display:none;">
       <button class="btn-primary" onclick="openAddWatchModal()" style="margin-bottom:16px;">⭐ أضف سهم للمراقبة</button>
       <div id="watchlist-list"></div>
+    </div>
+
+    <!-- Gold Portfolio Section -->
+    <div id="section-gold-port" style="display:none;">
+      <div id="gold-port-content"></div>
+      <button class="btn-primary" onclick="openAddGoldModal()" style="margin-bottom:16px;background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0a1628;">🥇 أضف/حدّث ذهبك</button>
+      <div id="gold-port-ai" style="margin-top:8px;"></div>
     </div>
   </div>
 </div>
@@ -1016,6 +1024,29 @@
   <button class="nav-btn" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span><span class="nav-label">إعدادات</span></button>
 </div>
 
+<!-- Gold Portfolio Modal -->
+<div class="modal-overlay" id="addGoldModal">
+  <div class="modal-box">
+    <div class="modal-title">🥇 إضافة/تحديث الذهب</div>
+    <div class="input-group">
+      <label class="input-label">عدد الجرامات</label>
+      <input type="number" class="input-field" id="gp-grams" placeholder="0.2538" step="0.0001">
+    </div>
+    <div class="input-group">
+      <label class="input-label">متوسط سعر الشراء (ج.م)</label>
+      <input type="number" class="input-field" id="gp-buy-price" placeholder="1723.40" step="0.01">
+    </div>
+    <div class="input-group">
+      <label class="input-label">السعر الحالي للجرام (ج.م)</label>
+      <input type="number" class="input-field" id="gp-current-price" placeholder="6680.41" step="0.01">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="btn-secondary" onclick="closeGoldModal()" style="flex:1;">إلغاء</button>
+      <button class="btn-primary" onclick="saveGoldPortfolio()" style="flex:2;background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0a1628;">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
 <!-- Watch Modal -->
 <div class="modal-overlay" id="addWatchModal">
   <div class="modal-box">
@@ -1137,8 +1168,15 @@ onValue(journalRef, (snap) => {
   renderJournal();
 });
 
-// Listen watchlist realtime
-const watchlistRef = ref(db, 'watchlist');
+// Listen gold portfolio
+const goldRef = ref(db, 'gold_portfolio');
+window.goldRef = goldRef;
+onValue(goldRef, (snap) => {
+  window._goldData = snap.val() || null;
+  if (document.getElementById('section-gold-port')?.style.display === 'block') {
+    renderGoldPortfolio();
+  }
+});
 window.watchlistRef = watchlistRef;
 onValue(watchlistRef, (snap) => {
   var data = snap.val();
@@ -1455,9 +1493,183 @@ window._watchlist = [];
 window.switchPortTab = function(tab) {
   document.getElementById('section-portfolio').style.display = tab==='portfolio' ? 'block' : 'none';
   document.getElementById('section-watchlist').style.display = tab==='watchlist' ? 'block' : 'none';
+  document.getElementById('section-gold-port').style.display = tab==='gold-port' ? 'block' : 'none';
   document.getElementById('tab-portfolio').classList.toggle('active', tab==='portfolio');
   document.getElementById('tab-watchlist').classList.toggle('active', tab==='watchlist');
+  document.getElementById('tab-gold-port').classList.toggle('active', tab==='gold-port');
   if (tab==='watchlist') renderWatchlist();
+  if (tab==='gold-port') renderGoldPortfolio();
+};
+
+// Gold Portfolio Modal
+window.openAddGoldModal = function() {
+  var g = window._goldData;
+  if (g) {
+    document.getElementById('gp-grams').value = g.grams || '';
+    document.getElementById('gp-buy-price').value = g.buyPrice || '';
+    document.getElementById('gp-current-price').value = g.currentPrice || '';
+  }
+  document.getElementById('addGoldModal').classList.add('open');
+};
+window.closeGoldModal = function() {
+  document.getElementById('addGoldModal').classList.remove('open');
+};
+
+window.saveGoldPortfolio = async function() {
+  var grams = parseFloat(document.getElementById('gp-grams').value);
+  var buyPrice = parseFloat(document.getElementById('gp-buy-price').value);
+  var currentPrice = parseFloat(document.getElementById('gp-current-price').value);
+  if (!grams || !buyPrice || !currentPrice) { showToast('⚠️ أدخل كل البيانات'); return; }
+  var data = { grams, buyPrice, currentPrice, date: new Date().toLocaleDateString('ar-EG') };
+  try {
+    await window._fbSet(window._fbRef('gold_portfolio'), data);
+    window._goldData = data;
+    closeGoldModal();
+    renderGoldPortfolio();
+    showToast('✅ تم حفظ الذهب');
+  } catch(e) { showToast('❌ خطأ في الحفظ'); }
+};
+
+// Render Gold Portfolio
+window.renderGoldPortfolio = function() {
+  var g = window._goldData;
+  var container = document.getElementById('gold-port-content');
+  if (!container) return;
+
+  if (!g || !g.grams) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🥇</div><div class="empty-text">مش أضفت ذهبك لسه<br>اضغط الزرار تحت عشان تضيفه</div></div>';
+    document.getElementById('gold-port-ai').innerHTML = '';
+    return;
+  }
+
+  var totalBuy = g.buyPrice * g.grams;
+  var totalCurrent = g.currentPrice * g.grams;
+  var pnl = totalCurrent - totalBuy;
+  var pct = totalBuy > 0 ? pnl/totalBuy*100 : 0;
+
+  container.innerHTML =
+    '<div class="portfolio-summary" style="background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border-color:var(--gold-dim);">' +
+      '<div class="summary-label">🥇 ذهبك في ثاندر</div>' +
+      '<div style="font-size:32px;font-weight:900;color:var(--gold);">' + g.grams + ' <span style="font-size:16px;">جرام</span></div>' +
+      '<div class="summary-pnl"><span class="'+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+pnl.toFixed(2)+' ج.م ('+(pct>=0?'+':'')+pct.toFixed(1)+'%)</span></div>' +
+      '<div class="summary-row">' +
+        '<div class="summary-item"><div class="summary-item-val gold">' + totalCurrent.toFixed(2) + '</div><div class="summary-item-lbl">القيمة الحالية</div></div>' +
+        '<div class="summary-item"><div class="summary-item-val">' + totalBuy.toFixed(2) + '</div><div class="summary-item-lbl">تكلفة الشراء</div></div>' +
+        '<div class="summary-item"><div class="summary-item-val gold">' + g.currentPrice.toFixed(2) + '</div><div class="summary-item-lbl">سعر الجرام</div></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="card" style="margin-bottom:14px;">' +
+      '<div class="card-title">📊 تفاصيل</div>' +
+      '<div class="info-row"><span class="info-label">متوسط سعر الشراء</span><span class="info-value gold">' + g.buyPrice.toFixed(2) + ' ج.م/جرام</span></div>' +
+      '<div class="info-row"><span class="info-label">السعر الحالي</span><span class="info-value">' + g.currentPrice.toFixed(2) + ' ج.م/جرام</span></div>' +
+      '<div class="info-row"><span class="info-label">الجرامات</span><span class="info-value">' + g.grams + ' جرام</span></div>' +
+      '<div class="info-row"><span class="info-label">الربح/الخسارة</span><span class="info-value '+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+pnl.toFixed(2)+' ج.م</span></div>' +
+      '<div class="info-row"><span class="info-label">آخر تحديث</span><span class="info-value gray">' + (g.date||'—') + '</span></div>' +
+    '</div>' +
+    '<div style="margin-bottom:12px;">' +
+      '<div class="input-label" style="margin-bottom:6px;">تحديث السعر الحالي:</div>' +
+      '<div style="display:flex;gap:8px;">' +
+        '<input type="number" class="update-price-input" id="gold-update-price" placeholder="' + g.currentPrice + '" step="0.01" style="flex:1;">' +
+        '<button class="btn-secondary" style="padding:8px 12px;font-size:12px;" onclick="updateGoldPrice()">تحديث</button>' +
+      '</div>' +
+    '</div>' +
+    '<button onclick="getGoldAdvice()" style="width:100%;padding:13px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);color:#a78bfa;font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🤖 AI ينصحني — أزود ولا أبيع؟</button>';
+};
+
+window.updateGoldPrice = async function() {
+  var newPrice = parseFloat(document.getElementById('gold-update-price').value);
+  if (!newPrice) { showToast('⚠️ أدخل السعر'); return; }
+  if (!window._goldData) return;
+  window._goldData.currentPrice = newPrice;
+  window._goldData.date = new Date().toLocaleDateString('ar-EG');
+  try {
+    await window._fbSet(window._fbRef('gold_portfolio'), window._goldData);
+    renderGoldPortfolio();
+    showToast('✅ تم تحديث السعر');
+  } catch(e) { showToast('❌ خطأ'); }
+};
+
+// AI Gold Advice
+window.getGoldAdvice = async function() {
+  var apiKey = localStorage.getItem('rs_claude_key') || CLAUDE_API_KEY;
+  if (!apiKey) { showToast('⚠️ أضف API Key في الإعدادات'); return; }
+  var g = window._goldData;
+  if (!g) return;
+
+  var totalBuy = g.buyPrice * g.grams;
+  var totalCurrent = g.currentPrice * g.grams;
+  var pnl = totalCurrent - totalBuy;
+  var pct = totalBuy > 0 ? pnl/totalBuy*100 : 0;
+
+  var aiDiv = document.getElementById('gold-port-ai');
+  aiDiv.innerHTML = '<div style="text-align:center;padding:14px;background:rgba(99,102,241,0.08);border-radius:var(--radius-sm);margin-top:8px;"><div style="font-size:16px;">🤖</div><div style="font-size:11px;color:#a78bfa;margin-top:4px;">AI بيبحث عن أسعار الذهب العالمية...</div></div>';
+
+  var prompt = `أنت مستشار استثماري متخصص. المستثمر عنده ذهب في تطبيق ثاندر المصري.
+
+ابحث في الإنترنت عن:
+1. سعر الذهب العالمي الحالي بالدولار
+2. سعر الدولار مقابل الجنيه المصري الآن
+3. اتجاه الذهب الأسبوع الحالي
+4. توقعات الذهب قصيرة المدى
+
+وضع المستثمر:
+الجرامات: ${g.grams} جرام
+متوسط سعر الشراء: ${g.buyPrice} ج.م/جرام
+السعر الحالي: ${g.currentPrice} ج.م/جرام
+إجمالي الاستثمار: ${totalBuy.toFixed(2)} ج.م
+القيمة الحالية: ${totalCurrent.toFixed(2)} ج.م
+الربح/الخسارة: ${pnl>=0?'+':''}${pnl.toFixed(2)} ج.م (${pct>=0?'+':''}${pct.toFixed(1)}%)
+
+قدم توصية باللغة العربية:
+
+🌍 السوق دلوقتي:
+سعر الذهب العالمي: [X] دولار للأوقية
+سعر الدولار/جنيه: [X]
+اتجاه الذهب: [صاعد/هابط/مستقر]
+
+📊 تقييم وضعك:
+[جملتين عن وضعه الحالي]
+
+🎯 التوصية: [زيد / احتفظ / بيع جزء]
+
+💡 الخطة العملية:
+${pct > 10 ?
+'• عنده ربح — هل يناسبه جني جزء من الأرباح؟' :
+'• في خسارة بسيطة — هل يستمر أم ينتظر؟'}
+[خطة عملية مختصرة]
+
+⚠️ أهم مخاطرة: [جملة واحدة]`;
+
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 600,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await response.json();
+    var text = '';
+    if (data.content) data.content.forEach(function(b){ if(b.type==='text') text+=b.text; });
+    if (!text) text = 'مش قادر أحلل دلوقتي';
+
+    aiDiv.innerHTML =
+      '<div style="background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(232,201,122,0.05));border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:14px;margin-top:8px;">' +
+        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">🤖 AI — أزود ولا أبيع؟</div>' +
+        '<div style="font-size:13px;color:var(--white);line-height:1.9;">' + text.replace(/\n/g,'<br>') + '</div>' +
+        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ استرشادي — القرار النهائي ليك أنت</div>' +
+      '</div>';
+  } catch(e) {
+    aiDiv.innerHTML = '<div style="color:var(--red);font-size:13px;margin-top:8px;">❌ خطأ — جرب تاني</div>';
+  }
 };
 
 // Watchlist Modal
