@@ -1579,7 +1579,19 @@ window._portfolio = [];
 window._journal = [];
 window._watchlist = [];
 
-// Toggle Journal Entry
+// Toggle Report List
+window.toggleReportList = function(type) {
+  var types = ['all', 'buy', 'sell', 'watch'];
+  types.forEach(function(t) {
+    var el = document.getElementById('report-list-' + t);
+    if (!el) return;
+    if (t === type) {
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+};
 window.toggleJournalEntry = function(key) {
   var detail = document.getElementById('j-detail-'+key);
   var icon = document.getElementById('j-icon-'+key);
@@ -2285,14 +2297,74 @@ window.renderReport = function() {
   '</div>';
 
   // Journal
+  // بناء قوائم القرارات
+  var allItems = (window._journal || []);
+  var buyItems = allItems.filter(function(j){ return j.decision==='buy'; });
+  var sellItems = allItems.filter(function(j){ return j.decision==='sell'; });
+  var watchItems = allItems.filter(function(j){ return j.decision==='watch'; });
+
+  function buildMiniList(items, color) {
+    if (items.length === 0) return '<div style="font-size:12px;color:var(--gray);padding:8px;">مفيش قرارات</div>';
+    return items.map(function(e) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;">' +
+        '<span style="font-weight:700;color:#fff;">' + e.symbol + '</span>' +
+        '<span style="color:var(--gray);">' + (e.price ? e.price + ' ج.م' : '') + '</span>' +
+        '<span style="color:var(--gray);font-size:10px;">' + e.date + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
   html += '<div class="report-section">'+
-    '<div class="report-section-title">📓 قراراتك <span style="font-size:10px;color:var(--gray);font-weight:400;">← اضغط لعرض التفاصيل</span></div>'+
-    '<div class="report-grid" onclick="switchReportTab(\'journal\')" style="cursor:pointer;">'+
-      '<div class="report-item" style="border:1px solid rgba(201,168,76,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(201,168,76,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val">'+journal.length+'</div><div class="report-item-lbl">قرار سجلته</div></div>'+
-      '<div class="report-item" style="border:1px solid rgba(34,197,94,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(34,197,94,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val green">'+buyCount+'</div><div class="report-item-lbl">شراء</div></div>'+
-      '<div class="report-item" style="border:1px solid rgba(239,68,68,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(239,68,68,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val red">'+sellCount+'</div><div class="report-item-lbl">بيع</div></div>'+
-      '<div class="report-item" style="border:1px solid rgba(245,158,11,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(245,158,11,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val orange">'+watchCount+'</div><div class="report-item-lbl">مراقبة</div></div>'+
+    '<div class="report-section-title">📓 قراراتك</div>'+
+    '<div class="report-grid">'+
+
+      // كل القرارات
+      '<div class="report-item" style="border:1px solid rgba(201,168,76,0.2);cursor:pointer;" onclick="toggleReportList(\'all\')">' +
+        '<div class="report-item-val">'+journal.length+'</div>' +
+        '<div class="report-item-lbl">كل القرارات</div>' +
+      '</div>'+
+
+      // شراء
+      '<div class="report-item" style="border:1px solid rgba(34,197,94,0.2);cursor:pointer;" onclick="toggleReportList(\'buy\')">' +
+        '<div class="report-item-val green">'+buyCount+'</div>' +
+        '<div class="report-item-lbl">شراء</div>' +
+      '</div>'+
+
+      // بيع
+      '<div class="report-item" style="border:1px solid rgba(239,68,68,0.2);cursor:pointer;" onclick="toggleReportList(\'sell\')">' +
+        '<div class="report-item-val red">'+sellCount+'</div>' +
+        '<div class="report-item-lbl">بيع</div>' +
+      '</div>'+
+
+      // مراقبة
+      '<div class="report-item" style="border:1px solid rgba(245,158,11,0.2);cursor:pointer;" onclick="toggleReportList(\'watch\')">' +
+        '<div class="report-item-val orange">'+watchCount+'</div>' +
+        '<div class="report-item-lbl">مراقبة</div>' +
+      '</div>'+
+
     '</div>'+
+
+    // القوائم المنسدلة
+    '<div id="report-list-all" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
+      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--gold);background:rgba(201,168,76,0.08);">📋 كل القرارات</div>'+
+      buildMiniList(allItems, '--gold')+
+    '</div>'+
+
+    '<div id="report-list-buy" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
+      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--green);background:rgba(34,197,94,0.08);">🟢 قرارات الشراء</div>'+
+      buildMiniList(buyItems, '--green')+
+    '</div>'+
+
+    '<div id="report-list-sell" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
+      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--red);background:rgba(239,68,68,0.08);">🔴 قرارات البيع</div>'+
+      buildMiniList(sellItems, '--red')+
+    '</div>'+
+
+    '<div id="report-list-watch" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
+      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--orange);background:rgba(245,158,11,0.08);">🟡 قرارات المراقبة</div>'+
+      buildMiniList(watchItems, '--orange')+
+    '</div>'+
+
   '</div>';
 
   // Smart tip
