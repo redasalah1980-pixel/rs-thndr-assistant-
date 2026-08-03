@@ -423,6 +423,10 @@
       <button class="btn-primary" onclick="analyzeStock()">⚡ حلل دلوقتي</button>
     </div>
     <div class="result-box result-hidden" id="analyze-result">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;color:var(--gold);">نتيجة التحليل</div>
+        <button onclick="clearAnalysis()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-family:Cairo,sans-serif;font-size:12px;cursor:pointer;">🗑️ مسح</button>
+      </div>
       <div id="result-score-badge"></div>
       <div class="section-title">موقف السهم</div>
       <div id="result-position"></div>
@@ -667,13 +671,65 @@
   </div>
 </div>
 
+<!-- PAGE: إعدادات -->
+<div class="page" id="page-settings">
+  <div>
+    <div class="page-title">⚙️ الإعدادات</div>
+    <div class="page-subtitle">إعدادات الأداة والـ API</div>
+
+    <!-- Claude API Key -->
+    <div class="card">
+      <div class="card-title">🤖 Claude AI Key</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">
+        الـ Key بيتحفظ في متصفحك بس — مش على GitHub ✅
+      </div>
+      <div class="input-group">
+        <label class="input-label">Anthropic API Key</label>
+        <div style="position:relative;">
+          <input type="password" class="input-field" id="settings-api-key" placeholder="sk-ant-api03-..." style="padding-left:48px;" autocomplete="off">
+          <button onclick="toggleSettingsKey()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray);" id="toggle-key-btn">👁️</button>
+        </div>
+      </div>
+      <div id="key-status" style="font-size:12px;margin-bottom:12px;"></div>
+      <button class="btn-primary" onclick="saveAPIKey()">💾 حفظ الـ Key</button>
+      <button class="btn-danger" onclick="deleteAPIKey()" style="width:100%;margin-top:8px;padding:12px;">🗑️ مسح الـ Key</button>
+    </div>
+
+    <!-- معلومات الحساب -->
+    <div class="card">
+      <div class="card-title">👤 معلومات الحساب</div>
+      <div class="info-row">
+        <span class="info-label">المستخدم</span>
+        <span class="info-value gold">Reda Salah</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Firebase</span>
+        <span class="info-value green" id="settings-firebase-status">جاري التحقق...</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Claude AI</span>
+        <span class="info-value" id="settings-ai-status">جاري التحقق...</span>
+      </div>
+    </div>
+
+    <!-- تسجيل الخروج -->
+    <div class="card">
+      <div class="card-title">🔐 الحساب</div>
+      <button class="btn-danger" onclick="logout()" style="width:100%;padding:13px;font-size:14px;">
+        🚪 تسجيل الخروج
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <!-- Bottom Nav -->
 <div class="bottom-nav">
   <button class="nav-btn active" onclick="showPage('analyze',this)"><span class="nav-icon">🔍</span><span class="nav-label">تحليل</span></button>
   <button class="nav-btn" onclick="showPage('portfolio',this)"><span class="nav-icon">💼</span><span class="nav-label">محفظتي</span></button>
   <button class="nav-btn" onclick="showPage('compare',this)"><span class="nav-icon">📊</span><span class="nav-label">مقارنة</span></button>
-  <button class="nav-btn" onclick="showPage('calc',this)"><span class="nav-icon">🧮</span><span class="nav-label">الحاسبة</span></button>
   <button class="nav-btn" onclick="showPage('report',this)"><span class="nav-icon">📈</span><span class="nav-label">تقرير</span></button>
+  <button class="nav-btn" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span><span class="nav-label">إعدادات</span></button>
 </div>
 
 <!-- Watch Modal -->
@@ -1566,7 +1622,7 @@ window.shareReport = function() {
 };
 
 // ===== AI RECOMMENDATION =====
-var CLAUDE_API_KEY = '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';
+var CLAUDE_API_KEY = localStorage.getItem('rs_claude_key') || '';
 
 window.getAIRecommendation = async function() {
   if (!lastAnalysis) { showToast('⚠️ حلل سهم الأول'); return; }
@@ -1618,11 +1674,29 @@ window.getAIRecommendation = async function() {
     var data = await response.json();
     var text = data.content?.[0]?.text || 'مش قادر أحلل دلوقتي';
 
+    // استخراج سعر التصحيح من نص AI
+    var correctionPrice = null;
+    var priceMatches = text.match(/(?:عند|المرحلة \d[^:]*:|تصحيح.*?)\s*(\d+(?:\.\d+)?)\s*(?:جنيه|ج\.م)/g);
+    if (priceMatches && priceMatches.length > 0) {
+      var nums = priceMatches[0].match(/(\d+(?:\.\d+)?)/);
+      if (nums) correctionPrice = parseFloat(nums[1]);
+    }
+    // fallback: 15% تحت السعر الحالي
+    if (!correctionPrice || correctionPrice >= lastAnalysis.price) {
+      correctionPrice = parseFloat((lastAnalysis.price * 0.85).toFixed(2));
+    }
+
+    window._lastAIText = text;
+    window._lastCorrectionPrice = correctionPrice;
+
     document.getElementById('ai-result').innerHTML =
       '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:14px;">' +
         '<div style="font-size:11px;color:#8b5cf6;font-weight:700;margin-bottom:8px;">🤖 Claude AI</div>' +
         '<div style="font-size:13px;color:var(--white);line-height:1.8;">' + text.replace(/\n/g, '<br>') + '</div>' +
         '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ هذا رأي استرشادي — القرار النهائي ليك أنت</div>' +
+      '</div>' +
+      '<div style="margin-top:10px;display:flex;gap:8px;">' +
+        '<button onclick="addAIWatchAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⭐ أضف للمراقبة عند ' + correctionPrice + ' ج.م</button>' +
       '</div>';
 
     // حفظ التوصية تلقائياً في اليوميات
@@ -1646,6 +1720,119 @@ window.getAIRecommendation = async function() {
   } catch(e) {
     document.getElementById('ai-result').innerHTML =
       '<div style="color:var(--red);font-size:13px;">❌ خطأ في الاتصال — جرب تاني</div>';
+  }
+};
+
+// ===== SETTINGS =====
+window.toggleSettingsKey = function() {
+  var input = document.getElementById('settings-api-key');
+  var btn = document.getElementById('toggle-key-btn');
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁️'; }
+};
+
+window.saveAPIKey = function() {
+  var key = document.getElementById('settings-api-key').value.trim();
+  if (!key || !key.startsWith('sk-ant-')) {
+    showToast('⚠️ الـ Key غلط — لازم يبدأ بـ sk-ant-');
+    return;
+  }
+  localStorage.setItem('rs_claude_key', key);
+  CLAUDE_API_KEY = key;
+  document.getElementById('settings-api-key').value = '';
+  document.getElementById('settings-api-key').type = 'password';
+  document.getElementById('toggle-key-btn').textContent = '👁️';
+  updateSettingsStatus();
+  showToast('✅ تم حفظ الـ Key بأمان');
+};
+
+window.deleteAPIKey = function() {
+  localStorage.removeItem('rs_claude_key');
+  CLAUDE_API_KEY = '';
+  updateSettingsStatus();
+  showToast('🗑️ تم مسح الـ Key');
+};
+
+window.logout = function() {
+  localStorage.removeItem('rs_logged_in');
+  localStorage.removeItem('rs_username');
+  location.reload();
+};
+
+function updateSettingsStatus() {
+  var keyEl = document.getElementById('settings-ai-status');
+  var fbEl = document.getElementById('settings-firebase-status');
+  if (keyEl) {
+    var key = localStorage.getItem('rs_claude_key');
+    keyEl.textContent = key ? '✅ Key محفوظ' : '❌ مش محفوظ';
+    keyEl.style.color = key ? 'var(--green)' : 'var(--red)';
+    var statusEl = document.getElementById('key-status');
+    if (statusEl) {
+      statusEl.textContent = key ? '✅ الـ Key محفوظ وجاهز' : '⚠️ الـ Key مش محفوظ — اكتبه وحفظه';
+      statusEl.style.color = key ? 'var(--green)' : 'var(--orange)';
+    }
+  }
+  if (fbEl) {
+    fbEl.textContent = '✅ متصل';
+    fbEl.style.color = 'var(--green)';
+  }
+}
+
+// تحديث showPage لتحديث الإعدادات
+var _origShowPage = window.showPage;
+window.showPage = function(name, btn) {
+  _origShowPage(name, btn);
+  if (name === 'settings') {
+    var key = localStorage.getItem('rs_claude_key');
+    updateSettingsStatus();
+    var input = document.getElementById('settings-api-key');
+    if (input) input.placeholder = key ? '*** محفوظ — اكتب جديد لو عايز تغيير ***' : 'sk-ant-api03-...';
+  }
+};
+
+// Clear Analysis
+window.clearAnalysis = function() {
+  document.getElementById('analyze-result').classList.add('result-hidden');
+  document.getElementById('a-symbol').value = '';
+  document.getElementById('a-name').value = '';
+  document.getElementById('a-price').value = '';
+  document.getElementById('a-high').value = '';
+  document.getElementById('a-low').value = '';
+  document.getElementById('a-5y').value = '';
+  document.getElementById('a-sharia').value = '';
+  document.getElementById('a-budget').value = '';
+  document.getElementById('ai-result').innerHTML = '<button class="btn-primary" onclick="getAIRecommendation()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">🤖 اطلب توصية AI</button>';
+  document.getElementById('news-result').innerHTML = '<button class="btn-secondary" onclick="getStockNews()" style="width:100%;">📰 جيب أحدث الأخبار</button>';
+  lastAnalysis = null;
+  showToast('✅ تم المسح');
+};
+
+// ===== ADD AI WATCH ALERT =====
+window.addAIWatchAlert = async function() {
+  if (!lastAnalysis || !window._lastCorrectionPrice) return;
+  try {
+    var watchlistRef = ref(db, 'watchlist');
+    var newRef = push(watchlistRef);
+    await set(newRef, {
+      symbol: lastAnalysis.symbol,
+      name: lastAnalysis.name || '',
+      current: lastAnalysis.price,
+      target: window._lastCorrectionPrice,
+      note: '🤖 مضاف تلقائياً من توصية AI — انتظر التصحيح',
+      date: new Date().toLocaleDateString('ar-EG'),
+      isAI: true
+    });
+    showToast('⭐ تمت الإضافة للمراقبة عند ' + window._lastCorrectionPrice + ' ج.م');
+
+    // تغيير الزرار
+    var btn = document.querySelector('#ai-result button');
+    if (btn) {
+      btn.textContent = '✅ تمت الإضافة للمراقبة';
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+    }
+  } catch(e) {
+    showToast('❌ خطأ — جرب تاني');
   }
 };
 
