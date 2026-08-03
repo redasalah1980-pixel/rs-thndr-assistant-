@@ -437,7 +437,68 @@
         <label class="input-label">المبلغ المتاح (جنيه)</label>
         <input type="number" class="input-field" id="a-budget" placeholder="500">
       </div>
-      <button class="btn-primary" onclick="analyzeStock()">⚡ حلل دلوقتي</button>
+
+      <!-- بيانات إضافية -->
+      <div style="margin-top:4px;">
+        <div onclick="toggleExtraData()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;">
+          <span style="font-size:13px;font-weight:700;color:var(--gold);">📊 بيانات إضافية من ثاندر</span>
+          <span id="extra-toggle-icon" style="color:var(--gold);font-size:16px;">＋</span>
+        </div>
+        <div id="extra-data-section" style="display:none;padding:14px;background:var(--navy);border:1px solid rgba(201,168,76,0.1);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);">
+          <div style="font-size:11px;color:var(--gray);margin-bottom:12px;">اختيارية — كلما أضفت أكتر كلما التوصية أدق 🎯</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="input-group">
+              <label class="input-label">الافتتاح اليومي</label>
+              <input type="number" class="input-field" id="a-open" placeholder="52.85" step="0.01">
+            </div>
+            <div class="input-group">
+              <label class="input-label">الإغلاق السابق</label>
+              <input type="number" class="input-field" id="a-prev-close" placeholder="52.80" step="0.01">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="input-group">
+              <label class="input-label">الأعلى اليومي</label>
+              <input type="number" class="input-field" id="a-day-high" placeholder="53.40" step="0.01">
+            </div>
+            <div class="input-group">
+              <label class="input-label">الأدنى اليومي</label>
+              <input type="number" class="input-field" id="a-day-low" placeholder="52.50" step="0.01">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="input-group">
+              <label class="input-label">حجم التداول</label>
+              <input type="text" class="input-field" id="a-volume" placeholder="3.97m">
+            </div>
+            <div class="input-group">
+              <label class="input-label">متوسط قيمة التداول</label>
+              <input type="text" class="input-field" id="a-avg-volume" placeholder="3.84m">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="input-group">
+              <label class="input-label">الأرباح الموزعة (جنيه)</label>
+              <input type="number" class="input-field" id="a-dividend" placeholder="2.50" step="0.01">
+            </div>
+            <div class="input-group">
+              <label class="input-label">رأس المال السوقي</label>
+              <input type="text" class="input-field" id="a-market-cap" placeholder="مثال: 15B">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">التغيير اليومي (%)</label>
+            <input type="number" class="input-field" id="a-day-change" placeholder="مثال: +2.3 أو -1.5" step="0.01">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="analyzeStock()" style="margin-top:12px;">⚡ حلل دلوقتي</button>
     </div>
     <div class="result-box result-hidden" id="analyze-result">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -1813,53 +1874,120 @@ var CLAUDE_API_KEY = localStorage.getItem('rs_claude_key') || '';
 
 window.getAIRecommendation = async function() {
   if (!lastAnalysis) { showToast('⚠️ حلل سهم الأول'); return; }
+  var apiKey = localStorage.getItem('rs_claude_key') || CLAUDE_API_KEY;
+  if (!apiKey) { showToast('⚠️ أضف API Key في الإعدادات'); return; }
+
   var btn = document.querySelector('#ai-result button');
-  if (btn) { btn.textContent = '⏳ جاري التحليل...'; btn.disabled = true; }
+  if (btn) { btn.textContent = '⏳ AI بيبحث ويحلل...'; btn.disabled = true; }
 
-  var prompt = `أنت مستشار استثماري متخصص في البورصة المصرية. بناءً على البيانات التالية، قدم توصية استثمارية عملية ومفصلة باللغة العربية:
+  // جمع البيانات الإضافية
+  var extra = getExtraData();
+  var extraText = '';
+  if (Object.keys(extra).length > 0) {
+    extraText = '\n\nبيانات إضافية من ثاندر:\n';
+    if (extra.open) extraText += `• الافتتاح اليومي: ${extra.open} جنيه\n`;
+    if (extra.prevClose) extraText += `• الإغلاق السابق: ${extra.prevClose} جنيه\n`;
+    if (extra.dayHigh) extraText += `• الأعلى اليومي: ${extra.dayHigh} جنيه\n`;
+    if (extra.dayLow) extraText += `• الأدنى اليومي: ${extra.dayLow} جنيه\n`;
+    if (extra.dayChange) extraText += `• التغيير اليومي: ${extra.dayChange}%\n`;
+    if (extra.volume) extraText += `• حجم التداول: ${extra.volume}\n`;
+    if (extra.avgVolume) extraText += `• متوسط قيمة التداول: ${extra.avgVolume}\n`;
+    if (extra.dividend) extraText += `• الأرباح الموزعة: ${extra.dividend} جنيه للسهم\n`;
+    if (extra.marketCap) extraText += `• رأس المال السوقي: ${extra.marketCap}\n`;
+  }
 
-السهم: ${lastAnalysis.symbol} - ${lastAnalysis.name}
+  // عرض مؤشر التقدم
+  document.getElementById('ai-result').innerHTML =
+    '<div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:16px;text-align:center;">' +
+      '<div style="font-size:24px;margin-bottom:8px;">🤖</div>' +
+      '<div style="font-size:13px;color:#a78bfa;font-weight:700;margin-bottom:4px;">AI بيبحث عن ' + lastAnalysis.symbol + '</div>' +
+      '<div id="ai-progress" style="font-size:11px;color:var(--gray);">جاري البحث عن أخبار الشركة...</div>' +
+    '</div>';
+
+  var steps = [
+    'جاري البحث عن أخبار الشركة...',
+    'جاري تحليل البيانات المالية...',
+    'جاري مقارنة بالقطاع...',
+    'جاري إعداد التوصية...'
+  ];
+  var stepIdx = 0;
+  var progressInterval = setInterval(function() {
+    stepIdx = (stepIdx + 1) % steps.length;
+    var el = document.getElementById('ai-progress');
+    if (el) el.textContent = steps[stepIdx];
+  }, 2000);
+
+  var prompt = `أنت مستشار استثماري متخصص في البورصة المصرية. قم بتحليل شامل لسهم ${lastAnalysis.symbol} - ${lastAnalysis.name}.
+
+ابحث في الإنترنت عن:
+1. آخر أخبار الشركة والقطاع
+2. سعر الفايدة الحالي في مصر وتأثيره
+3. أداء القطاع مقارنة بالسوق
+4. نسبة P/E للسهم مقارنة بالقطاع
+5. نسبة الديون للشركة
+
+البيانات المتاحة من المستثمر:
 السعر الحالي: ${lastAnalysis.price} جنيه
-أعلى سعر سنوي: ${lastAnalysis.high} جنيه
-أدنى سعر سنوي: ${lastAnalysis.low} جنيه
-العائد على 5 سنين: ${lastAnalysis.fiveY}%
-متوافق مع الشريعة: ${lastAnalysis.sharia === 'yes' ? 'نعم' : lastAnalysis.sharia === 'no' ? 'لا' : 'غير محدد'}
-المبلغ المتاح: ${lastAnalysis.budget} جنيه
+أعلى سنوي: ${lastAnalysis.high} | أدنى سنوي: ${lastAnalysis.low}
+العائد 5 سنين: ${lastAnalysis.fiveY}%
+متوافق مع الشريعة: ${lastAnalysis.sharia === 'yes' ? 'نعم ✅' : lastAnalysis.sharia === 'no' ? 'لا ❌' : 'غير محدد'}
+المبلغ المتاح: ${lastAnalysis.budget} جنيه${extraText}
 
-قدم الرد في هذا الشكل بالضبط:
+قدم التحليل في هذا الشكل بالعربية:
+
+📰 آخر الأخبار:
+[أهم خبر أو حدث يؤثر على السهم]
+
+📊 وضع القطاع:
+[أداء القطاع + مقارنة السهم بمنافسيه]
+
+💰 الأرباح والتقييم:
+[الأرباح الموزعة + نسبة P/E + نسبة الديون من البحث]
+${extra.volume ? '\n📈 التحليل الفني:\n[تحليل حجم التداول ومعناه]' : ''}
 
 🎯 التوصية: [شراء الآن / انتظر تصحيح / تجنب]
 
-📊 التقييم:
-[جملتين عن وضع السهم]
-
 💰 خطة الشراء (بناءً على ${lastAnalysis.budget} جنيه):
 المرحلة 1 — [السعر]: اشتري [عدد] أسهم بـ [المبلغ] جنيه
-المرحلة 2 — لو نزل [السعر]: اشتري [عدد] أسهم بـ [المبلغ] جنيه  
+المرحلة 2 — لو نزل [السعر]: اشتري [عدد] أسهم بـ [المبلغ] جنيه
 المرحلة 3 — لو نزل [السعر]: اشتري [عدد] أسهم بـ [المبلغ] جنيه
 
 🎯 هدف الربح: [السعر] جنيه (+[النسبة]%)
 🛑 وقف الخسارة: [السعر] جنيه (-[النسبة]%)
 
-⚠️ أهم مخاطرة: [جملة واحدة]`;
+⚠️ أهم مخاطرة: [جملة مبنية على البحث والبيانات]`;
 
   try {
     var response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': CLAUDE_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 500,
+        max_tokens: 1000,
+        tools: [{
+          type: 'web_search_20250305',
+          name: 'web_search'
+        }],
         messages: [{ role: 'user', content: prompt }]
       })
     });
+
+    clearInterval(progressInterval);
     var data = await response.json();
-    var text = data.content?.[0]?.text || 'مش قادر أحلل دلوقتي';
+
+    // استخراج النص من الرد
+    var text = '';
+    if (data.content) {
+      data.content.forEach(function(block) {
+        if (block.type === 'text') text += block.text;
+      });
+    }
+    if (!text) text = 'مش قادر أحلل دلوقتي — جرب تاني';
 
 
     // استخراج أسعار من نص AI
@@ -1933,8 +2061,11 @@ window.getAIRecommendation = async function() {
       console.log('Could not save to journal:', e);
     }
   } catch(e) {
+    clearInterval(progressInterval);
+    console.error('AI error:', e);
     document.getElementById('ai-result').innerHTML =
-      '<div style="color:var(--red);font-size:13px;">❌ خطأ في الاتصال — جرب تاني</div>';
+      '<div style="color:var(--red);font-size:13px;padding:12px;background:rgba(239,68,68,0.1);border-radius:8px;">❌ خطأ في الاتصال — تأكد من الـ API Key وجرب تاني</div>' +
+      '<button class="btn-primary" onclick="getAIRecommendation()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);margin-top:8px;">🔄 جرب تاني</button>';
   }
 };
 
@@ -2004,6 +2135,43 @@ window.showPage = function(name, btn) {
     if (input) input.placeholder = key ? '*** محفوظ — اكتب جديد لو عايز تغيير ***' : 'sk-ant-api03-...';
   }
 };
+
+// Toggle Extra Data
+window.toggleExtraData = function() {
+  var section = document.getElementById('extra-data-section');
+  var icon = document.getElementById('extra-toggle-icon');
+  if (section.style.display === 'none') {
+    section.style.display = 'block';
+    icon.textContent = '－';
+  } else {
+    section.style.display = 'none';
+    icon.textContent = '＋';
+  }
+};
+
+// Get Extra Data
+function getExtraData() {
+  var extra = {};
+  var open = document.getElementById('a-open')?.value;
+  var prevClose = document.getElementById('a-prev-close')?.value;
+  var dayHigh = document.getElementById('a-day-high')?.value;
+  var dayLow = document.getElementById('a-day-low')?.value;
+  var volume = document.getElementById('a-volume')?.value;
+  var avgVolume = document.getElementById('a-avg-volume')?.value;
+  var dividend = document.getElementById('a-dividend')?.value;
+  var marketCap = document.getElementById('a-market-cap')?.value;
+  var dayChange = document.getElementById('a-day-change')?.value;
+  if (open) extra.open = open;
+  if (prevClose) extra.prevClose = prevClose;
+  if (dayHigh) extra.dayHigh = dayHigh;
+  if (dayLow) extra.dayLow = dayLow;
+  if (volume) extra.volume = volume;
+  if (avgVolume) extra.avgVolume = avgVolume;
+  if (dividend) extra.dividend = dividend;
+  if (marketCap) extra.marketCap = marketCap;
+  if (dayChange) extra.dayChange = dayChange;
+  return extra;
+}
 
 // Clear Analysis
 window.clearAnalysis = function() {
