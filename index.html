@@ -745,10 +745,58 @@
 <!-- PAGE: تقرير -->
 <div class="page" id="page-report">
   <div>
-    <div class="page-title">📊 التقرير الشهري</div>
-    <div class="page-subtitle">ملخص أداء محفظتك</div>
-    <div id="report-content"></div>
-    <div id="ai-portfolio-result"></div>
+    <div class="page-title">📊 التقرير والقرارات</div>
+
+    <!-- تبويبين -->
+    <div class="port-tabs" style="margin-bottom:16px;">
+      <button class="port-tab active" id="tab-report" onclick="switchReportTab('report')">📈 التقرير الشهري</button>
+      <button class="port-tab" id="tab-journal" onclick="switchReportTab('journal')">📓 يومياتي</button>
+    </div>
+
+    <!-- التقرير -->
+    <div id="section-report">
+      <div id="report-content"></div>
+      <div id="ai-portfolio-result"></div>
+    </div>
+
+    <!-- اليوميات -->
+    <div id="section-journal" style="display:none;">
+      <div class="card">
+        <div class="card-title">✍️ إضافة تسجيل جديد</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="input-group">
+            <label class="input-label">ابحث عن السهم</label>
+            <div class="search-wrapper">
+              <input type="text" class="input-field" id="j-symbol" placeholder="مثال: ADIB" oninput="searchStocks(this.value,'j')" autocomplete="off">
+              <div class="search-results search-hidden" id="j-results"></div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">القرار</label>
+            <select class="input-field" id="j-decision">
+              <option value="buy">🟢 شراء</option>
+              <option value="sell">🔴 بيع</option>
+              <option value="watch">🟡 مراقبة</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">السعر</label>
+          <input type="number" class="input-field" id="j-price" placeholder="53.20" step="0.01">
+        </div>
+        <div class="input-group">
+          <label class="input-label">ليه اتخذت القرار ده؟</label>
+          <textarea class="input-field" id="j-reason" rows="3" placeholder="مثال: السهم في قاع، ارتفع +160% في سنة..." style="resize:none;line-height:1.6;"></textarea>
+        </div>
+        <div class="input-group">
+          <label class="input-label">هدفك من الصفقة</label>
+          <input type="text" class="input-field" id="j-goal" placeholder="مثال: ربح 20% خلال 3 شهور">
+        </div>
+        <button class="btn-primary" onclick="addJournalEntry()">💾 سجل القرار</button>
+      </div>
+      <div id="journal-list"></div>
+    </div>
+
   </div>
 </div>
 
@@ -1015,14 +1063,6 @@
         <strong style="color:var(--white);">🔔 كل ساعة</strong> — فحص التنبيهات تلقائياً
       </div>
 
-    </div>
-
-    <!-- تسجيل الخروج -->
-    <div class="card">
-      <div class="card-title">🔐 الحساب</div>
-      <button class="btn-danger" onclick="logout()" style="width:100%;padding:13px;font-size:14px;">
-        🚪 تسجيل الخروج
-      </button>
     </div>
 
   </div>
@@ -1539,7 +1579,27 @@ window._portfolio = [];
 window._journal = [];
 window._watchlist = [];
 
-// Switch Portfolio Tabs
+// Toggle Journal Entry
+window.toggleJournalEntry = function(key) {
+  var detail = document.getElementById('j-detail-'+key);
+  var icon = document.getElementById('j-icon-'+key);
+  if (!detail) return;
+  if (detail.style.display === 'none') {
+    detail.style.display = 'block';
+    if (icon) icon.textContent = '－';
+  } else {
+    detail.style.display = 'none';
+    if (icon) icon.textContent = '＋';
+  }
+};
+window.switchReportTab = function(tab) {
+  document.getElementById('section-report').style.display = tab==='report' ? 'block' : 'none';
+  document.getElementById('section-journal').style.display = tab==='journal' ? 'block' : 'none';
+  document.getElementById('tab-report').classList.toggle('active', tab==='report');
+  document.getElementById('tab-journal').classList.toggle('active', tab==='journal');
+  if (tab==='report') renderReport();
+  if (tab==='journal') renderJournal();
+};
 window.switchPortTab = function(tab) {
   document.getElementById('section-portfolio').style.display = tab==='portfolio' ? 'block' : 'none';
   document.getElementById('section-watchlist').style.display = tab==='watchlist' ? 'block' : 'none';
@@ -1801,7 +1861,7 @@ function showPage(name, btn) {
   if(btn) btn.classList.add('active');
   if(name==='portfolio') renderPortfolio();
   if(name==='journal') renderJournal();
-  if(name==='report') renderReport();
+  if(name==='report') { renderReport(); switchReportTab('report'); }
 }
 window.showPage = showPage;
 
@@ -2091,7 +2151,7 @@ window.renderJournal = function() {
   var list = document.getElementById('journal-list');
   if(!list) return;
   if(j.length===0){
-    list.innerHTML='<div class="empty-state"><div class="empty-icon">📓</div><div class="empty-text">ما فيش تسجيلات لسه</div></div>';
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">📓</div><div class="empty-text">ما فيش قرارات لسه<br>سجل أول قرار استثماري</div></div>';
     return;
   }
   var dl={buy:'🟢 شراء',sell:'🔴 بيع',watch:'🟡 مراقبة'};
@@ -2099,17 +2159,25 @@ window.renderJournal = function() {
   var html='';
   j.forEach(function(e){
     var isAI = e.isAI;
-    html+='<div class="journal-entry" style="'+(isAI?'border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.05);':'')+'">' +
-      '<div class="journal-header">'+
-        '<div class="journal-symbol">'+e.symbol+(e.price?' — '+e.price+' ج.م':'')+
-        (isAI?' <span style="font-size:10px;background:rgba(99,102,241,0.2);color:#a78bfa;padding:2px 8px;border-radius:10px;margin-right:4px;">🤖 AI</span>':'')+'</div>'+
-        '<div class="journal-date">'+e.date+' '+e.time+'</div>'+
-      '</div>'+
-      '<div class="journal-decision '+(dc[e.decision]||'decision-watch')+'">'+(dl[e.decision]||e.decision)+'</div>'+
-      '<div class="journal-note" style="white-space:pre-wrap;">'+e.reason+'</div>'+
-      (e.goal&&!isAI?'<div class="journal-note" style="margin-top:6px;">🎯 '+e.goal+'</div>':'')+
-      '<div style="margin-top:10px;text-align:left;"><button class="btn-danger" onclick="deleteJournal(\''+e._key+'\')">🗑️ حذف</button></div>'+
-    '</div>';
+    html+=
+      '<div class="journal-entry" style="cursor:pointer;'+(isAI?'border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.05);':'')+'" onclick="toggleJournalEntry(\''+e._key+'\')">' +
+        '<div class="journal-header">' +
+          '<div class="journal-symbol">'+e.symbol+(e.price?' — '+e.price+' ج.م':'')+
+          (isAI?' <span style="font-size:10px;background:rgba(99,102,241,0.2);color:#a78bfa;padding:2px 8px;border-radius:10px;margin-right:4px;">🤖 AI</span>':'')+'</div>'+
+          '<div style="display:flex;align-items:center;gap:8px;">'+
+            '<div class="journal-date">'+e.date+' '+e.time+'</div>'+
+            '<span id="j-icon-'+e._key+'" style="color:var(--gold);font-size:14px;">＋</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="journal-decision '+(dc[e.decision]||'decision-watch')+'">'+(dl[e.decision]||e.decision)+'</div>'+
+
+        // المحتوى المخفي
+        '<div id="j-detail-'+e._key+'" style="display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px;">'+
+          '<div class="journal-note" style="white-space:pre-wrap;margin-bottom:8px;">'+e.reason+'</div>'+
+          (e.goal&&!isAI?'<div style="background:rgba(201,168,76,0.08);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--gold);margin-bottom:8px;">🎯 '+e.goal+'</div>':'')+
+          '<button class="btn-danger" onclick="event.stopPropagation();deleteJournal(\''+e._key+'\')" style="margin-top:4px;">🗑️ حذف</button>'+
+        '</div>'+
+      '</div>';
   });
   list.innerHTML=html;
 };
