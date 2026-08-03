@@ -1681,20 +1681,35 @@ window.getAIRecommendation = async function() {
     var data = await response.json();
     var text = data.content?.[0]?.text || 'مش قادر أحلل دلوقتي';
 
-    // استخراج سعر التصحيح من نص AI
+
+    // استخراج أسعار من نص AI
     var correctionPrice = null;
-    var priceMatches = text.match(/(?:عند|المرحلة \d[^:]*:|تصحيح.*?)\s*(\d+(?:\.\d+)?)\s*(?:جنيه|ج\.م)/g);
-    if (priceMatches && priceMatches.length > 0) {
-      var nums = priceMatches[0].match(/(\d+(?:\.\d+)?)/);
-      if (nums) correctionPrice = parseFloat(nums[1]);
+    var targetPrice = null;
+
+    // استخراج هدف الربح
+    var targetMatch = text.match(/هدف الربح[^:]*:\s*(\d+(?:\.\d+)?)\s*(?:جنيه|ج\.م)/);
+    if (targetMatch) targetPrice = parseFloat(targetMatch[1]);
+
+    // استخراج سعر الدخول/التصحيح — نأخذ أول رقم في المراحل
+    var stageMatches = text.match(/المرحلة[^—–-]*[—–-]\s*(?:لو نزل\s*)?(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/g);
+    if (stageMatches && stageMatches.length > 0) {
+      var firstStageNum = stageMatches[0].match(/(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/);
+      if (firstStageNum) correctionPrice = parseFloat(firstStageNum[1]);
     }
-    // fallback: 15% تحت السعر الحالي
+
+    // fallback للتصحيح: 10% تحت السعر الحالي
     if (!correctionPrice || correctionPrice >= lastAnalysis.price) {
-      correctionPrice = parseFloat((lastAnalysis.price * 0.85).toFixed(2));
+      correctionPrice = parseFloat((lastAnalysis.price * 0.90).toFixed(2));
+    }
+
+    // fallback للهدف: 20% فوق السعر الحالي
+    if (!targetPrice || targetPrice <= lastAnalysis.price) {
+      targetPrice = parseFloat((lastAnalysis.price * 1.20).toFixed(2));
     }
 
     window._lastAIText = text;
     window._lastCorrectionPrice = correctionPrice;
+    window._lastTargetPrice = targetPrice;
 
     document.getElementById('ai-result').innerHTML =
       '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:14px;">' +
@@ -1702,8 +1717,22 @@ window.getAIRecommendation = async function() {
         '<div style="font-size:13px;color:var(--white);line-height:1.8;">' + text.replace(/\n/g, '<br>') + '</div>' +
         '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ هذا رأي استرشادي — القرار النهائي ليك أنت</div>' +
       '</div>' +
-      '<div style="margin-top:10px;display:flex;gap:8px;">' +
-        '<button onclick="addAIWatchAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⭐ أضف للمراقبة عند ' + correctionPrice + ' ج.م</button>' +
+      '<div style="background:var(--navy-light);border-radius:var(--radius-sm);padding:12px;margin-top:10px;">' +
+        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">📌 الأسعار المستخرجة تلقائياً:</div>' +
+        '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
+          '<div style="flex:1;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:8px;text-align:center;">' +
+            '<div style="font-size:10px;color:var(--gray);">🎯 هدف الربح</div>' +
+            '<div style="font-size:15px;font-weight:900;color:var(--green);">' + targetPrice + '</div>' +
+          '</div>' +
+          '<div style="flex:1;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:8px;text-align:center;">' +
+            '<div style="font-size:10px;color:var(--gray);">🔔 سعر الدخول</div>' +
+            '<div style="font-size:15px;font-weight:900;color:var(--red);">' + correctionPrice + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-top:8px;display:flex;gap:8px;">' +
+        '<button onclick="addAIToPortfolioAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💼 أضف للمحفظة مع تنبيهات</button>' +
+        '<button onclick="addAIWatchAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">⭐ أضف للمراقبة عند ' + correctionPrice + '</button>' +
       '</div>';
 
     // حفظ التوصية تلقائياً في اليوميات
@@ -1811,6 +1840,26 @@ window.clearAnalysis = function() {
   document.getElementById('news-result').innerHTML = '<button class="btn-secondary" onclick="getStockNews()" style="width:100%;">📰 جيب أحدث الأخبار</button>';
   lastAnalysis = null;
   showToast('✅ تم المسح');
+};
+
+// ===== ADD AI TO PORTFOLIO WITH ALERTS =====
+window.addAIToPortfolioAlert = function() {
+  if (!lastAnalysis) return;
+  // ملء المودال تلقائياً
+  document.getElementById('m-symbol').value = lastAnalysis.symbol;
+  document.getElementById('m-name').value = lastAnalysis.name || '';
+  document.getElementById('m-buy-price').value = lastAnalysis.price;
+  document.getElementById('m-shares').value = lastAnalysis.shares1 || 1;
+  document.getElementById('m-current-price').value = lastAnalysis.price;
+  // التنبيهات من AI
+  if (window._lastTargetPrice) {
+    document.getElementById('m-alert-up').value = window._lastTargetPrice;
+  }
+  if (window._lastCorrectionPrice) {
+    document.getElementById('m-alert-down').value = window._lastCorrectionPrice;
+  }
+  openAddStockModal();
+  showToast('✅ التنبيهات اتملت تلقائياً من AI');
 };
 
 // ===== ADD AI WATCH ALERT =====
