@@ -1187,30 +1187,43 @@ onValue(goldRef, (snap) => {
     renderGoldPortfolio();
   }
 });
+
+// Listen watchlist realtime — داخل الـ module عشان ref و onValue متاحين
+const watchlistRef = ref(db, 'watchlist');
 window.watchlistRef = watchlistRef;
+window._fbPush = push;
+window._fbSet = set;
+window._fbRemove = remove;
+window._fbRef = (path) => ref(db, path);
+
 onValue(watchlistRef, (snap) => {
   var data = snap.val();
   window._watchlist = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})) : [];
+  console.log('Watchlist updated:', window._watchlist.length, 'items');
 
-  // render دايماً
-  renderWatchlist();
+  // render دايماً في الخلفية
+  if (typeof window.renderWatchlist === 'function') {
+    window.renderWatchlist();
+  }
 
-  // تحديث الشارة على التبويب
-  var badge = document.getElementById('watch-badge');
-  if (!badge) {
-    var tabBtn = document.getElementById('tab-watchlist');
-    if (tabBtn) {
-      badge = document.createElement('span');
-      badge.id = 'watch-badge';
-      badge.style.cssText = 'background:var(--green);color:white;font-size:9px;font-weight:900;padding:1px 5px;border-radius:10px;margin-right:4px;';
-      tabBtn.prepend(badge);
+  // شارة العداد
+  setTimeout(function() {
+    var badge = document.getElementById('watch-badge');
+    if (!badge) {
+      var tabBtn = document.getElementById('tab-watchlist');
+      if (tabBtn) {
+        badge = document.createElement('span');
+        badge.id = 'watch-badge';
+        badge.style.cssText = 'background:var(--green);color:white;font-size:9px;font-weight:900;padding:1px 5px;border-radius:10px;margin-right:4px;';
+        tabBtn.prepend(badge);
+      }
     }
-  }
-  if (badge) {
-    var count = (window._watchlist||[]).length;
-    badge.textContent = count > 0 ? count : '';
-    badge.style.display = count > 0 ? 'inline' : 'none';
-  }
+    if (badge) {
+      var count = (window._watchlist||[]).length;
+      badge.textContent = count > 0 ? count : '';
+      badge.style.display = count > 0 ? 'inline' : 'none';
+    }
+  }, 500);
 });
 
 // ADD TO WATCHLIST
@@ -1714,6 +1727,7 @@ window.closeWatchModal = function() { document.getElementById('addWatchModal').c
 window.renderWatchlist = function() {
   var list = document.getElementById('watchlist-list');
   var watches = window._watchlist || [];
+  console.log('renderWatchlist called:', watches.length, 'items, list element:', !!list);
   if (!list) return;
   if (watches.length === 0) {
     list.innerHTML = '<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-text">قائمة المراقبة فاضية<br>أضف أسهم عايز تتابعها</div></div>';
