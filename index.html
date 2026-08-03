@@ -1191,11 +1191,10 @@ window.watchlistRef = watchlistRef;
 onValue(watchlistRef, (snap) => {
   var data = snap.val();
   window._watchlist = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})) : [];
-  // تحديث المراقبة لو التبويب ظاهر
-  var watchSection = document.getElementById('section-watchlist');
-  if (watchSection && watchSection.style.display !== 'none') {
-    renderWatchlist();
-  }
+
+  // render دايماً
+  renderWatchlist();
+
   // تحديث الشارة على التبويب
   var badge = document.getElementById('watch-badge');
   if (!badge) {
