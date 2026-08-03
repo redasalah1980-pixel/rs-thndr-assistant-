@@ -849,6 +849,7 @@ onValue(journalRef, (snap) => {
 
 // Listen watchlist realtime
 const watchlistRef = ref(db, 'watchlist');
+window.watchlistRef = watchlistRef;
 onValue(watchlistRef, (snap) => {
   var data = snap.val();
   window._watchlist = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})) : [];
@@ -1809,9 +1810,11 @@ window.clearAnalysis = function() {
 
 // ===== ADD AI WATCH ALERT =====
 window.addAIWatchAlert = async function() {
-  if (!lastAnalysis || !window._lastCorrectionPrice) return;
+  if (!lastAnalysis || !window._lastCorrectionPrice) {
+    showToast('⚠️ مفيش بيانات — حلل سهم الأول');
+    return;
+  }
   try {
-    var watchlistRef = ref(db, 'watchlist');
     var newRef = push(watchlistRef);
     await set(newRef, {
       symbol: lastAnalysis.symbol,
@@ -1823,8 +1826,6 @@ window.addAIWatchAlert = async function() {
       isAI: true
     });
     showToast('⭐ تمت الإضافة للمراقبة عند ' + window._lastCorrectionPrice + ' ج.م');
-
-    // تغيير الزرار
     var btn = document.querySelector('#ai-result button');
     if (btn) {
       btn.textContent = '✅ تمت الإضافة للمراقبة';
@@ -1832,7 +1833,8 @@ window.addAIWatchAlert = async function() {
       btn.style.opacity = '0.6';
     }
   } catch(e) {
-    showToast('❌ خطأ — جرب تاني');
+    console.error('Watch error:', e);
+    showToast('❌ خطأ: ' + (e.message || 'جرب تاني'));
   }
 };
 
