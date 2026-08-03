@@ -434,6 +434,25 @@
       <div id="result-targets"></div>
       <div class="divider"></div>
       <div id="result-sharia-note"></div>
+
+      <!-- AI توصية -->
+      <div class="divider"></div>
+      <div class="section-title">🤖 توصية الذكاء الاصطناعي</div>
+      <div id="ai-result">
+        <button class="btn-primary" onclick="getAIRecommendation()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">
+          🤖 اطلب توصية AI
+        </button>
+      </div>
+
+      <!-- أخبار الشركة -->
+      <div class="divider"></div>
+      <div class="section-title">📰 أخبار الشركة</div>
+      <div id="news-result">
+        <button class="btn-secondary" onclick="getStockNews()" style="width:100%;">
+          📰 جيب أحدث الأخبار
+        </button>
+      </div>
+
       <div style="display:flex;gap:10px;margin-top:14px;">
         <button class="btn-secondary" onclick="saveToPortfolio()" style="flex:1;">💼 أضف للمحفظة</button>
         <button class="btn-secondary" onclick="saveToJournal()" style="flex:1;">📓 سجل</button>
@@ -1383,11 +1402,16 @@ window.renderJournal = function() {
   var dc={buy:'decision-buy',sell:'decision-sell',watch:'decision-watch'};
   var html='';
   j.forEach(function(e){
-    html+='<div class="journal-entry">'+
-      '<div class="journal-header"><div class="journal-symbol">'+e.symbol+(e.price?' — '+e.price+' ج.م':'')+'</div><div class="journal-date">'+e.date+' '+e.time+'</div></div>'+
+    var isAI = e.isAI;
+    html+='<div class="journal-entry" style="'+(isAI?'border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.05);':'')+'">' +
+      '<div class="journal-header">'+
+        '<div class="journal-symbol">'+e.symbol+(e.price?' — '+e.price+' ج.م':'')+
+        (isAI?' <span style="font-size:10px;background:rgba(99,102,241,0.2);color:#a78bfa;padding:2px 8px;border-radius:10px;margin-right:4px;">🤖 AI</span>':'')+'</div>'+
+        '<div class="journal-date">'+e.date+' '+e.time+'</div>'+
+      '</div>'+
       '<div class="journal-decision '+(dc[e.decision]||'decision-watch')+'">'+(dl[e.decision]||e.decision)+'</div>'+
-      '<div class="journal-note">💬 '+e.reason+'</div>'+
-      (e.goal?'<div class="journal-note" style="margin-top:6px;">🎯 '+e.goal+'</div>':'')+
+      '<div class="journal-note" style="white-space:pre-wrap;">'+e.reason+'</div>'+
+      (e.goal&&!isAI?'<div class="journal-note" style="margin-top:6px;">🎯 '+e.goal+'</div>':'')+
       '<div style="margin-top:10px;text-align:left;"><button class="btn-danger" onclick="deleteJournal(\''+e._key+'\')">🗑️ حذف</button></div>'+
     '</div>';
   });
@@ -1538,6 +1562,138 @@ window.shareReport = function() {
     navigator.share({ title:'تقرير محفظتي', text:text }).catch(function(){});
   } else {
     navigator.clipboard.writeText(text).then(function(){ showToast('✅ تم النسخ — الصق في أي مكان'); });
+  }
+};
+
+// ===== AI RECOMMENDATION =====
+var CLAUDE_API_KEY = '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';
+
+window.getAIRecommendation = async function() {
+  if (!lastAnalysis) { showToast('⚠️ حلل سهم الأول'); return; }
+  var btn = document.querySelector('#ai-result button');
+  if (btn) { btn.textContent = '⏳ جاري التحليل...'; btn.disabled = true; }
+
+  var prompt = `أنت مستشار استثماري متخصص في البورصة المصرية. بناءً على البيانات التالية، قدم توصية استثمارية عملية ومفصلة باللغة العربية:
+
+السهم: ${lastAnalysis.symbol} - ${lastAnalysis.name}
+السعر الحالي: ${lastAnalysis.price} جنيه
+أعلى سعر سنوي: ${lastAnalysis.high} جنيه
+أدنى سعر سنوي: ${lastAnalysis.low} جنيه
+العائد على 5 سنين: ${lastAnalysis.fiveY}%
+متوافق مع الشريعة: ${lastAnalysis.sharia === 'yes' ? 'نعم' : lastAnalysis.sharia === 'no' ? 'لا' : 'غير محدد'}
+المبلغ المتاح: ${lastAnalysis.budget} جنيه
+
+قدم الرد في هذا الشكل بالضبط:
+
+🎯 التوصية: [شراء الآن / انتظر تصحيح / تجنب]
+
+📊 التقييم:
+[جملتين عن وضع السهم]
+
+💰 خطة الشراء (بناءً على ${lastAnalysis.budget} جنيه):
+المرحلة 1 — [السعر]: اشتري [عدد] أسهم بـ [المبلغ] جنيه
+المرحلة 2 — لو نزل [السعر]: اشتري [عدد] أسهم بـ [المبلغ] جنيه  
+المرحلة 3 — لو نزل [السعر]: اشتري [عدد] أسهم بـ [المبلغ] جنيه
+
+🎯 هدف الربح: [السعر] جنيه (+[النسبة]%)
+🛑 وقف الخسارة: [السعر] جنيه (-[النسبة]%)
+
+⚠️ أهم مخاطرة: [جملة واحدة]`;
+
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await response.json();
+    var text = data.content?.[0]?.text || 'مش قادر أحلل دلوقتي';
+
+    document.getElementById('ai-result').innerHTML =
+      '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:14px;">' +
+        '<div style="font-size:11px;color:#8b5cf6;font-weight:700;margin-bottom:8px;">🤖 Claude AI</div>' +
+        '<div style="font-size:13px;color:var(--white);line-height:1.8;">' + text.replace(/\n/g, '<br>') + '</div>' +
+        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ هذا رأي استرشادي — القرار النهائي ليك أنت</div>' +
+      '</div>';
+
+    // حفظ التوصية تلقائياً في اليوميات
+    try {
+      var journalRef = ref(db, 'journal');
+      var newRef = push(journalRef);
+      await set(newRef, {
+        symbol: lastAnalysis.symbol,
+        decision: 'watch',
+        price: lastAnalysis.price,
+        reason: '🤖 توصية AI:\n' + text,
+        goal: 'تحليل آلي بالذكاء الاصطناعي',
+        date: new Date().toLocaleDateString('ar-EG'),
+        time: new Date().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}),
+        isAI: true
+      });
+      showToast('✅ التوصية اتحفظت في اليوميات');
+    } catch(e) {
+      console.log('Could not save to journal:', e);
+    }
+  } catch(e) {
+    document.getElementById('ai-result').innerHTML =
+      '<div style="color:var(--red);font-size:13px;">❌ خطأ في الاتصال — جرب تاني</div>';
+  }
+};
+
+// ===== STOCK NEWS =====
+window.getStockNews = async function() {
+  if (!lastAnalysis) { showToast('⚠️ حلل سهم الأول'); return; }
+  var btn = document.querySelector('#news-result button');
+  if (btn) { btn.textContent = '⏳ جاري البحث...'; btn.disabled = true; }
+
+  var companyName = lastAnalysis.name || lastAnalysis.symbol;
+  var prompt = `ابحث عن آخر 3-4 أخبار مهمة عن شركة "${companyName}" (${lastAnalysis.symbol}) في البورصة المصرية.
+
+إذا لم تكن عندك أخبار حديثة، اذكر معلومات عامة مفيدة عن الشركة وقطاعها.
+
+الرد يكون باللغة العربية في هذا الشكل فقط:
+📰 خبر 1: [العنوان]
+📰 خبر 2: [العنوان]
+📰 خبر 3: [العنوان]
+
+ثم سطر: 💡 ملاحظة: [جملة مفيدة عن وضع الشركة]`;
+
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 400,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await response.json();
+    var text = data.content?.[0]?.text || 'مش قادر أجيب أخبار دلوقتي';
+
+    document.getElementById('news-result').innerHTML =
+      '<div style="background:var(--navy-light);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);padding:14px;">' +
+        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">📰 ' + (lastAnalysis.name || lastAnalysis.symbol) + '</div>' +
+        '<div style="font-size:13px;color:var(--white);line-height:2;">' + text.replace(/\n/g, '<br>') + '</div>' +
+        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ المعلومات من Claude AI — تحقق من المصادر الرسمية</div>' +
+      '</div>';
+  } catch(e) {
+    document.getElementById('news-result').innerHTML =
+      '<div style="color:var(--red);font-size:13px;">❌ خطأ في الاتصال — جرب تاني</div>';
   }
 };
 
