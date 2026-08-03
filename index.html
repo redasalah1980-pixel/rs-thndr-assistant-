@@ -2286,12 +2286,12 @@ window.renderReport = function() {
 
   // Journal
   html += '<div class="report-section">'+
-    '<div class="report-section-title">📓 قراراتك</div>'+
-    '<div class="report-grid">'+
-      '<div class="report-item"><div class="report-item-val">'+journal.length+'</div><div class="report-item-lbl">قرار سجلته</div></div>'+
-      '<div class="report-item"><div class="report-item-val green">'+buyCount+'</div><div class="report-item-lbl">شراء</div></div>'+
-      '<div class="report-item"><div class="report-item-val red">'+sellCount+'</div><div class="report-item-lbl">بيع</div></div>'+
-      '<div class="report-item"><div class="report-item-val orange">'+watchCount+'</div><div class="report-item-lbl">مراقبة</div></div>'+
+    '<div class="report-section-title">📓 قراراتك <span style="font-size:10px;color:var(--gray);font-weight:400;">← اضغط لعرض التفاصيل</span></div>'+
+    '<div class="report-grid" onclick="switchReportTab(\'journal\')" style="cursor:pointer;">'+
+      '<div class="report-item" style="border:1px solid rgba(201,168,76,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(201,168,76,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val">'+journal.length+'</div><div class="report-item-lbl">قرار سجلته</div></div>'+
+      '<div class="report-item" style="border:1px solid rgba(34,197,94,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(34,197,94,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val green">'+buyCount+'</div><div class="report-item-lbl">شراء</div></div>'+
+      '<div class="report-item" style="border:1px solid rgba(239,68,68,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(239,68,68,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val red">'+sellCount+'</div><div class="report-item-lbl">بيع</div></div>'+
+      '<div class="report-item" style="border:1px solid rgba(245,158,11,0.2);transition:background 0.2s;" onmouseover="this.style.background=\'rgba(245,158,11,0.08)\'" onmouseout="this.style.background=\'\'"><div class="report-item-val orange">'+watchCount+'</div><div class="report-item-lbl">مراقبة</div></div>'+
     '</div>'+
   '</div>';
 
