@@ -9,7 +9,7 @@
   :root {
     --navy: #0a1628; --navy-mid: #112240; --navy-light: #1a3458;
     --gold: #c9a84c; --gold-light: #e8c97a; --gold-dim: #8a6f2e;
-    --white: #f0f4ff; --gray: #8899aa;
+    --white: #ffffff; --gray: #a0b0c0;
     --green: #22c55e; --red: #ef4444; --orange: #f59e0b;
     --radius: 16px; --radius-sm: 10px;
   }
@@ -37,12 +37,12 @@
   .card { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius); padding:18px; margin-bottom:14px; }
   .card-title { font-size:14px; font-weight:700; color:var(--gold); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
   .input-group { margin-bottom:12px; }
-  .input-label { font-size:12px; color:var(--gray); margin-bottom:6px; display:block; }
-  .input-field { width:100%; padding:13px 14px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:var(--radius-sm); color:var(--white); font-family:'Cairo',sans-serif; font-size:15px; outline:none; transition:border 0.2s; }
-  .input-field:focus { border-color:var(--gold); }
-  .input-field::placeholder { color:var(--gray); font-size:13px; }
+  .input-label { font-size:12px; color:#c0cfe0; margin-bottom:6px; display:block; font-weight:600; }
+  .input-field { width:100%; padding:13px 14px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:var(--radius-sm); color:#ffffff; font-family:'Cairo',sans-serif; font-size:15px; font-weight:600; outline:none; transition:border 0.2s; }
+  .input-field:focus { border-color:var(--gold); box-shadow:0 0 0 2px rgba(201,168,76,0.15); }
+  .input-field::placeholder { color:#6a7f94; font-size:13px; font-weight:400; }
   select.input-field { cursor:pointer; }
-  select.input-field option { background:var(--navy-mid); }
+  select.input-field option { background:var(--navy-mid); color:#ffffff; }
   .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; border-radius:var(--radius-sm); color:var(--navy); font-family:'Cairo',sans-serif; font-size:16px; font-weight:900; cursor:pointer; transition:opacity 0.2s; margin-top:4px; }
   .btn-primary:active { opacity:0.85; }
   .btn-secondary { padding:10px 18px; background:transparent; border:1px solid var(--gold-dim); border-radius:var(--radius-sm); color:var(--gold); font-family:'Cairo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; }
@@ -55,8 +55,8 @@
   .score-avoid { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
   .info-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; }
   .info-row:last-child { border-bottom:none; }
-  .info-label { color:var(--gray); }
-  .info-value { font-weight:700; color:var(--white); }
+  .info-label { color:#a0b8cc; }
+  .info-value { font-weight:700; color:#ffffff; }
   .info-value.green { color:var(--green); }
   .info-value.red { color:var(--red); }
   .info-value.gold { color:var(--gold); }
