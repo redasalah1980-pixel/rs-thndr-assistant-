@@ -1573,36 +1573,45 @@ window.searchStocks = function(query, prefix) {
 };
 
 window.selectStock = function(symbol, name, prefix) {
-  document.getElementById(prefix+'-symbol').value = symbol;
-  document.getElementById(prefix+'-results').classList.add('search-hidden');
-  if (prefix === 'a') document.getElementById('a-name').value = name;
-  if (prefix === 'm') document.getElementById('m-name').value = name;
-  if (prefix === 'w') document.getElementById('w-name').value = name;
+  var inputEl = document.getElementById(prefix+'-symbol') || document.getElementById(prefix === 'sh' ? 'sharia-search' : prefix+'-symbol');
+  if (inputEl) inputEl.value = prefix === 'sh' ? symbol + ' — ' + name : symbol;
+  var resultsEl = document.getElementById(prefix+'-results');
+  if (resultsEl) resultsEl.classList.add('search-hidden');
+  if (prefix === 'a') { var n = document.getElementById('a-name'); if(n) n.value = name; }
+  if (prefix === 'm') { var n2 = document.getElementById('m-name'); if(n2) n2.value = name; }
+  if (prefix === 'w') { var n3 = document.getElementById('w-name'); if(n3) n3.value = name; }
   if (prefix === 'sh') {
-    document.getElementById('sharia-search').value = symbol + ' — ' + name;
-    // فتح kasheif مباشرة
-    checkSharia(symbol);
+    checkSharia(symbol, name);
+  } else {
+    showToast('✅ تم اختيار ' + symbol);
   }
-  if (prefix !== 'sh') showToast('✅ تم اختيار ' + symbol);
 };
 
-window.checkSharia = function(symbolParam) {
+window.checkSharia = function(symbolParam, nameParam) {
   var input = document.getElementById('sharia-search');
-  var symbol = symbolParam || (input ? input.value.split(' — ')[0].trim().toUpperCase() : '');
-  if (!symbol) { showToast('⚠️ ابحث عن السهم الأول'); return; }
+  var raw = symbolParam || (input ? input.value.split(' — ')[0].trim().toUpperCase() : '');
+  var name = nameParam || raw;
+  if (!raw) { showToast('⚠️ ابحث عن السهم الأول'); return; }
+
+  // استخدام البحث في kasheif بدل رابط مباشر
+  var searchQuery = encodeURIComponent(raw);
+  var kasheifUrl = 'https://www.kasheif.com/search?q=' + searchQuery;
 
   var resultDiv = document.getElementById('sharia-result');
   resultDiv.style.display = 'block';
   resultDiv.innerHTML =
     '<div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:var(--radius-sm);padding:12px;">' +
-      '<div style="font-size:13px;color:var(--white);margin-bottom:10px;">🔍 للتحقق من <strong style="color:var(--green);">' + symbol + '</strong> — اضغط الرابط:</div>' +
-      '<a href="https://www.kasheif.com/stocks/' + symbol + '" target="_blank" style="text-decoration:none;">' +
-        '<div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">' +
-          '<span style="font-size:13px;font-weight:700;color:var(--green);">☪️ kasheif.com — ' + symbol + '</span>' +
-          '<span style="font-size:18px;">🔗</span>' +
+      '<div style="font-size:13px;color:var(--white);margin-bottom:10px;">🔍 تحقق من <strong style="color:var(--green);">' + raw + '</strong> على kasheif:</div>' +
+      '<a href="' + kasheifUrl + '" target="_blank" style="text-decoration:none;">' +
+        '<div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">' +
+          '<div>' +
+            '<div style="font-size:13px;font-weight:700;color:var(--green);">☪️ ابحث عن ' + raw + ' في kasheif</div>' +
+            '<div style="font-size:11px;color:var(--gray);margin-top:3px;">' + name + '</div>' +
+          '</div>' +
+          '<span style="font-size:20px;">🔗</span>' +
         '</div>' +
       '</a>' +
-      '<div style="font-size:11px;color:var(--gray);margin-top:8px;">بيفتح الموقع في تاب جديد ويورييك حكم الشريعة مباشرة</div>' +
+      '<div style="font-size:11px;color:var(--gray);margin-top:8px;">⚠️ لو السهم مش ظاهر — ابحث باسمه بالعربي في kasheif.com</div>' +
     '</div>';
 };
 
