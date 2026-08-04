@@ -1511,67 +1511,164 @@ function checkOnboarding() {
 
 checkLogin();
 var EGX_STOCKS = [
+  // البنوك
   {symbol:'COMI',name:'البنك التجاري الدولي CIB'},
   {symbol:'ADIB',name:'مصرف أبو ظبي الإسلامي مصر'},
+  {symbol:'NSGB',name:'بنك قطر الوطني الأهلي QNB'},
+  {symbol:'CIEB',name:'سي آي كابيتال القابضة'},
+  {symbol:'MFPC',name:'المصرية للمنتجات الكيماوية'},
+
+  // العقارات
   {symbol:'TMGH',name:'مجموعة طلعت مصطفى القابضة'},
   {symbol:'PHDC',name:'بالم هيلز للتعمير'},
   {symbol:'EMFD',name:'إعمار مصر للتطوير'},
   {symbol:'MNHD',name:'مدينة نصر للإسكان والتعمير'},
   {symbol:'OCDI',name:'أوراسكوم للتنمية'},
+  {symbol:'HELI',name:'هيليوبوليس للإسكان والتعمير'},
+  {symbol:'EHDR',name:'الأهلي للتطوير العقاري'},
+  {symbol:'AMER',name:'أمر جروب للإسكان'},
+
+  // الصناعة والكيماويات
   {symbol:'SWDY',name:'السويدي إليكتريك'},
-  {symbol:'EAST',name:'الشرقية إيسترن كومباني'},
+  {symbol:'ALCN',name:'الكابلات المصرية'},
+  {symbol:'SVCE',name:'سيماف للصناعات الهندسية'},
+  {symbol:'SKPC',name:'سيدي كرير للبتروكيماويات'},
+  {symbol:'MFPC',name:'المصرية للمنتجات الكيماوية'},
+  {symbol:'ELKA',name:'الكيماويات العربية'},
+
+  // الغذاء والمشروبات
   {symbol:'JUFO',name:'جهينة للصناعات الغذائية'},
   {symbol:'EDITA',name:'إيديتا للصناعات الغذائية'},
-  {symbol:'SKPC',name:'سيدي كرير للبتروكيماويات'},
-  {symbol:'ORWE',name:'النساجون الشرقيون'},
-  {symbol:'RAYA',name:'راية القابضة للاستثمارات المالية'},
-  {symbol:'FWRY',name:'فوري للتكنولوجيا'},
-  {symbol:'VFCO',name:'فودافون مصر'},
-  {symbol:'ORAN',name:'أورنج مصر'},
-  {symbol:'ETEL',name:'المصرية للاتصالات'},
-  {symbol:'ESRS',name:'عز الدخيلة'},
-  {symbol:'IRON',name:'حديد عز'},
-  {symbol:'NSGB',name:'بنك قطر الوطني الأهلي'},
-  {symbol:'ABUK',name:'أبو قير للأسمدة'},
+  {symbol:'DOMN',name:'دومتي للألبان والعصائر'},
+  {symbol:'POUL',name:'كايرو للدواجن'},
+  {symbol:'SUGR',name:'مصر للسكر والصناعات التكاملية'},
+  {symbol:'HFMZ',name:'حافظ للغذاء'},
+
+  // الأدوية والرعاية الصحية
   {symbol:'ISPH',name:'ابن سينا فارما'},
   {symbol:'EIPICO',name:'إيبيكو للأدوية'},
-  {symbol:'POUL',name:'كايرو للدواجن'},
-  {symbol:'SUGR',name:'مصر للسكر'},
-  {symbol:'TYCN',name:'تايكون'},
-  {symbol:'DLTA',name:'الدلتا للتأمين'},
-  {symbol:'MISR',name:'مصر للتأمين'},
-  {symbol:'BLTC',name:'بلتون المالية القابضة'},
-  {symbol:'EFGD',name:'إي إف جي هيرميس'},
-  {symbol:'ETRS',name:'المصرية لخدمات النقل'},
-  {symbol:'SVCE',name:'سيماف للصناعات الهندسية'},
-  {symbol:'DOMN',name:'دومتي'},
+  {symbol:'PHAR',name:'مصر للأدوية'},
+  {symbol:'BIOC',name:'جلاكسو سميث كلاين — بيوكيم'},
+  {symbol:'AMRK',name:'أمريكان ميديكال سنتر'},
+  {symbol:'SPMD',name:'صن فارما مصر'},
+
+  // الاتصالات والتكنولوجيا
+  {symbol:'VFCO',name:'فودافون مصر للاتصالات'},
+  {symbol:'ORAN',name:'أورنج مصر للاتصالات'},
+  {symbol:'ETEL',name:'المصرية للاتصالات'},
+  {symbol:'FWRY',name:'فوري للتكنولوجيا والمدفوعات'},
+  {symbol:'RAYA',name:'راية القابضة للاستثمارات المالية'},
+  {symbol:'ACGC',name:'القاهرة للاتصالات'},
+
+  // البترول والطاقة
   {symbol:'GTHE',name:'جنوب الوادي للبترول'},
-  {symbol:'ALCN',name:'الكابلات المصرية'},
-  {symbol:'AMOC',name:'أنابيب البترول'},
-  {symbol:'EKHO',name:'إيكو للمشروبات'},
+  {symbol:'AMOC',name:'أنابيب البترول المصرية'},
+  {symbol:'GASC',name:'شركة مصر للغازات'},
+
+  // الحديد والصلب
+  {symbol:'ESRS',name:'عز الدخيلة للصلب'},
+  {symbol:'IRON',name:'حديد عز'},
+
+  // التأمين
+  {symbol:'MISR',name:'مصر للتأمين'},
+  {symbol:'DLTA',name:'الدلتا للتأمين'},
+  {symbol:'MNHD',name:'مدينة نصر للإسكان'},
+
+  // النسيج والملابس
+  {symbol:'ORWE',name:'النساجون الشرقيون للسجاد'},
+  {symbol:'PRTM',name:'بريما للغزل والنسيج'},
+
+  // الأسمدة والزراعة
+  {symbol:'ABUK',name:'أبو قير للأسمدة والصناعات الكيماوية'},
+
+  // التبغ
+  {symbol:'EAST',name:'الشرقية إيسترن كومباني للتبغ'},
+
+  // السياحة والفنادق
   {symbol:'EGTS',name:'مصر للسياحة'},
-  {symbol:'MFPC',name:'المصرية للمنتجات الكيماوية'},
+  {symbol:'EGCH',name:'القاهرة للفنادق والسياحة'},
+
+  // المالية والاستثمار
+  {symbol:'EFGD',name:'إي إف جي هيرميس القابضة'},
+  {symbol:'BLTC',name:'بلتون المالية القابضة'},
   {symbol:'CIVC',name:'سيتي كورب فينتشرز'},
+
+  // النقل واللوجستيات
+  {symbol:'ETRS',name:'المصرية لخدمات النقل'},
+  {symbol:'SCOM',name:'إسكندرية للحاويات والشحن'},
+
+  // متنوع
+  {symbol:'TYCN',name:'تايكون للاستثمار'},
+  {symbol:'EKHO',name:'إيكو للمشروبات'},
+  {symbol:'MTIE',name:'مصر لتأجير المعدات'},
 ];
+
+// ===== SMART STOCK SEARCH =====
+var TWELVE_KEY = 'de22aa3525b84767985c65db7b46b33d';
+var searchTimeout = null;
 
 window.searchStocks = function(query, prefix) {
   var resultsEl = document.getElementById(prefix+'-results');
-  if (!query || query.length < 1) { resultsEl.classList.add('search-hidden'); return; }
+  if (!query || query.length < 2) {
+    resultsEl.classList.add('search-hidden');
+    return;
+  }
+
+  // أولاً — ابحث في القائمة المحلية
   var q = query.toLowerCase();
-  var matches = EGX_STOCKS.filter(function(s) {
+  var localMatches = EGX_STOCKS.filter(function(s) {
     return s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q);
-  }).slice(0, 8);
-  if (matches.length === 0) { resultsEl.classList.add('search-hidden'); return; }
+  }).slice(0, 5);
+
+  // اعرض النتائج المحلية فوراً
+  if (localMatches.length > 0) {
+    renderSearchResults(localMatches, prefix, resultsEl);
+  }
+
+  // ثانياً — ابحث في Twelve Data بعد توقف قصير
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(async function() {
+    try {
+      var response = await fetch(
+        'https://api.twelvedata.com/symbol_search?symbol=' + encodeURIComponent(query) + '&exchange=XCAI&outputsize=10&apikey=' + TWELVE_KEY
+      );
+      var data = await response.json();
+
+      if (data.data && data.data.length > 0) {
+        var apiMatches = data.data.map(function(s) {
+          return { symbol: s.symbol, name: s.instrument_name || s.symbol };
+        });
+
+        // دمج النتائج المحلية مع API بدون تكرار
+        var allSymbols = localMatches.map(function(s){ return s.symbol; });
+        var newMatches = apiMatches.filter(function(s){
+          return !allSymbols.includes(s.symbol);
+        });
+
+        var combined = localMatches.concat(newMatches).slice(0, 8);
+        renderSearchResults(combined, prefix, resultsEl);
+      }
+    } catch(e) {
+      // لو فشل API — النتائج المحلية كافية
+    }
+  }, 500);
+};
+
+function renderSearchResults(matches, prefix, resultsEl) {
+  if (matches.length === 0) {
+    resultsEl.classList.add('search-hidden');
+    return;
+  }
   var html = '';
   matches.forEach(function(s) {
-    html += '<div class="search-item" onclick="selectStock(\''+s.symbol+'\',\''+s.name+'\',\''+prefix+'\')">' +
+    html += '<div class="search-item" onclick="selectStock(\''+s.symbol+'\',\''+s.name.replace(/'/g,"\\'") +'\',\''+prefix+'\')">' +
       '<span class="search-name">'+s.name+'</span>' +
       '<span class="search-symbol">'+s.symbol+'</span>' +
     '</div>';
   });
   resultsEl.innerHTML = html;
   resultsEl.classList.remove('search-hidden');
-};
+}
 
 window.selectStock = function(symbol, name, prefix) {
   var inputEl = document.getElementById(prefix+'-symbol') || document.getElementById(prefix === 'sh' ? 'sharia-search' : prefix+'-symbol');
