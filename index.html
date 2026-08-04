@@ -410,10 +410,11 @@
       <div class="card-title" style="color:var(--green);">☪️ تحقق سريع من الشريعة</div>
       <div style="font-size:12px;color:var(--gray);margin-bottom:12px;">بدون ما تدخل بيانات — ابحث واعرف فوراً</div>
       <div style="display:flex;gap:8px;">
-        <div class="search-wrapper" style="flex:1;">
+        <div class="search-wrapper" style="flex:1;position:relative;">
           <input type="text" class="input-field" id="sharia-search" placeholder="ابحث عن السهم..." oninput="searchStocks(this.value,'sh')" autocomplete="off">
           <div class="search-results search-hidden" id="sh-results"></div>
         </div>
+        <button onclick="clearShariaSearch()" style="padding:13px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red);font-size:16px;cursor:pointer;">✕</button>
         <button onclick="checkSharia()" style="padding:13px 16px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-sm);color:var(--green);font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">☪️ تحقق</button>
       </div>
       <div id="sharia-result" style="display:none;margin-top:10px;"></div>
@@ -1587,15 +1588,20 @@ window.selectStock = function(symbol, name, prefix) {
   }
 };
 
+window.clearShariaSearch = function() {
+  document.getElementById('sharia-search').value = '';
+  document.getElementById('sh-results').classList.add('search-hidden');
+  document.getElementById('sharia-result').style.display = 'none';
+};
+
 window.checkSharia = function(symbolParam, nameParam) {
   var input = document.getElementById('sharia-search');
   var raw = symbolParam || (input ? input.value.split(' — ')[0].trim().toUpperCase() : '');
   var name = nameParam || raw;
   if (!raw) { showToast('⚠️ ابحث عن السهم الأول'); return; }
 
-  // استخدام البحث في kasheif بدل رابط مباشر
-  var searchQuery = encodeURIComponent(raw);
-  var kasheifUrl = 'https://www.kasheif.com/search?q=' + searchQuery;
+  // رابط البحث الصح في kasheif
+  var kasheifUrl = 'https://kasheif.com/?s=' + encodeURIComponent(raw);
 
   var resultDiv = document.getElementById('sharia-result');
   resultDiv.style.display = 'block';
@@ -1611,7 +1617,7 @@ window.checkSharia = function(symbolParam, nameParam) {
           '<span style="font-size:20px;">🔗</span>' +
         '</div>' +
       '</a>' +
-      '<div style="font-size:11px;color:var(--gray);margin-top:8px;">⚠️ لو السهم مش ظاهر — ابحث باسمه بالعربي في kasheif.com</div>' +
+      '<div style="font-size:11px;color:var(--gray);margin-top:8px;">لو مش لاقيه — ابحث باسمه بالعربي في kasheif.com مباشرة</div>' +
     '</div>';
 };
 
