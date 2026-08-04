@@ -1904,7 +1904,12 @@ window.analyzeStock = function() {
   var shariaHTML='';
   if(sharia==='yes') shariaHTML='<div class="tag green">✅ متوافق مع الشريعة</div>';
   else if(sharia==='no') shariaHTML='<div class="tag red">❌ غير متوافق — راجع قرارك</div>';
-  else if(sharia==='check') shariaHTML='<div class="tag">⚠️ تحقق من kasheif.com</div>';
+  else if(sharia==='check') {
+    var kasheifUrl = 'https://www.kasheif.com/stocks/' + symbol;
+    shariaHTML = '<a href="'+kasheifUrl+'" target="_blank" style="text-decoration:none;">' +
+      '<div class="tag" style="cursor:pointer;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--orange);">⚠️ تحقق من kasheif.com — اضغط هنا 🔗</div>' +
+    '</a>';
+  }
   document.getElementById('result-score-badge').innerHTML='<div class="score-badge '+scoreClass+'">'+score+'</div><div style="font-size:13px;color:var(--gray);margin-bottom:12px;">'+symbol+' — '+(name||'السهم')+'</div>';
   document.getElementById('result-position').innerHTML='<div class="info-row"><span class="info-label">السعر الحالي</span><span class="info-value gold">'+price.toFixed(2)+' ج.م</span></div><div class="info-row"><span class="info-label">أعلى سنوياً</span><span class="info-value">'+high.toFixed(2)+'</span></div><div class="info-row"><span class="info-label">أدنى سنوياً</span><span class="info-value">'+low.toFixed(2)+'</span></div><div class="info-row"><span class="info-label">عائد 5 سنين</span><span class="info-value green">+'+(fiveY||'—')+'%</span></div><div class="info-row"><span class="info-label">الموقف</span><span class="info-value orange">'+posText+'</span></div>';
   document.getElementById('result-strategy').innerHTML='<div class="strategy-step"><div class="step-num step-1">1</div><div class="step-info"><div class="step-label">الشراء الأول — دلوقتي</div><div class="step-price">'+buy1.toFixed(2)+' ج.م</div><div class="step-shares">'+s1+' سهم ≈ '+(budget?Math.round(budget*0.33):'—')+' ج.م</div></div></div><div class="strategy-step"><div class="step-num step-2">2</div><div class="step-info"><div class="step-label">الشراء الثاني — لو نزل 10%</div><div class="step-price">'+buy2.toFixed(2)+' ج.م</div><div class="step-shares">'+s2+' سهم</div></div></div><div class="strategy-step"><div class="step-num step-3">3</div><div class="step-info"><div class="step-label">الشراء الثالث — لو نزل 20%</div><div class="step-price">'+buy3.toFixed(2)+' ج.م</div><div class="step-shares">'+s3+' سهم</div></div></div>';
@@ -3074,6 +3079,7 @@ function getExtraData() {
 // Clear Analysis
 window.clearAnalysis = function() {
   document.getElementById('analyze-result').classList.add('result-hidden');
+  // البيانات الأساسية
   document.getElementById('a-symbol').value = '';
   document.getElementById('a-name').value = '';
   document.getElementById('a-price').value = '';
@@ -3082,9 +3088,24 @@ window.clearAnalysis = function() {
   document.getElementById('a-5y').value = '';
   document.getElementById('a-sharia').value = '';
   document.getElementById('a-budget').value = '';
+  // البيانات الإضافية
+  var extraFields = ['a-open','a-prev-close','a-day-high','a-day-low','a-volume','a-avg-volume','a-buy-vol','a-sell-vol','a-pe','a-eps','a-dividend'];
+  extraFields.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  // إغلاق قسم البيانات الإضافية
+  var extraSection = document.getElementById('extra-data-section');
+  var extraIcon = document.getElementById('extra-toggle-icon');
+  if (extraSection) extraSection.style.display = 'none';
+  if (extraIcon) extraIcon.textContent = '＋';
+  // إعادة تعيين AI والأخبار
   document.getElementById('ai-result').innerHTML = '<button class="btn-primary" onclick="getAIRecommendation()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">🤖 اطلب توصية AI</button>';
   document.getElementById('news-result').innerHTML = '<button class="btn-secondary" onclick="getStockNews()" style="width:100%;">📰 جيب أحدث الأخبار</button>';
   lastAnalysis = null;
+  window._lastAIText = null;
+  window._lastCorrectionPrice = null;
+  window._lastTargetPrice = null;
   showToast('✅ تم المسح');
 };
 
