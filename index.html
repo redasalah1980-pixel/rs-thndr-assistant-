@@ -1228,7 +1228,9 @@ const portfolioRef = ref(db, 'portfolio');
 onValue(portfolioRef, (snap) => {
   var data = snap.val();
   window._portfolio = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})) : [];
-  renderPortfolio();
+  setTimeout(function() {
+    if (typeof window.renderPortfolio === 'function') window.renderPortfolio();
+  }, 100);
 });
 
 // Listen journal realtime
@@ -1236,7 +1238,9 @@ const journalRef = ref(db, 'journal');
 onValue(journalRef, (snap) => {
   var data = snap.val();
   window._journal = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})).reverse() : [];
-  renderJournal();
+  setTimeout(function() {
+    if (typeof window.renderJournal === 'function') window.renderJournal();
+  }, 100);
 });
 
 // Listen gold portfolio
@@ -1244,12 +1248,15 @@ const goldRef = ref(db, 'gold_portfolio');
 window.goldRef = goldRef;
 onValue(goldRef, (snap) => {
   window._goldData = snap.val() || null;
-  if (document.getElementById('section-gold-port')?.style.display === 'block') {
-    renderGoldPortfolio();
-  }
+  setTimeout(function() {
+    var sec = document.getElementById('section-gold-port');
+    if (sec && sec.style.display !== 'none' && typeof window.renderGoldPortfolio === 'function') {
+      window.renderGoldPortfolio();
+    }
+  }, 100);
 });
 
-// Listen watchlist realtime — داخل الـ module عشان ref و onValue متاحين
+// Listen watchlist realtime
 const watchlistRef = ref(db, 'watchlist');
 window.watchlistRef = watchlistRef;
 window._fbPush = push;
@@ -1261,14 +1268,9 @@ onValue(watchlistRef, (snap) => {
   var data = snap.val();
   window._watchlist = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})) : [];
   console.log('Watchlist updated:', window._watchlist.length, 'items');
-
-  // render دايماً في الخلفية
-  if (typeof window.renderWatchlist === 'function') {
-    window.renderWatchlist();
-  }
-
-  // شارة العداد
   setTimeout(function() {
+    if (typeof window.renderWatchlist === 'function') window.renderWatchlist();
+    // شارة العداد
     var badge = document.getElementById('watch-badge');
     if (!badge) {
       var tabBtn = document.getElementById('tab-watchlist');
@@ -1284,7 +1286,7 @@ onValue(watchlistRef, (snap) => {
       badge.textContent = count > 0 ? count : '';
       badge.style.display = count > 0 ? 'inline' : 'none';
     }
-  }, 500);
+  }, 100);
 });
 
 // ADD TO WATCHLIST
@@ -1387,6 +1389,67 @@ window.deleteJournal = function(key) {
 </script>
 
 <script>
+// ===== EARLY DEFINITIONS — لازم تتعرف قبل أي حاجة =====
+window.confirmLogout = function() {
+  if (confirm('هل تريد تسجيل الخروج؟')) {
+    localStorage.removeItem('rs_logged_in');
+    localStorage.removeItem('rs_username');
+    location.reload();
+  }
+};
+
+window.switchAnalyzeTab = function(tab) {
+  var stocks = document.getElementById('section-stocks');
+  var gold = document.getElementById('section-gold');
+  var tabS = document.getElementById('tab-stocks');
+  var tabG = document.getElementById('tab-gold');
+  if (stocks) stocks.style.display = tab==='stocks' ? 'block' : 'none';
+  if (gold) gold.style.display = tab==='gold' ? 'block' : 'none';
+  if (tabS) tabS.classList.toggle('active', tab==='stocks');
+  if (tabG) tabG.classList.toggle('active', tab==='gold');
+};
+
+window.switchPortTab = function(tab) {
+  var sp = document.getElementById('section-portfolio');
+  var sw = document.getElementById('section-watchlist');
+  var sg = document.getElementById('section-gold-port');
+  if (sp) sp.style.display = tab==='portfolio' ? 'block' : 'none';
+  if (sw) sw.style.display = tab==='watchlist' ? 'block' : 'none';
+  if (sg) sg.style.display = tab==='gold-port' ? 'block' : 'none';
+  ['portfolio','watchlist','gold-port'].forEach(function(t) {
+    var btn = document.getElementById('tab-'+t);
+    if (btn) btn.classList.toggle('active', t===tab);
+  });
+  if (tab==='watchlist' && typeof window.renderWatchlist === 'function') window.renderWatchlist();
+  if (tab==='gold-port' && typeof window.renderGoldPortfolio === 'function') window.renderGoldPortfolio();
+};
+
+window.switchReportTab = function(tab) {
+  var sr = document.getElementById('section-report');
+  var sj = document.getElementById('section-journal');
+  if (sr) sr.style.display = tab==='report' ? 'block' : 'none';
+  if (sj) sj.style.display = tab==='journal' ? 'block' : 'none';
+  var tr = document.getElementById('tab-report');
+  var tj = document.getElementById('tab-journal');
+  if (tr) tr.classList.toggle('active', tab==='report');
+  if (tj) tj.classList.toggle('active', tab==='journal');
+  if (tab==='report' && typeof window.renderReport === 'function') window.renderReport();
+  if (tab==='journal' && typeof window.renderJournal === 'function') window.renderJournal();
+};
+
+window.showPage = function(name, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  var page = document.getElementById('page-'+name);
+  if (page) page.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name==='portfolio' && typeof window.renderPortfolio === 'function') window.renderPortfolio();
+  if (name==='report') {
+    if (typeof window.renderReport === 'function') window.renderReport();
+    window.switchReportTab('report');
+  }
+  if (name==='settings' && typeof window.updateSettingsStatus === 'function') window.updateSettingsStatus();
+};
 // ===== TICKER BACKGROUND =====
 function buildTicker() {
   var stocks = [
