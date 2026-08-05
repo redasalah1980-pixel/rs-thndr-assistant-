@@ -139,6 +139,7 @@
   /* Login */
   .login-overlay { position:fixed; inset:0; background:var(--navy); z-index:600; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; overflow:hidden; }
   .login-overlay.show { display:flex; }
+  .login-overlay.show ~ .bottom-nav, .onboarding-overlay.show ~ .bottom-nav { display:none !important; }
   .login-box { width:100%; max-width:360px; position:relative; z-index:2; }
   .login-logo { text-align:center; margin-bottom:28px; }
   .login-logo-icon { width:72px; height:72px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:20px; display:inline-flex; align-items:center; justify-content:center; font-size:32px; font-weight:900; color:var(--navy); margin-bottom:14px; box-shadow:0 8px 32px rgba(201,168,76,0.4); }
