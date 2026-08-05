@@ -3849,17 +3849,45 @@ window.showToast = function(msg){
   t.textContent=msg; t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 2500);
 };
+
+// Build Bottom Nav via JS — after everything loads
+(function buildNav() {
+  var nav = document.createElement('div');
+  nav.style.cssText = 'position:fixed;bottom:0;left:0;right:0;width:100%;background:#112240;border-top:1px solid #8a6f2e;display:flex;z-index:99999;';
+  var pages = [
+    {id:'analyze', icon:'🔍', label:'تحليل'},
+    {id:'portfolio', icon:'💼', label:'محفظتي'},
+    {id:'compare', icon:'📊', label:'مقارنة'},
+    {id:'report', icon:'📈', label:'تقرير'},
+    {id:'settings', icon:'⚙️', label:'إعدادات'}
+  ];
+  pages.forEach(function(p, i) {
+    var btn = document.createElement('button');
+    btn.id = 'navbtn-' + p.id;
+    btn.style.cssText = 'flex:1;padding:10px 4px 12px;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:' + (i===0?'#c9a84c':'#8899aa') + ';font-family:Cairo,sans-serif;';
+    btn.innerHTML = '<span style="font-size:22px">' + p.icon + '</span><span style="font-size:10px;font-weight:600">' + p.label + '</span>';
+    btn.onclick = function() {
+      pages.forEach(function(pp) {
+        var b = document.getElementById('navbtn-' + pp.id);
+        if (b) b.style.color = '#8899aa';
+        var pg = document.getElementById('page-' + pp.id);
+        if (pg) pg.style.display = 'none';
+      });
+      btn.style.color = '#c9a84c';
+      var page = document.getElementById('page-' + p.id);
+      if (page) page.style.display = 'block';
+      if (p.id === 'portfolio' && typeof window.renderPortfolio === 'function') window.renderPortfolio();
+      if (p.id === 'report') { if (typeof window.renderReport === 'function') window.renderReport(); if (typeof window.switchReportTab === 'function') window.switchReportTab('report'); }
+      if (p.id === 'settings' && typeof window.updateSettingsStatus === 'function') window.updateSettingsStatus();
+    };
+    nav.appendChild(btn);
+  });
+  document.body.appendChild(nav);
+  document.body.style.paddingBottom = '70px';
+})();
 </script>
 
 </div><!-- end app-wrapper -->
-
-<div class="bottom-nav">
-  <button class="nav-btn active" onclick="showPage('analyze',this)"><span class="nav-icon">🔍</span><span class="nav-label">تحليل</span></button>
-  <button class="nav-btn" onclick="showPage('portfolio',this)"><span class="nav-icon">💼</span><span class="nav-label">محفظتي</span></button>
-  <button class="nav-btn" onclick="showPage('compare',this)"><span class="nav-icon">📊</span><span class="nav-label">مقارنة</span></button>
-  <button class="nav-btn" onclick="showPage('report',this)"><span class="nav-icon">📈</span><span class="nav-label">تقرير</span></button>
-  <button class="nav-btn" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span><span class="nav-label">إعدادات</span></button>
-</div>
 
 </body>
 </html>
