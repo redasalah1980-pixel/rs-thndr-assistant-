@@ -3241,7 +3241,7 @@ ${extra.volume ? '\n📈 التحليل الفني:\n[تحليل حجم التد
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 2500,
+        max_tokens: 4000,
         tools: [{
           type: 'web_search_20250305',
           name: 'web_search'
@@ -3271,11 +3271,33 @@ ${extra.volume ? '\n📈 التحليل الفني:\n[تحليل حجم التد
     var targetMatch = text.match(/هدف الربح[^:]*:\s*(\d+(?:\.\d+)?)\s*(?:جنيه|ج\.م)/);
     if (targetMatch) targetPrice = parseFloat(targetMatch[1]);
 
-    // استخراج سعر الدخول/التصحيح — نأخذ أول رقم في المراحل
-    var stageMatches = text.match(/المرحلة[^—–-]*[—–-]\s*(?:لو نزل\s*)?(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/g);
-    if (stageMatches && stageMatches.length > 0) {
-      var firstStageNum = stageMatches[0].match(/(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/);
-      if (firstStageNum) correctionPrice = parseFloat(firstStageNum[1]);
+    // استخراج سعر الدخول بطرق متعددة
+    var entryPatterns = [
+      // المرحلة الأولى
+      /المرحلة\s*(?:الأولى|1)[^—–\-\d]*[—–\-]\s*(?:لو نزل\s*)?(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/,
+      // سعر الدخول مباشرة
+      /سعر الدخول[^:]*:\s*(\d+(?:\.\d+)?)\s*(?:جنيه|ج\.م)/,
+      // نقطة الدخول
+      /نقطة الدخول[^:]*:\s*(\d+(?:\.\d+)?)\s*(?:جنيه|ج\.م)/,
+      // اشتري عند
+      /اشتري عند\s*(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/,
+      // الشراء عند
+      /الشراء عند\s*(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/,
+      // الدخول عند
+      /الدخول عند\s*(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/,
+      // أي رقم بعد "المرحلة"
+      /المرحلة[^—–\-]*[—–\-][^(\d]*(\d+(?:\.\d+)?)\s*(?:ج\.م|جنيه)/,
+    ];
+
+    for (var ep of entryPatterns) {
+      var m = text.match(ep);
+      if (m) {
+        var val = parseFloat(m[1]);
+        if (val > 0 && val < lastAnalysis.price * 1.1) {
+          correctionPrice = val;
+          break;
+        }
+      }
     }
 
     // fallback للتصحيح: 10% تحت السعر الحالي
@@ -3702,33 +3724,22 @@ window.addAIToPortfolioAlert = function() {
 };
 
 // ===== ADD AI WATCH ALERT =====
-window.addAIWatchAlert = async function() {
+window.addAIWatchAlert = function() {
   if (!lastAnalysis || !window._lastCorrectionPrice) {
     showToast('⚠️ مفيش بيانات — حلل سهم الأول');
     return;
   }
-  try {
-    var newRef = window._fbPush(window._fbRef('watchlist'));
-    await window._fbSet(newRef, {
-      symbol: lastAnalysis.symbol,
-      name: lastAnalysis.name || '',
-      current: lastAnalysis.price,
-      target: window._lastCorrectionPrice,
-      note: '🤖 مضاف تلقائياً من توصية AI — انتظر التصحيح',
-      date: new Date().toLocaleDateString('ar-EG'),
-      isAI: true
-    });
-    showToast('⭐ تمت الإضافة للمراقبة عند ' + window._lastCorrectionPrice + ' ج.م');
-    var btn = document.querySelector('#ai-result button');
-    if (btn) {
-      btn.textContent = '✅ تمت الإضافة للمراقبة';
-      btn.disabled = true;
-      btn.style.opacity = '0.6';
-    }
-  } catch(e) {
-    console.error('Watch error:', e);
-    showToast('❌ خطأ: ' + (e.message || 'جرب تاني'));
-  }
+  // افتح مودال المراقبة مع السعر المستخرج من AI عشان المستخدم يراجعه
+  var sym = document.getElementById('w-symbol');
+  var name = document.getElementById('w-name');
+  var cur = document.getElementById('w-current');
+  var tar = document.getElementById('w-target');
+  if (sym) sym.value = lastAnalysis.symbol;
+  if (name) name.value = lastAnalysis.name || '';
+  if (cur) cur.value = lastAnalysis.price;
+  if (tar) tar.value = window._lastCorrectionPrice;
+  openAddWatchModal();
+  showToast('✅ راجع سعر الدخول قبل الحفظ');
 };
 
 // ===== STOCK NEWS =====
