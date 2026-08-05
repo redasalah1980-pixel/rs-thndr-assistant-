@@ -1270,24 +1270,74 @@
         <span id="g8-icon" style="color:var(--gold);">＋</span>
       </div>
       <div id="g8" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
-        <strong style="color:var(--gold);">البوت على @RSThndrAssistantBot:</strong><br>
-        <strong style="color:var(--white);">/check</strong> — فحص تنبيهات الأسعار دلوقتي<br>
-        <strong style="color:var(--white);">/summary</strong> — ملخص المحفظة والمراقبة<br>
+        <strong style="color:var(--gold);">البوت: @RSThndrAssistantBot</strong><br><br>
+
+        <strong style="color:var(--gold);">📋 الأوامر:</strong><br>
+        <strong style="color:var(--white);">/check</strong> — فحص التنبيهات دلوقتي<br>
+        <strong style="color:var(--white);">/summary</strong> — ملخص المحفظة والمراقبة والذهب<br>
+        <strong style="color:var(--white);">/portfolio</strong> — تفاصيل كل سهم في المحفظة<br>
+        <strong style="color:var(--white);">/myanalyze</strong> — تحليل كل أسهمك دفعة واحدة<br>
+        <strong style="color:var(--white);">/suggest</strong> — 🤖 AI يوصي لكل سهم عندك<br>
+        <strong style="color:var(--white);">/market</strong> — تحليل السوق المصري بالـ AI<br>
+        <strong style="color:var(--white);">/week</strong> — التقرير الأسبوعي<br>
+        <strong style="color:var(--white);">/learn</strong> — درس استثماري جديد<br>
+        <strong style="color:var(--white);">/gold</strong> — وضع ذهبك مع الربح/الخسارة<br>
+        <strong style="color:var(--white);">/dollar</strong> — سعر الدولار/جنيه دلوقتي<br>
+        <strong style="color:var(--white);">/analyze ADIB</strong> — تحليل سهم معين<br>
         <strong style="color:var(--white);">/status</strong> — حالة البوت<br>
-        <strong style="color:var(--white);">/help</strong> — قائمة الأوامر<br><br>
-        <strong style="color:var(--gold);">البوت بيبعتلك تلقائياً:</strong><br>
-        <strong style="color:var(--white);">🌅 9 ص</strong> — ملخص صباحي قبل فتح البورصة<br>
+        <strong style="color:var(--white);">/help</strong> — قائمة الأوامر كاملة<br><br>
+
+        <strong style="color:var(--gold);">⏰ التلقائي كل يوم:</strong><br>
+        <strong style="color:var(--white);">📚 8 ص</strong> — درس استثماري جديد<br>
+        <strong style="color:var(--white);">🌅 9 ص</strong> — ملخص صباحي + محفظتك<br>
+        <strong style="color:var(--white);">📊 10 ص</strong> — تحليل السوق مع الافتتاح<br>
         <strong style="color:var(--white);">📊 2 ظ</strong> — ملخص إغلاق البورصة<br>
-        <strong style="color:var(--white);">🌙 9 م</strong> — ملخص مسائي ونصائح<br>
+        <strong style="color:var(--white);">🌙 9 م</strong> — ملخص مسائي + توصيات AI<br>
+        <strong style="color:var(--white);">📅 جمعة 6م</strong> — التقرير الأسبوعي<br>
+        <strong style="color:var(--white);">🥇 اثنين 9ص</strong> — تذكير تحديث سعر الذهب<br>
         <strong style="color:var(--white);">🔔 كل ساعة</strong> — فحص التنبيهات تلقائياً
       </div>
 
+      <!-- قسم الذهب -->
+      <div onclick="toggleGuide('g9')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
+        <span style="font-size:13px;font-weight:700;color:var(--white);">🥇 تبويب الذهب</span>
+        <span id="g9-icon" style="color:var(--gold);">＋</span>
+      </div>
+      <div id="g9" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+        <strong style="color:var(--gold);">تتابع ذهبك في ثاندر:</strong><br>
+        <strong style="color:var(--white);">1.</strong> روح <strong style="color:var(--gold);">💼 محفظتي</strong> ← تبويب <strong style="color:var(--gold);">🥇 ذهب</strong><br>
+        <strong style="color:var(--white);">2.</strong> اضغط <strong style="color:var(--gold);">أضف/حدّث ذهبك</strong><br>
+        <strong style="color:var(--white);">3.</strong> ادخل: عدد الجرامات — متوسط سعر الشراء — السعر الحالي من ثاندر<br>
+        <strong style="color:var(--white);">4.</strong> اضغط <strong style="color:var(--gold);">💾 حفظ</strong><br>
+        <strong style="color:var(--white);">5.</strong> اضغط <strong style="color:var(--gold);">🤖 AI ينصحني</strong> — هيجيبلك سعر الذهب العالمي وتوقعات<br><br>
+        <strong style="color:var(--green);">💡 تذكير:</strong> حدّث السعر أسبوعياً من ثاندر عشان الحسابات تبقى صح
+      </div>
+
+      <!-- قسم جديد: توصيات AI -->
+      <div onclick="toggleGuide('g10')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
+        <span style="font-size:13px;font-weight:700;color:#a78bfa;">🤖 توصيات الذكاء الاصطناعي</span>
+        <span id="g10-icon" style="color:#a78bfa;">＋</span>
+      </div>
+      <div id="g10" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+        <strong style="color:#a78bfa;">في التحليل 🔍:</strong><br>
+        <strong style="color:var(--white);">•</strong> بعد التحليل اضغط <strong style="color:var(--gold);">🤖 اطلب توصية AI</strong><br>
+        <strong style="color:var(--white);">•</strong> AI بيبحث في الإنترنت عن أخبار الشركة وP/E ونسبة الديون<br>
+        <strong style="color:var(--white);">•</strong> بيديك خطة شراء بالأرقام بناءً على مبلغك<br>
+        <strong style="color:var(--white);">•</strong> اضغط <strong style="color:var(--gold);">⭐ أضف للمراقبة</strong> لو AI قال انتظر<br>
+        <strong style="color:var(--white);">•</strong> اضغط <strong style="color:var(--gold);">💼 أضف للمحفظة مع تنبيهات</strong> لو اشتريت<br><br>
+
+        <strong style="color:#a78bfa;">في التقرير 📈:</strong><br>
+        <strong style="color:var(--white);">•</strong> اضغط <strong style="color:var(--gold);">🤖 AI يحلل محفظتك</strong><br>
+        <strong style="color:var(--white);">•</strong> بيقارن أداءك بالسوق ويديك توصيات للتحسين<br><br>
+
+        <strong style="color:#a78bfa;">في المراقبة ⭐:</strong><br>
+        <strong style="color:var(--white);">•</strong> لو السهم طلع +10% عن هدفك — هيظهر زرار<br>
+        <strong style="color:var(--white);">•</strong> <strong style="color:var(--gold);">🔄 حدّث التوصية</strong> — AI يحسب خياراتك بالسعر الجديد<br><br>
+
+        <strong style="color:var(--red);">⚠️ مهم:</strong> كل التوصيات استرشادية للتعلم — القرار ليك أنت
+      </div>
+
     </div>
-
-  </div>
-</div>
-
-<!-- Bottom Nav -->
 <div class="bottom-nav">
   <button class="nav-btn active" onclick="showPage('analyze',this)"><span class="nav-icon">🔍</span><span class="nav-label">تحليل</span></button>
   <button class="nav-btn" onclick="showPage('portfolio',this)"><span class="nav-icon">💼</span><span class="nav-label">محفظتي</span></button>
