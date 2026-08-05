@@ -187,7 +187,8 @@
   .report-highlight-val { font-size:14px; font-weight:900; }
   .report-tip { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); border-radius:var(--radius-sm); padding:12px; font-size:13px; color:var(--gray); line-height:1.6; }
   .report-tip strong { color:var(--green); }
-  .btn-share { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; background:rgba(201,168,76,0.1); border:1px solid var(--gold-dim); border-radius:var(--radius-sm); color:var(--gold); font-family:'Cairo',sans-serif; font-size:14px; font-weight:700; cursor:pointer; margin-top:4px; }
+  .term-header { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.12); border-radius:8px; cursor:pointer; margin-bottom:6px; font-size:13px; font-weight:700; color:var(--white); }
+  .term-body { background:var(--navy); border-radius:8px; padding:14px; margin-bottom:8px; font-size:12px; color:var(--gray); line-height:1.9; border:1px solid rgba(255,255,255,0.04); } display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; background:rgba(201,168,76,0.1); border:1px solid var(--gold-dim); border-radius:var(--radius-sm); color:var(--gold); font-family:'Cairo',sans-serif; font-size:14px; font-weight:700; cursor:pointer; margin-top:4px; }
 
   /* Charts */
   .chart-container { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius); padding:16px; margin-bottom:14px; }
@@ -904,6 +905,206 @@
   <div>
     <div class="page-title">⚙️ الإعدادات</div>
     <div class="page-subtitle">إعدادات الأداة والـ API</div>
+
+    <!-- قاموس المصطلحات -->
+    <div class="card">
+      <div class="card-title">📚 قاموس مصطلحات البورصة</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:14px;">اضغط على أي مصطلح لتعرف معناه</div>
+
+      <!-- التداول -->
+      <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px;">⏱️ مصطلحات التداول</div>
+
+      <div onclick="toggleTerm('t1')" class="term-header">
+        <span>T+0 / T+1 / T+2</span><span id="t1-icon">＋</span>
+      </div>
+      <div id="t1" class="term-body" style="display:none;">
+        <strong style="color:var(--gold);">T = Transaction Day (يوم الصفقة)</strong><br><br>
+        <strong style="color:#fff;">T+0:</strong> تقدر تبيع نفس اليوم اللي اشتريت فيه فوراً<br>
+        <strong style="color:#fff;">T+1:</strong> الأسهم بتظهر في محفظتك اليوم التاني<br>
+        <strong style="color:#fff;">T+2:</strong> التسوية الكاملة بتتم بعد يومين<br><br>
+        <span style="color:var(--green);">مثال: اشتريت ADIB النهارده → تقدر تبيعه بكره (T+1)</span>
+      </div>
+
+      <div onclick="toggleTerm('t2')" class="term-header">
+        <span>الحد الأدنى والأقصى للسعر</span><span id="t2-icon">＋</span>
+      </div>
+      <div id="t2" class="term-body" style="display:none;">
+        البورصة المصرية بتحدد <strong style="color:#fff;">نطاق تحرك السهم في اليوم</strong><br><br>
+        <strong style="color:var(--green);">+10%</strong> الحد الأقصى للارتفاع في يوم واحد<br>
+        <strong style="color:var(--red);">-10%</strong> الحد الأدنى للانخفاض في يوم واحد<br><br>
+        <span style="color:var(--gray);">لو السهم وصل الحد — التداول بيتوقف لحين إشعار آخر</span>
+      </div>
+
+      <div onclick="toggleTerm('t3')" class="term-header">
+        <span>الجلسة التمهيدية</span><span id="t3-icon">＋</span>
+      </div>
+      <div id="t3" class="term-body" style="display:none;">
+        فترة قبل فتح البورصة رسمياً <strong style="color:#fff;">(9:30 - 10:00 ص)</strong><br><br>
+        فيها بيتم استقبال الأوامر فقط بدون تنفيذ<br>
+        سعر الافتتاح بيتحدد بناءً على العرض والطلب في الجلسة دي<br><br>
+        <span style="color:var(--gold);">🕙 البورصة بتفتح رسمياً الساعة 10 الصبح</span>
+      </div>
+
+      <div onclick="toggleTerm('t4')" class="term-header">
+        <span>حجم التداول vs قيمة التداول</span><span id="t4-icon">＋</span>
+      </div>
+      <div id="t4" class="term-body" style="display:none;">
+        <strong style="color:#fff;">حجم التداول:</strong> عدد الأسهم اللي اتباعت<br>
+        <strong style="color:#fff;">قيمة التداول:</strong> المبلغ الكلي بالجنيه<br><br>
+        <span style="color:var(--green);">مثال: تداول 1,000 سهم بسعر 50 ج.م</span><br>
+        الحجم = 1,000 سهم<br>
+        القيمة = 50,000 ج.م<br><br>
+        <span style="color:var(--gold);">💡 حجم تداول عالي = اهتمام كبير بالسهم</span>
+      </div>
+
+      <div onclick="toggleTerm('t5')" class="term-header">
+        <span>إجمالي الشراء vs إجمالي البيع</span><span id="t5-icon">＋</span>
+      </div>
+      <div id="t5" class="term-body" style="display:none;">
+        <strong style="color:var(--green);">إجمالي الشراء:</strong> مجموع أوامر الشراء المنتظرة<br>
+        <strong style="color:var(--red);">إجمالي البيع:</strong> مجموع أوامر البيع المنتظرة<br><br>
+        <span style="color:var(--gold);">كيف تقرأها؟</span><br>
+        الشراء > البيع = <span style="color:var(--green);">ضغط شرائي → السهم ممكن يطلع ✅</span><br>
+        البيع > الشراء = <span style="color:var(--red);">ضغط بيعي → السهم ممكن ينزل ⚠️</span>
+      </div>
+
+      <!-- أنواع المتداولين -->
+      <div style="font-size:11px;font-weight:700;color:var(--gold);margin:14px 0 8px;">👥 أنواع المتداولين</div>
+
+      <div onclick="toggleTerm('t6')" class="term-header">
+        <span>مضارب vs مستثمر</span><span id="t6-icon">＋</span>
+      </div>
+      <div id="t6" class="term-body" style="display:none;">
+        <strong style="color:var(--red);">المضارب:</strong><br>
+        بيشتري ويبيع في نفس اليوم أو أيام قليلة<br>
+        هدفه ربح سريع من تذبذب الأسعار<br>
+        مخاطرة عالية جداً<br><br>
+        <strong style="color:var(--green);">المستثمر:</strong><br>
+        بيشتري ويحتفظ لفترة طويلة (شهور أو سنين)<br>
+        هدفه نمو رأس المال + أرباح موزعة<br>
+        مخاطرة أقل بكتير<br><br>
+        <span style="color:var(--gold);">💡 أنت في مرحلة تعلم → المستثمر أأمن ليك</span>
+      </div>
+
+      <div onclick="toggleTerm('t7')" class="term-header">
+        <span>المستثمر المؤسسي</span><span id="t7-icon">＋</span>
+      </div>
+      <div id="t7" class="term-body" style="display:none;">
+        شركات وصناديق بتستثمر مبالغ ضخمة<br>
+        زي: صناديق التقاعد — شركات التأمين — البنوك<br><br>
+        <span style="color:var(--gold);">💡 لما مستثمر مؤسسي كبير يشتري سهم → ده إشارة إيجابية قوية</span><br>
+        <span style="color:var(--gray);">تقدر تشوفه في تقارير البورصة على egx.com.eg</span>
+      </div>
+
+      <!-- التحليل المالي -->
+      <div style="font-size:11px;font-weight:700;color:var(--gold);margin:14px 0 8px;">📊 التحليل المالي</div>
+
+      <div onclick="toggleTerm('t8')" class="term-header">
+        <span>P/E — نسبة السعر للربح</span><span id="t8-icon">＋</span>
+      </div>
+      <div id="t8" class="term-body" style="display:none;">
+        <strong style="color:#fff;">P/E = سعر السهم ÷ ربح السهم السنوي</strong><br><br>
+        <span style="color:var(--green);">P/E منخفض (أقل من 10) = السهم رخيص نسبياً</span><br>
+        <span style="color:var(--orange);">P/E متوسط (10-20) = سعر عادل</span><br>
+        <span style="color:var(--red);">P/E مرتفع (أكتر من 20) = السهم غالي</span><br><br>
+        <span style="color:var(--gold);">مثال: ADIB بـ P/E = 6.33 يعني رخيص مقارنة بالقطاع</span><br><br>
+        <span style="color:var(--gray);">⚠️ مقارن P/E بيكون بين أسهم نفس القطاع بس</span>
+      </div>
+
+      <div onclick="toggleTerm('t9')" class="term-header">
+        <span>EPS — العائد على السهم</span><span id="t9-icon">＋</span>
+      </div>
+      <div id="t9" class="term-body" style="display:none;">
+        <strong style="color:#fff;">EPS = صافي الربح ÷ عدد الأسهم</strong><br><br>
+        يعني كل سهم عنده بيكسب كام جنيه في السنة<br><br>
+        <span style="color:var(--green);">EPS مرتفع ومتزايد = الشركة بتنمو ✅</span><br>
+        <span style="color:var(--red);">EPS منخفض أو بينزل = الشركة بتتراجع ⚠️</span><br><br>
+        <span style="color:var(--gold);">مثال: EPS = 8.40 يعني كل سهم بيكسب 8.40 جنيه سنوياً</span>
+      </div>
+
+      <div onclick="toggleTerm('t10')" class="term-header">
+        <span>الأرباح الموزعة — Dividend</span><span id="t10-icon">＋</span>
+      </div>
+      <div id="t10" class="term-body" style="display:none;">
+        جزء من أرباح الشركة بتوزعه على المساهمين<br><br>
+        <strong style="color:#fff;">العائد التوزيعي = الأرباح ÷ سعر السهم × 100</strong><br><br>
+        <span style="color:var(--green);">مثال: سهم بـ 50 ج.م يوزع 3 ج.م → عائد 6%</span><br><br>
+        <span style="color:var(--gold);">💡 الأرباح الموزعة بتتحسب في العائد الحقيقي للسهم</span><br>
+        <span style="color:var(--gray);">بتتوزع عادة مرة أو مرتين في السنة</span>
+      </div>
+
+      <!-- الاستراتيجيات -->
+      <div style="font-size:11px;font-weight:700;color:var(--gold);margin:14px 0 8px;">🎯 الاستراتيجيات</div>
+
+      <div onclick="toggleTerm('t11')" class="term-header">
+        <span>DCA — الشراء المتدرج</span><span id="t11-icon">＋</span>
+      </div>
+      <div id="t11" class="term-body" style="display:none;">
+        <strong style="color:#fff;">Dollar Cost Averaging</strong><br><br>
+        بدل ما تشتري بكل مبلغك دفعة واحدة —<br>
+        تقسمه على أجزاء وتشتري على فترات<br><br>
+        <span style="color:var(--green);">مثال عملي (500 جنيه):</span><br>
+        الأسبوع 1: اشتري بـ 170 ج.م<br>
+        الأسبوع 2: اشتري بـ 165 ج.م<br>
+        الأسبوع 3: اشتري بـ 165 ج.م<br><br>
+        <span style="color:var(--gold);">✅ الفايدة: بتقلل مخاطرة الشراء في قمة السعر</span>
+      </div>
+
+      <div onclick="toggleTerm('t12')" class="term-header">
+        <span>وقف الخسارة — Stop Loss</span><span id="t12-icon">＋</span>
+      </div>
+      <div id="t12" class="term-body" style="display:none;">
+        سعر محدد تبيع عنده لو السهم نزل — عشان تحمي رأس مالك<br><br>
+        <span style="color:var(--green);">مثال: اشتريت بـ 50 → وقف الخسارة عند 42 (-16%)</span><br>
+        لو وصل 42 → بتبيع فوراً وتوقف الخسارة<br><br>
+        <span style="color:var(--gold);">القاعدة الذهبية: وقف الخسارة بين 10-15% تحت سعر الشراء</span><br><br>
+        <span style="color:var(--gray);">⚠️ المشكلة: السهم ممكن ينزل لوقف خسارتك ويطلع تاني — اصبر لو أساسيات الشركة كويسة</span>
+      </div>
+
+      <div onclick="toggleTerm('t13')" class="term-header">
+        <span>التنويع — Diversification</span><span id="t13-icon">＋</span>
+      </div>
+      <div id="t13" class="term-body" style="display:none;">
+        توزيع استثمارك على أسهم وقطاعات مختلفة<br><br>
+        <span style="color:var(--red);">❌ مش كويس: كل فلوسك في سهم واحد</span><br>
+        <span style="color:var(--green);">✅ كويس: 3-5 أسهم في قطاعات مختلفة</span><br><br>
+        <span style="color:var(--gold);">مثال تنويع مقترح:</span><br>
+        40% بنوك (ADIB/COMI)<br>
+        30% عقارات (TMGH/PHDC)<br>
+        30% صناعة (SWDY/EAST)<br><br>
+        <span style="color:var(--gray);">💡 لو سهم واحد نزل — الباقي بيعوض</span>
+      </div>
+
+      <div onclick="toggleTerm('t14')" class="term-header">
+        <span>التحليل الفني vs الأساسي</span><span id="t14-icon">＋</span>
+      </div>
+      <div id="t14" class="term-body" style="display:none;">
+        <strong style="color:var(--green);">التحليل الأساسي (Fundamental):</strong><br>
+        بيدرس الشركة نفسها — أرباحها وديونها ومستقبلها<br>
+        سؤاله: الشركة دي تستاهل؟<br><br>
+        <strong style="color:var(--orange);">التحليل الفني (Technical):</strong><br>
+        بيدرس الشارت والأسعار التاريخية<br>
+        سؤاله: امتى أشتري وامتى أبيع؟<br><br>
+        <span style="color:var(--gold);">💡 الأفضل: الاتنين مع بعض</span><br>
+        الأساسي يقولك إيه تشتري<br>
+        الفني يقولك امتى تشتري
+      </div>
+
+      <div onclick="toggleTerm('t15')" class="term-header">
+        <span>العائد الحقيقي — Total Return</span><span id="t15-icon">＋</span>
+      </div>
+      <div id="t15" class="term-body" style="display:none;">
+        العائد الكلي من الاستثمار يشمل <strong style="color:#fff;">الاتنين:</strong><br><br>
+        ✅ ارتفاع سعر السهم (Capital Gain)<br>
+        ✅ الأرباح الموزعة (Dividends)<br><br>
+        <span style="color:var(--gold);">مثال:</span><br>
+        اشتريت سهم بـ 100 ج.م<br>
+        السهم طلع لـ 115 ج.م (+15%)<br>
+        وزع 5 ج.م أرباح (+5%)<br>
+        العائد الحقيقي = <span style="color:var(--green);">+20% ✅</span>
+      </div>
+
+    </div>
 
     <!-- Claude API Key -->
     <div class="card">
@@ -3084,7 +3285,19 @@ ${extra.volume ? '\n📈 التحليل الفني:\n[تحليل حجم التد
   }
 };
 
-// Toggle Guide Sections
+// Toggle Term
+window.toggleTerm = function(id) {
+  var body = document.getElementById(id);
+  var icon = document.getElementById(id+'-icon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (icon) icon.textContent = '－';
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.textContent = '＋';
+  }
+};
 window.toggleGuide = function(id) {
   var section = document.getElementById(id);
   var icon = document.getElementById(id+'-icon');
