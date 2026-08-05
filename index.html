@@ -2418,17 +2418,17 @@ function updateMarketStatus() {
 updateMarketStatus();
 setInterval(updateMarketStatus, 60000);
 
-// Navigation
-function showPage(name, btn) {
+// Navigation - handled in early script
+window.showPage = window.showPage || function(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  if(btn) btn.classList.add('active');
-  if(name==='portfolio') renderPortfolio();
-  if(name==='journal') renderJournal();
-  if(name==='report') { renderReport(); switchReportTab('report'); }
-}
-window.showPage = showPage;
+  var page = document.getElementById('page-'+name);
+  if (page) page.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name==='portfolio' && typeof window.renderPortfolio === 'function') window.renderPortfolio();
+  if (name==='report') { if (typeof window.renderReport === 'function') window.renderReport(); window.switchReportTab('report'); }
+  if (name==='settings' && typeof window.updateSettingsStatus === 'function') window.updateSettingsStatus();
+};
 
 // Analyze
 window.analyzeStock = function() {
