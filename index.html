@@ -2398,7 +2398,7 @@ window.getUpdatedRecommendation = async function(key) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 600,
+        max_tokens: 1500,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{ role: 'user', content: prompt }]
       })
@@ -2656,7 +2656,7 @@ window.getSellPlan = async function(key) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 800,
+        max_tokens: 1200,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -3105,7 +3105,7 @@ ${watchData}
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 800,
+        max_tokens: 1200,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -3792,7 +3792,7 @@ window.getStockNews = async function() {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 800,
+        max_tokens: 1200,
         messages: [{ role: 'user', content: prompt }]
       })
     });
