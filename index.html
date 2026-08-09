@@ -1737,8 +1737,10 @@ window.fetchAndFillPrice = async function(symbol) {
   try {
     var res = await fetch('https://api.twelvedata.com/quote?symbol=' + encodeURIComponent(symbol) + '&exchange=XCAI&apikey=' + TWELVE_KEY);
     var data = await res.json();
+    console.log('Twelve Data quote response:', data);
     if (data.status === 'error' || !data.close) {
-      if (hint) hint.textContent = '⚠️ مش لاقي سعر — اكتبه يدوي';
+      var reason = data.message || data.code || 'سبب غير معروف';
+      if (hint) hint.textContent = '⚠️ مش لاقي سعر (' + reason + ') — اكتبه يدوي';
       return;
     }
     var priceEl = document.getElementById('a-price');
@@ -1751,6 +1753,7 @@ window.fetchAndFillPrice = async function(symbol) {
     }
     if (hint) hint.textContent = '⏱ سعر متأخر ~15 دقيقة من Twelve Data — راجعه في ثاندر قبل أي قرار';
   } catch (e) {
+    console.log('Twelve Data fetch error:', e);
     if (hint) hint.textContent = '⚠️ مش قادر أجيب السعر — اكتبه يدوي';
   }
 };
