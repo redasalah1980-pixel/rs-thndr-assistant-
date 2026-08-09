@@ -7,54 +7,54 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
   :root {
-    --navy: #0a1628; --navy-mid: #112240; --navy-light: #1a3458;
-    --gold: #c9a84c; --gold-light: #e8c97a; --gold-dim: #8a6f2e;
-    --white: #ffffff; --gray: #a0b0c0;
-    --green: #22c55e; --red: #ef4444; --orange: #f59e0b;
+    --navy: #1c2b42; --navy-mid: #26395a; --navy-light: #33496e;
+    --gold: #d4b45a; --gold-light: #ecd08c; --gold-dim: #a68a42;
+    --white: #ffffff; --gray: #c3d0e0;
+    --green: #34d16f; --red: #f0605c; --orange: #f5a623;
     --radius: 16px; --radius-sm: 10px;
   }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family:'Cairo',sans-serif; background:#06101e; color:var(--white); min-height:100vh; margin:0; padding:0; }
-  .app-wrapper { max-width:480px; margin:0 auto; min-height:100vh; background:var(--navy); position:relative; padding-bottom:80px; }
+  body { font-family:'Cairo',sans-serif; background:#111d30; color:var(--white); min-height:100vh; margin:0; padding:0; font-size:16px; }
+  .app-wrapper { max-width:480px; margin:0 auto; min-height:100vh; background:var(--navy); position:relative; padding-bottom:96px; }
   .header { background:linear-gradient(135deg,var(--navy-mid),var(--navy-light)); padding:20px 20px 16px; border-bottom:2px solid var(--gold-dim); position:sticky; top:0; z-index:100; }
   .header-top { display:flex; align-items:center; justify-content:space-between; }
   .logo { display:flex; align-items:center; gap:10px; }
-  .logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:900; color:var(--navy); }
-  .logo-text { font-size:18px; font-weight:900; color:var(--gold); }
-  .logo-sub { font-size:11px; color:var(--gray); margin-top:1px; }
-  .market-badge { background:var(--navy); border:1px solid var(--gold-dim); border-radius:20px; padding:4px 10px; font-size:11px; color:var(--gray); }
+  .logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:21px; font-weight:900; color:var(--navy); }
+  .logo-text { font-size:19px; font-weight:900; color:var(--gold); }
+  .logo-sub { font-size:13px; color:var(--gray); margin-top:1px; }
+  .market-badge { background:var(--navy); border:1px solid var(--gold-dim); border-radius:20px; padding:4px 10px; font-size:13px; color:var(--gray); }
   .sync-bar { display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding:6px 10px; background:rgba(201,168,76,0.08); border-radius:8px; }
-  .sync-status { font-size:11px; color:var(--gray); display:flex; align-items:center; gap:5px; }
+  .sync-status { font-size:13px; color:var(--gray); display:flex; align-items:center; gap:5px; }
   .sync-dot { width:7px; height:7px; border-radius:50%; background:var(--gray); }
   .sync-dot.connected { background:var(--green); }
   .sync-dot.error { background:var(--red); }
   .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:var(--navy-mid); border-top:1px solid var(--gold-dim); display:flex; z-index:9999; padding-bottom:env(safe-area-inset-bottom); }
-  .nav-btn { flex:1; padding:10px 4px 12px; background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--gray); font-family:'Cairo',sans-serif; transition:all 0.2s; }
+  .nav-btn { flex:1; padding:16px 4px 16px; background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:5px; color:var(--gray); font-family:'Cairo',sans-serif; transition:all 0.2s; min-height:56px; }
   .nav-btn.active { color:var(--gold); }
-  .nav-btn .nav-icon { font-size:22px; }
-  .nav-btn .nav-label { font-size:10px; font-weight:600; }
-  .page { display:none !important; padding:16px; padding-bottom:80px; }
+  .nav-btn .nav-icon { font-size:27px; }
+  .nav-btn .nav-label { font-size:14px; font-weight:700; }
+  .page { display:none !important; padding:16px; padding-bottom:96px; }
   .page.active { display:block !important; }
   .card { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius); padding:18px; margin-bottom:14px; }
-  .card-title { font-size:14px; font-weight:700; color:var(--gold); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .card-title { font-size:15px; font-weight:700; color:var(--gold); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
   .input-group { margin-bottom:12px; }
-  .input-label { font-size:12px; color:#c0cfe0; margin-bottom:6px; display:block; font-weight:600; }
-  .input-field { width:100%; padding:13px 14px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:var(--radius-sm); color:#ffffff; font-family:'Cairo',sans-serif; font-size:15px; font-weight:600; outline:none; transition:border 0.2s; }
+  .input-label { font-size:14px; color:#c0cfe0; margin-bottom:6px; display:block; font-weight:600; }
+  .input-field { width:100%; padding:13px 14px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:var(--radius-sm); color:#ffffff; font-family:'Cairo',sans-serif; font-size:16px; font-weight:600; outline:none; transition:border 0.2s; }
   .input-field:focus { border-color:var(--gold); box-shadow:0 0 0 2px rgba(201,168,76,0.15); }
-  .input-field::placeholder { color:#6a7f94; font-size:13px; font-weight:400; }
+  .input-field::placeholder { color:#6a7f94; font-size:14px; font-weight:400; }
   select.input-field { cursor:pointer; }
   select.input-field option { background:var(--navy-mid); color:#ffffff; }
-  .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; border-radius:var(--radius-sm); color:var(--navy); font-family:'Cairo',sans-serif; font-size:16px; font-weight:900; cursor:pointer; transition:opacity 0.2s; margin-top:4px; }
+  .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; border-radius:var(--radius-sm); color:var(--navy); font-family:'Cairo',sans-serif; font-size:17px; font-weight:900; cursor:pointer; transition:opacity 0.2s; margin-top:4px; }
   .btn-primary:active { opacity:0.85; }
-  .btn-secondary { padding:10px 18px; background:transparent; border:1px solid var(--gold-dim); border-radius:var(--radius-sm); color:var(--gold); font-family:'Cairo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; }
-  .btn-danger { padding:8px 14px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius-sm); color:var(--red); font-family:'Cairo',sans-serif; font-size:12px; cursor:pointer; }
+  .btn-secondary { padding:10px 18px; background:transparent; border:1px solid var(--gold-dim); border-radius:var(--radius-sm); color:var(--gold); font-family:'Cairo',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
+  .btn-danger { padding:8px 14px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius-sm); color:var(--red); font-family:'Cairo',sans-serif; font-size:14px; cursor:pointer; }
   .result-box { background:var(--navy); border-radius:var(--radius-sm); padding:16px; margin-top:14px; border:1px solid rgba(201,168,76,0.15); }
   .result-hidden { display:none; }
-  .score-badge { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:30px; font-size:15px; font-weight:900; margin-bottom:14px; }
+  .score-badge { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:30px; font-size:16px; font-weight:900; margin-bottom:14px; }
   .score-buy { background:rgba(34,197,94,0.15); color:var(--green); border:1px solid rgba(34,197,94,0.3); }
   .score-wait { background:rgba(245,158,11,0.15); color:var(--orange); border:1px solid rgba(245,158,11,0.3); }
   .score-avoid { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
-  .info-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; }
+  .info-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:14px; }
   .info-row:last-child { border-bottom:none; }
   .info-label { color:#a0b8cc; }
   .info-value { font-weight:700; color:#ffffff; }
@@ -63,76 +63,67 @@
   .info-value.gold { color:var(--gold); }
   .info-value.orange { color:var(--orange); }
   .strategy-step { display:flex; align-items:center; gap:12px; padding:11px 12px; margin-bottom:8px; background:var(--navy-light); border-radius:var(--radius-sm); }
-  .step-num { width:28px; height:28px; flex-shrink:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
+  .step-num { width:28px; height:28px; flex-shrink:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; }
   .step-1 { background:rgba(34,197,94,0.2); color:var(--green); }
   .step-2 { background:rgba(245,158,11,0.2); color:var(--orange); }
   .step-3 { background:rgba(201,168,76,0.2); color:var(--gold); }
   .step-info { flex:1; }
-  .step-label { font-size:11px; color:var(--gray); }
-  .step-price { font-size:15px; font-weight:700; color:var(--white); }
-  .step-shares { font-size:11px; color:var(--gold); margin-top:1px; }
+  .step-label { font-size:13px; color:var(--gray); }
+  .step-price { font-size:16px; font-weight:700; color:var(--white); }
+  .step-shares { font-size:13px; color:var(--gold); margin-top:1px; }
   .stock-card { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.15); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
   .stock-header { display:flex; justify-content:space-between; align-items:flex-start; }
-  .stock-symbol { font-size:18px; font-weight:900; color:var(--gold); }
-  .stock-name { font-size:12px; color:var(--gray); margin-top:2px; }
+  .stock-symbol { font-size:19px; font-weight:900; color:var(--gold); }
+  .stock-name { font-size:14px; color:var(--gray); margin-top:2px; }
   .stock-pnl { text-align:left; }
-  .pnl-value { font-size:16px; font-weight:900; }
-  .pnl-pct { font-size:11px; margin-top:2px; }
-  .stock-footer { display:flex; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.05); font-size:12px; color:var(--gray); flex-wrap:wrap; gap:8px; }
+  .pnl-value { font-size:17px; font-weight:900; }
+  .pnl-pct { font-size:13px; margin-top:2px; }
+  .stock-footer { display:flex; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.05); font-size:14px; color:var(--gray); flex-wrap:wrap; gap:8px; }
   .stock-footer span { display:flex; flex-direction:column; gap:2px; }
-  .stock-footer strong { color:var(--white); font-size:13px; }
+  .stock-footer strong { color:var(--white); font-size:14px; }
   .portfolio-summary { background:linear-gradient(135deg,var(--navy-light),var(--navy-mid)); border:1px solid var(--gold-dim); border-radius:var(--radius); padding:18px; margin-bottom:16px; text-align:center; }
-  .summary-label { font-size:12px; color:var(--gray); margin-bottom:4px; }
+  .summary-label { font-size:14px; color:var(--gray); margin-bottom:4px; }
   .summary-total { font-size:28px; font-weight:900; color:var(--gold); }
-  .summary-pnl { font-size:14px; font-weight:700; margin-top:6px; }
+  .summary-pnl { font-size:15px; font-weight:700; margin-top:6px; }
   .summary-row { display:flex; justify-content:space-around; margin-top:14px; }
   .summary-item { text-align:center; }
-  .summary-item-val { font-size:15px; font-weight:700; }
-  .summary-item-lbl { font-size:10px; color:var(--gray); margin-top:2px; }
-  .journal-entry { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.15); border-radius:var(--radius); padding:14px; margin-bottom:10px; }
-  .journal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-  .journal-symbol { font-size:16px; font-weight:900; color:var(--gold); }
-  .journal-date { font-size:11px; color:var(--gray); }
-  .journal-decision { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; margin-bottom:8px; }
-  .decision-buy { background:rgba(34,197,94,0.15); color:var(--green); }
-  .decision-sell { background:rgba(239,68,68,0.15); color:var(--red); }
-  .decision-watch { background:rgba(245,158,11,0.15); color:var(--orange); }
-  .journal-note { font-size:13px; color:var(--gray); line-height:1.6; }
+  .summary-item-val { font-size:16px; font-weight:700; }
+  .summary-item-lbl { font-size:13px; color:var(--gray); margin-top:2px; }
   .empty-state { text-align:center; padding:40px 20px; color:var(--gray); }
   .empty-icon { font-size:48px; margin-bottom:12px; }
-  .empty-text { font-size:14px; }
+  .empty-text { font-size:15px; }
   .divider { height:1px; background:rgba(201,168,76,0.1); margin:16px 0; }
-  .tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; background:rgba(201,168,76,0.1); color:var(--gold); border:1px solid rgba(201,168,76,0.2); }
+  .tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:13px; font-weight:700; background:rgba(201,168,76,0.1); color:var(--gold); border:1px solid rgba(201,168,76,0.2); }
   .tag.green { background:rgba(34,197,94,0.1); color:var(--green); border-color:rgba(34,197,94,0.2); }
   .tag.red { background:rgba(239,68,68,0.1); color:var(--red); border-color:rgba(239,68,68,0.2); }
-  .section-title { font-size:13px; font-weight:700; color:var(--gray); margin-bottom:12px; margin-top:4px; text-transform:uppercase; letter-spacing:0.5px; }
-  .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--navy); padding:10px 24px; border-radius:30px; font-size:13px; font-weight:700; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+  .section-title { font-size:14px; font-weight:700; color:var(--gray); margin-bottom:12px; margin-top:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--navy); padding:10px 24px; border-radius:30px; font-size:14px; font-weight:700; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
   .toast.show { opacity:1; }
   .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; display:none; align-items:flex-end; }
   .modal-overlay.open { display:flex; }
   .modal-box { background:var(--navy-mid); width:100%; max-width:480px; margin:0 auto; border-radius:24px 24px 0 0; padding:20px 20px 40px; max-height:85vh; overflow-y:auto; border-top:2px solid var(--gold-dim); }
-  .modal-title { font-size:16px; font-weight:900; color:var(--gold); margin-bottom:16px; text-align:center; }
+  .modal-title { font-size:17px; font-weight:900; color:var(--gold); margin-bottom:16px; text-align:center; }
   .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
   .calc-item { background:var(--navy-light); border-radius:var(--radius-sm); padding:12px; text-align:center; }
-  .calc-item-label { font-size:11px; color:var(--gray); margin-bottom:4px; }
-  .calc-item-value { font-size:16px; font-weight:900; }
-  .page-title { font-size:20px; font-weight:900; color:var(--white); margin-bottom:4px; }
-  .page-subtitle { font-size:13px; color:var(--gray); margin-bottom:16px; }
-  .update-price-input { width:90px; padding:6px 8px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:8px; color:var(--white); font-family:'Cairo',sans-serif; font-size:13px; text-align:center; }
+  .calc-item-label { font-size:13px; color:var(--gray); margin-bottom:4px; }
+  .calc-item-value { font-size:17px; font-weight:900; }
+  .page-title { font-size:21px; font-weight:900; color:var(--white); margin-bottom:4px; }
+  .page-subtitle { font-size:14px; color:var(--gray); margin-bottom:16px; }
+  .update-price-input { width:90px; padding:6px 8px; background:var(--navy); border:1px solid rgba(201,168,76,0.3); border-radius:8px; color:var(--white); font-family:'Cairo',sans-serif; font-size:14px; text-align:center; }
 
   /* Alerts */
   .alerts-banner { margin:12px 16px 0; }
   .alert-item { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:var(--radius-sm); margin-bottom:8px; animation:slideIn 0.3s ease; }
   .alert-up { background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); }
   .alert-down { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); }
-  .alert-icon { font-size:20px; flex-shrink:0; }
+  .alert-icon { font-size:21px; flex-shrink:0; }
   .alert-body { flex:1; }
-  .alert-title { font-size:13px; font-weight:700; }
+  .alert-title { font-size:14px; font-weight:700; }
   .alert-title.up { color:var(--green); }
   .alert-title.down { color:var(--red); }
-  .alert-sub { font-size:11px; color:var(--gray); margin-top:2px; }
-  .alert-dismiss { background:none; border:none; color:var(--gray); font-size:18px; cursor:pointer; padding:0 4px; }
-  .nav-badge { position:absolute; top:6px; right:50%; transform:translateX(14px); background:var(--red); color:white; font-size:9px; font-weight:900; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .alert-sub { font-size:13px; color:var(--gray); margin-top:2px; }
+  .alert-dismiss { background:none; border:none; color:var(--gray); font-size:19px; cursor:pointer; padding:0 4px; }
+  .nav-badge { position:absolute; top:6px; right:50%; transform:translateX(14px); background:var(--red); color:white; font-size:12px; font-weight:900; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
   .nav-btn { position:relative; }
   @keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
 
@@ -143,18 +134,18 @@
   .login-box { width:100%; max-width:360px; position:relative; z-index:2; }
   .login-logo { text-align:center; margin-bottom:28px; }
   .login-logo-icon { width:72px; height:72px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:20px; display:inline-flex; align-items:center; justify-content:center; font-size:32px; font-weight:900; color:var(--navy); margin-bottom:14px; box-shadow:0 8px 32px rgba(201,168,76,0.4); }
-  .login-title { font-size:22px; font-weight:900; color:var(--white); }
-  .login-sub { font-size:13px; color:var(--gray); margin-top:6px; }
+  .login-title { font-size:23px; font-weight:900; color:var(--white); }
+  .login-sub { font-size:14px; color:var(--gray); margin-top:6px; }
   .login-card { background:rgba(17,34,64,0.92); border:1px solid rgba(201,168,76,0.3); border-radius:var(--radius); padding:24px; margin-top:8px; backdrop-filter:blur(10px); }
-  .login-error { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; color:var(--red); margin-bottom:14px; display:none; text-align:center; }
-  .login-footer { text-align:center; margin-top:16px; font-size:11px; color:rgba(136,153,170,0.6); }
+  .login-error { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius-sm); padding:10px 14px; font-size:14px; color:var(--red); margin-bottom:14px; display:none; text-align:center; }
+  .login-footer { text-align:center; margin-top:16px; font-size:13px; color:rgba(136,153,170,0.6); }
 
   /* Ticker Background */
   .ticker-bg { position:absolute; inset:0; z-index:1; overflow:hidden; opacity:0.12; pointer-events:none; }
   .ticker-col { position:absolute; top:0; display:flex; flex-direction:column; gap:18px; animation:tickerFall linear infinite; }
-  .ticker-item { font-size:12px; font-weight:700; white-space:nowrap; font-family:'Cairo',sans-serif; letter-spacing:0.5px; }
-  .ticker-up { color:#22c55e; }
-  .ticker-down { color:#ef4444; }
+  .ticker-item { font-size:14px; font-weight:700; white-space:nowrap; font-family:'Cairo',sans-serif; letter-spacing:0.5px; }
+  .ticker-up { color:#34d16f; }
+  .ticker-down { color:#f0605c; }
   @keyframes tickerFall { from { transform:translateY(-50%); } to { transform:translateY(0%); } }
 
   /* Glowing border on login card */
@@ -164,75 +155,46 @@
   .onboarding-overlay.show { display:block; }
   .onboarding-logo { text-align:center; margin-bottom:24px; }
   .onboarding-logo-icon { width:64px; height:64px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:18px; display:inline-flex; align-items:center; justify-content:center; font-size:32px; font-weight:900; color:var(--navy); margin-bottom:12px; }
-  .onboarding-title { font-size:22px; font-weight:900; color:var(--white); }
-  .onboarding-sub { font-size:13px; color:var(--gray); margin-top:4px; }
+  .onboarding-title { font-size:23px; font-weight:900; color:var(--white); }
+  .onboarding-sub { font-size:14px; color:var(--gray); margin-top:4px; }
   .onboarding-step { display:flex; gap:14px; align-items:flex-start; padding:14px; background:var(--navy-mid); border:1px solid rgba(201,168,76,0.15); border-radius:var(--radius); margin-bottom:10px; }
   .onboarding-step-icon { font-size:26px; flex-shrink:0; width:44px; height:44px; background:rgba(201,168,76,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; }
   .onboarding-step-body { flex:1; }
-  .onboarding-step-title { font-size:14px; font-weight:900; color:var(--gold); margin-bottom:4px; }
-  .onboarding-step-desc { font-size:12px; color:var(--gray); line-height:1.6; }
-  .onboarding-tip { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); border-radius:var(--radius-sm); padding:12px 14px; margin:14px 0; font-size:12px; color:var(--gray); line-height:1.6; }
+  .onboarding-step-title { font-size:15px; font-weight:900; color:var(--gold); margin-bottom:4px; }
+  .onboarding-step-desc { font-size:14px; color:var(--gray); line-height:1.6; }
+  .onboarding-tip { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); border-radius:var(--radius-sm); padding:12px 14px; margin:14px 0; font-size:14px; color:var(--gray); line-height:1.6; }
   .onboarding-tip strong { color:var(--green); }
-  .report-card { background:linear-gradient(135deg,var(--navy-light),var(--navy-mid)); border:1px solid var(--gold-dim); border-radius:var(--radius); padding:20px; margin-bottom:14px; }
-  .report-header { text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(201,168,76,0.2); }
-  .report-title { font-size:18px; font-weight:900; color:var(--gold); }
-  .report-date { font-size:12px; color:var(--gray); margin-top:4px; }
-  .report-section { margin-bottom:16px; }
-  .report-section-title { font-size:12px; font-weight:700; color:var(--gold); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:6px; }
-  .report-big-number { font-size:26px; font-weight:900; text-align:center; margin:8px 0; }
-  .report-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .report-item { background:var(--navy); border-radius:var(--radius-sm); padding:12px; text-align:center; }
-  .report-item-val { font-size:16px; font-weight:900; }
-  .report-item-lbl { font-size:10px; color:var(--gray); margin-top:3px; }
-  .report-highlight { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius-sm); padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
-  .report-highlight-label { font-size:12px; color:var(--gray); }
-  .report-highlight-val { font-size:14px; font-weight:900; }
-  .report-tip { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); border-radius:var(--radius-sm); padding:12px; font-size:13px; color:var(--gray); line-height:1.6; }
-  .report-tip strong { color:var(--green); }
-  .term-header { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.12); border-radius:8px; cursor:pointer; margin-bottom:6px; font-size:13px; font-weight:700; color:var(--white); }
-  .term-body { background:var(--navy); border-radius:8px; padding:14px; margin-bottom:8px; font-size:12px; color:var(--gray); line-height:1.9; border:1px solid rgba(255,255,255,0.04); }
+  .term-header { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.12); border-radius:8px; cursor:pointer; margin-bottom:6px; font-size:14px; font-weight:700; color:var(--white); }
+  .term-body { background:var(--navy); border-radius:8px; padding:14px; margin-bottom:8px; font-size:14px; color:var(--gray); line-height:1.9; border:1px solid rgba(255,255,255,0.04); }
 
   /* Charts */
   .chart-container { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.2); border-radius:var(--radius); padding:16px; margin-bottom:14px; }
-  .chart-title { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:14px; }
+  .chart-title { font-size:14px; font-weight:700; color:var(--gold); margin-bottom:14px; }
   .donut-wrap { display:flex; align-items:center; gap:16px; }
   .donut-svg { flex-shrink:0; }
   .donut-legend { flex:1; }
-  .legend-item { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:12px; }
+  .legend-item { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:14px; }
   .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
   .legend-name { color:var(--gray); flex:1; }
   .legend-val { font-weight:700; color:var(--white); }
   .bars-wrap { display:flex; flex-direction:column; gap:8px; }
   .bar-item { display:flex; align-items:center; gap:8px; }
-  .bar-label { font-size:11px; color:var(--gray); width:50px; text-align:right; flex-shrink:0; }
+  .bar-label { font-size:13px; color:var(--gray); width:50px; text-align:right; flex-shrink:0; }
   .bar-track { flex:1; height:8px; background:var(--navy); border-radius:4px; overflow:hidden; }
   .bar-fill { height:100%; border-radius:4px; transition:width 0.5s; }
-  .bar-val { font-size:11px; font-weight:700; width:45px; text-align:left; flex-shrink:0; }
-  .compare-vs { display:flex; align-items:center; justify-content:center; gap:12px; margin:12px 0; }
-  .compare-vs-badge { background:var(--gold); color:var(--navy); font-size:13px; font-weight:900; padding:6px 14px; border-radius:20px; }
-  .compare-table { width:100%; border-collapse:collapse; margin-top:4px; }
-  .compare-table th { padding:10px 8px; font-size:11px; color:var(--gray); font-weight:700; text-align:center; border-bottom:1px solid rgba(201,168,76,0.2); }
-  .compare-table th:first-child { text-align:right; }
-  .compare-table td { padding:10px 8px; font-size:13px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); }
-  .compare-table td:first-child { text-align:right; color:var(--gray); font-size:12px; }
-  .compare-winner { background:rgba(201,168,76,0.08); }
-  .winner-badge { display:inline-block; background:rgba(201,168,76,0.15); color:var(--gold); border:1px solid var(--gold-dim); border-radius:20px; padding:2px 8px; font-size:10px; font-weight:900; margin-right:4px; }
-  .compare-final { background:linear-gradient(135deg,var(--navy-light),var(--navy-mid)); border:1px solid var(--gold-dim); border-radius:var(--radius); padding:16px; margin-top:14px; text-align:center; }
-  .compare-final-title { font-size:12px; color:var(--gray); margin-bottom:8px; }
-  .compare-final-winner { font-size:22px; font-weight:900; color:var(--gold); }
-  .compare-final-reason { font-size:12px; color:var(--gray); margin-top:6px; line-height:1.6; }
+  .bar-val { font-size:13px; font-weight:700; width:45px; text-align:left; flex-shrink:0; }
   .port-tabs { display:flex; background:var(--navy); border-radius:var(--radius-sm); padding:4px; margin-bottom:16px; gap:4px; }
-  .port-tab { flex:1; padding:10px; text-align:center; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; border:none; font-family:'Cairo',sans-serif; transition:all 0.2s; color:var(--gray); background:none; }
+  .port-tab { flex:1; padding:10px; text-align:center; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; border:none; font-family:'Cairo',sans-serif; transition:all 0.2s; color:var(--gray); background:none; }
   .port-tab.active { background:var(--navy-mid); color:var(--gold); border:1px solid var(--gold-dim); }
 
   /* Watchlist */
   .watch-card { background:var(--navy-mid); border:1px solid rgba(201,168,76,0.15); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
   .watch-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
-  .watch-symbol { font-size:18px; font-weight:900; color:var(--gold); }
-  .watch-name { font-size:12px; color:var(--gray); margin-top:2px; }
+  .watch-symbol { font-size:19px; font-weight:900; color:var(--gold); }
+  .watch-name { font-size:14px; color:var(--gray); margin-top:2px; }
   .watch-status { text-align:left; }
-  .watch-current { font-size:16px; font-weight:900; color:var(--white); }
-  .watch-target-label { font-size:11px; color:var(--gray); margin-top:2px; }
+  .watch-current { font-size:17px; font-weight:900; color:var(--white); }
+  .watch-target-label { font-size:13px; color:var(--gray); margin-top:2px; }
   .watch-progress { height:6px; background:var(--navy); border-radius:3px; margin:10px 0; overflow:hidden; }
   .watch-progress-bar { height:100%; border-radius:3px; transition:width 0.5s; }
   .progress-far { background:var(--gray); }
@@ -243,8 +205,8 @@
   .search-item { padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s; }
   .search-item:last-child { border-bottom:none; }
   .search-item:active { background:rgba(201,168,76,0.1); }
-  .search-symbol { font-size:13px; font-weight:900; color:var(--gold); direction:ltr; }
-  .search-name { font-size:12px; color:var(--gray); }
+  .search-symbol { font-size:14px; font-weight:900; color:var(--gold); direction:ltr; }
+  .search-name { font-size:14px; color:var(--gray); }
   .search-hidden { display:none; }
 </style>
 </head>
@@ -270,8 +232,8 @@
       <div class="input-group">
         <label class="input-label">اسم المستخدم</label>
         <div style="display:flex;align-items:center;gap:10px;background:var(--navy);border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:13px 14px;">
-          <span style="font-size:18px;">👤</span>
-          <span style="font-size:15px;font-weight:700;color:var(--gold);">Reda Salah</span>
+          <span style="font-size:19px;">👤</span>
+          <span style="font-size:16px;font-weight:700;color:var(--gold);">Reda Salah</span>
         </div>
       </div>
 
@@ -280,10 +242,10 @@
         <label class="input-label">الباسورد</label>
         <div style="position:relative;">
           <input type="password" class="input-field" id="login-password" placeholder="أدخل الباسورد" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin(); checkCapsLock(event);" onkeyup="checkCapsLock(event);" style="padding-left:48px;">
-          <button onclick="togglePassword()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray);padding:0;" id="toggle-pass-btn">👁️</button>
+          <button onclick="togglePassword()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:19px;color:var(--gray);padding:0;" id="toggle-pass-btn">👁️</button>
         </div>
         <!-- Caps Lock Warning -->
-        <div id="caps-warning" style="display:none;margin-top:6px;font-size:11px;color:var(--orange);display:none;align-items:center;gap:4px;">
+        <div id="caps-warning" style="display:none;margin-top:6px;font-size:13px;color:var(--orange);display:none;align-items:center;gap:4px;">
           ⚠️ Caps Lock شغال — تأكد من حالة الأحرف
         </div>
       </div>
@@ -380,7 +342,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
       <div class="market-badge">EGX <span id="marketStatus">—</span></div>
-      <button onclick="confirmLogout()" title="تسجيل الخروج" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:20px;padding:4px 10px;cursor:pointer;font-size:14px;color:var(--red);">🚪</button>
+      <button onclick="confirmLogout()" title="تسجيل الخروج" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:20px;padding:4px 10px;cursor:pointer;font-size:15px;color:var(--red);">🚪</button>
     </div>
   </div>
   <div class="sync-bar">
@@ -388,7 +350,7 @@
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncText">جاري الاتصال...</span>
     </div>
-    <span style="font-size:10px; color:var(--gray);" id="lastSync"></span>
+    <span style="font-size:13px; color:var(--gray);" id="lastSync"></span>
   </div>
 </div>
 
@@ -412,14 +374,14 @@
     <!-- بحث سريع للشريعة -->
     <div class="card" style="background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.2);">
       <div class="card-title" style="color:var(--green);">☪️ تحقق سريع من الشريعة</div>
-      <div style="font-size:12px;color:var(--gray);margin-bottom:12px;">بدون ما تدخل بيانات — ابحث واعرف فوراً</div>
+      <div style="font-size:14px;color:var(--gray);margin-bottom:12px;">بدون ما تدخل بيانات — ابحث واعرف فوراً</div>
       <div style="display:flex;gap:8px;">
         <div class="search-wrapper" style="flex:1;position:relative;">
           <input type="text" class="input-field" id="sharia-search" placeholder="ابحث عن السهم..." oninput="searchStocks(this.value,'sh')" autocomplete="off">
           <div class="search-results search-hidden" id="sh-results"></div>
         </div>
-        <button onclick="clearShariaSearch()" style="padding:13px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red);font-size:16px;cursor:pointer;">✕</button>
-        <button onclick="checkSharia()" style="padding:13px 16px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-sm);color:var(--green);font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">☪️ تحقق</button>
+        <button onclick="clearShariaSearch()" style="padding:13px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red);font-size:17px;cursor:pointer;">✕</button>
+        <button onclick="checkSharia()" style="padding:13px 16px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-sm);color:var(--green);font-family:Cairo,sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">☪️ تحقق</button>
       </div>
       <div id="sharia-result" style="display:none;margin-top:10px;"></div>
     </div>
@@ -433,7 +395,7 @@
             <input type="text" class="input-field" id="a-symbol" placeholder="مثال: أبو ظبي أو ADIB" oninput="searchStocks(this.value,'a')" autocomplete="off">
             <div class="search-results search-hidden" id="a-results"></div>
           </div>
-          <button onclick="clearStockSearch()" style="padding:13px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red);font-size:16px;cursor:pointer;" title="مسح">✕</button>
+          <button onclick="clearStockSearch()" style="padding:13px 12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red);font-size:17px;cursor:pointer;" title="مسح">✕</button>
         </div>
       </div>
       <div class="input-group">
@@ -475,14 +437,14 @@
       <!-- بيانات إضافية -->
       <div style="margin-top:4px;">
         <div onclick="toggleExtraData()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;">
-          <span style="font-size:13px;font-weight:700;color:var(--gold);">📊 بيانات إضافية من ثاندر</span>
-          <span id="extra-toggle-icon" style="color:var(--gold);font-size:16px;">＋</span>
+          <span style="font-size:14px;font-weight:700;color:var(--gold);">📊 بيانات إضافية من ثاندر</span>
+          <span id="extra-toggle-icon" style="color:var(--gold);font-size:17px;">＋</span>
         </div>
         <div id="extra-data-section" style="display:none;padding:14px;background:var(--navy);border:1px solid rgba(201,168,76,0.1);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);">
-          <div style="font-size:11px;color:var(--gray);margin-bottom:12px;">من تبويب "الإحصائيات" في ثاندر — كلما أضفت أكتر كلما التوصية أدق 🎯</div>
+          <div style="font-size:13px;color:var(--gray);margin-bottom:12px;">من تبويب "الإحصائيات" في ثاندر — كلما أضفت أكتر كلما التوصية أدق 🎯</div>
 
           <!-- اليوميات -->
-          <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px;text-transform:uppercase;">📅 اليوميات</div>
+          <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px;text-transform:uppercase;">📅 اليوميات</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div class="input-group">
               <label class="input-label">الافتتاح</label>
@@ -511,7 +473,7 @@
           </div>
 
           <!-- ضغط الشراء والبيع -->
-          <div style="font-size:11px;font-weight:700;color:var(--gold);margin:12px 0 8px;text-transform:uppercase;">📊 ضغط الشراء/البيع</div>
+          <div style="font-size:13px;font-weight:700;color:var(--gold);margin:12px 0 8px;text-transform:uppercase;">📊 ضغط الشراء/البيع</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div class="input-group">
               <label class="input-label">🟢 إجمالي الشراء</label>
@@ -524,7 +486,7 @@
           </div>
 
           <!-- المالية -->
-          <div style="font-size:11px;font-weight:700;color:var(--gold);margin:12px 0 8px;text-transform:uppercase;">💰 المالية</div>
+          <div style="font-size:13px;font-weight:700;color:var(--gold);margin:12px 0 8px;text-transform:uppercase;">💰 المالية</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div class="input-group">
               <label class="input-label">P/E العائد على السعر</label>
@@ -546,8 +508,8 @@
     </div>
     <div class="result-box result-hidden" id="analyze-result">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <div style="font-size:13px;font-weight:700;color:var(--gold);">نتيجة التحليل</div>
-        <button onclick="clearAnalysis()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-family:Cairo,sans-serif;font-size:12px;cursor:pointer;">🗑️ مسح</button>
+        <div style="font-size:14px;font-weight:700;color:var(--gold);">نتيجة التحليل</div>
+        <button onclick="clearAnalysis()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-family:Cairo,sans-serif;font-size:14px;cursor:pointer;">🗑️ مسح</button>
       </div>
       <div id="result-score-badge"></div>
       <div class="section-title">موقف السهم</div>
@@ -579,9 +541,8 @@
         </button>
       </div>
 
-      <div style="display:flex;gap:10px;margin-top:14px;">
-        <button class="btn-secondary" onclick="saveToPortfolio()" style="flex:1;">💼 أضف للمحفظة</button>
-        <button class="btn-secondary" onclick="saveToJournal()" style="flex:1;">📓 سجل</button>
+      <div style="margin-top:14px;">
+        <button class="btn-secondary" onclick="saveToPortfolio()" style="width:100%;">💼 أضف للمحفظة</button>
       </div>
     </div>
     </div> <!-- end section-stocks -->
@@ -590,7 +551,7 @@
     <div id="section-gold" style="display:none;">
       <div class="card">
         <div class="card-title">🥇 تحليل الذهب</div>
-        <div style="font-size:12px;color:var(--gray);margin-bottom:14px;">أدخل بيانات Thndr Gold من ثاندر</div>
+        <div style="font-size:14px;color:var(--gray);margin-bottom:14px;">أدخل بيانات Thndr Gold من ثاندر</div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div class="input-group">
@@ -619,14 +580,14 @@
           <input type="number" class="input-field" id="g-budget" placeholder="1000">
         </div>
 
-        <button class="btn-primary" onclick="analyzeGold()" style="background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0a1628;">🥇 حلل الذهب دلوقتي</button>
+        <button class="btn-primary" onclick="analyzeGold()" style="background:linear-gradient(135deg,#d4b45a,#ecd08c);color:#1c2b42;">🥇 حلل الذهب دلوقتي</button>
       </div>
 
       <!-- نتيجة تحليل الذهب -->
       <div class="result-box result-hidden" id="gold-result">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <div style="font-size:13px;font-weight:700;color:var(--gold);">نتيجة تحليل الذهب</div>
-          <button onclick="clearGoldAnalysis()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-family:Cairo,sans-serif;font-size:12px;cursor:pointer;">🗑️ مسح</button>
+          <div style="font-size:14px;font-weight:700;color:var(--gold);">نتيجة تحليل الذهب</div>
+          <button onclick="clearGoldAnalysis()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-family:Cairo,sans-serif;font-size:14px;cursor:pointer;">🗑️ مسح</button>
         </div>
         <div id="gold-basic-result"></div>
         <div class="divider"></div>
@@ -665,8 +626,7 @@
           <div class="summary-item"><div class="summary-item-val red" id="p-losers">0</div><div class="summary-item-lbl">خاسر</div></div>
         </div>
       </div>
-      <button class="btn-primary" onclick="openAddStockModal()" style="margin-bottom:10px;">+ أضف صفقة جديدة</button>
-      <button class="btn-share" onclick="showPage('report', document.getElementById('navbtn-report'))" style="margin-bottom:16px;">📊 التقرير الشهري</button>
+      <button class="btn-primary" onclick="openAddStockModal()" style="margin-bottom:16px;">+ أضف صفقة جديدة</button>
       <div id="portfolio-list"></div>
     </div>
 
@@ -679,7 +639,7 @@
     <!-- Gold Portfolio Section -->
     <div id="section-gold-port" style="display:none;">
       <div id="gold-port-content"></div>
-      <button class="btn-primary" onclick="openAddGoldModal()" style="margin-bottom:16px;background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0a1628;">🥇 أضف/حدّث ذهبك</button>
+      <button class="btn-primary" onclick="openAddGoldModal()" style="margin-bottom:16px;background:linear-gradient(135deg,#d4b45a,#ecd08c);color:#1c2b42;">🥇 أضف/حدّث ذهبك</button>
       <div id="gold-port-ai" style="margin-top:8px;"></div>
     </div>
   </div>
@@ -722,187 +682,6 @@
   </div>
 </div>
 
-<!-- PAGE: يوميات -->
-<div class="page" id="page-journal">
-  <div>
-    <div class="page-title">📓 يومياتي</div>
-    <div class="page-subtitle">سجل قراراتك وتعلم منها</div>
-    <div class="card">
-      <div class="card-title">✍️ إضافة تسجيل جديد</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="input-group">
-          <label class="input-label">ابحث عن السهم</label>
-          <div class="search-wrapper">
-            <input type="text" class="input-field" id="j-symbol" placeholder="مثال: CIB أو بنك" oninput="searchStocks(this.value,'j')" autocomplete="off">
-            <div class="search-results search-hidden" id="j-results"></div>
-          </div>
-        </div>
-        <div class="input-group">
-          <label class="input-label">القرار</label>
-          <select class="input-field" id="j-decision">
-            <option value="buy">🟢 شراء</option>
-            <option value="sell">🔴 بيع</option>
-            <option value="watch">🟡 مراقبة</option>
-          </select>
-        </div>
-      </div>
-      <div class="input-group">
-        <label class="input-label">السعر</label>
-        <input type="number" class="input-field" id="j-price" placeholder="53.20" step="0.01">
-      </div>
-      <div class="input-group">
-        <label class="input-label">ليه اتخذت القرار ده؟</label>
-        <textarea class="input-field" id="j-reason" rows="3" placeholder="مثال: السهم في قاع، ارتفع +160% في سنة..." style="resize:none;line-height:1.6;"></textarea>
-      </div>
-      <div class="input-group">
-        <label class="input-label">هدفك من الصفقة</label>
-        <input type="text" class="input-field" id="j-goal" placeholder="مثال: ربح 20% خلال 3 شهور">
-      </div>
-      <button class="btn-primary" onclick="addJournalEntry()">💾 سجل القرار</button>
-    </div>
-    <div id="journal-list"></div>
-  </div>
-</div>
-
-<!-- PAGE: تقرير -->
-<div class="page" id="page-report">
-  <div>
-    <div class="page-title">📊 التقرير والقرارات</div>
-
-    <!-- تبويبين -->
-    <div class="port-tabs" style="margin-bottom:16px;">
-      <button class="port-tab active" id="tab-report" onclick="switchReportTab('report')">📈 التقرير الشهري</button>
-      <button class="port-tab" id="tab-journal" onclick="switchReportTab('journal')">📓 يومياتي</button>
-    </div>
-
-    <!-- التقرير -->
-    <div id="section-report">
-      <div id="report-content"></div>
-      <div id="ai-portfolio-result"></div>
-    </div>
-
-    <!-- اليوميات -->
-    <div id="section-journal" style="display:none;">
-      <div class="card">
-        <div class="card-title">✍️ إضافة تسجيل جديد</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div class="input-group">
-            <label class="input-label">ابحث عن السهم</label>
-            <div class="search-wrapper">
-              <input type="text" class="input-field" id="j-symbol" placeholder="مثال: ADIB" oninput="searchStocks(this.value,'j')" autocomplete="off">
-              <div class="search-results search-hidden" id="j-results"></div>
-            </div>
-          </div>
-          <div class="input-group">
-            <label class="input-label">القرار</label>
-            <select class="input-field" id="j-decision">
-              <option value="buy">🟢 شراء</option>
-              <option value="sell">🔴 بيع</option>
-              <option value="watch">🟡 مراقبة</option>
-            </select>
-          </div>
-        </div>
-        <div class="input-group">
-          <label class="input-label">السعر</label>
-          <input type="number" class="input-field" id="j-price" placeholder="53.20" step="0.01">
-        </div>
-        <div class="input-group">
-          <label class="input-label">ليه اتخذت القرار ده؟</label>
-          <textarea class="input-field" id="j-reason" rows="3" placeholder="مثال: السهم في قاع، ارتفع +160% في سنة..." style="resize:none;line-height:1.6;"></textarea>
-        </div>
-        <div class="input-group">
-          <label class="input-label">هدفك من الصفقة</label>
-          <input type="text" class="input-field" id="j-goal" placeholder="مثال: ربح 20% خلال 3 شهور">
-        </div>
-        <button class="btn-primary" onclick="addJournalEntry()">💾 سجل القرار</button>
-      </div>
-      <div id="journal-list"></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- PAGE: مقارنة -->
-<div class="page" id="page-compare">
-  <div>
-    <div class="page-title">📊 قارن سهمين</div>
-    <div class="page-subtitle">اعرف مين أحسن قبل ما تشتري</div>
-
-    <!-- السهم الأول -->
-    <div class="card">
-      <div class="card-title">🔵 السهم الأول</div>
-      <div class="input-group">
-        <label class="input-label">ابحث عن السهم</label>
-        <div class="search-wrapper">
-          <input type="text" class="input-field" id="c1-symbol" placeholder="مثال: ADIB" oninput="searchStocks(this.value,'c1')" autocomplete="off">
-          <div class="search-results search-hidden" id="c1-results"></div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="input-group"><label class="input-label">السعر الحالي</label><input type="number" class="input-field" id="c1-price" placeholder="53.20" step="0.01"></div>
-        <div class="input-group"><label class="input-label">عائد 5 سنين (%)</label><input type="number" class="input-field" id="c1-5y" placeholder="1157"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="input-group"><label class="input-label">أعلى سنوياً</label><input type="number" class="input-field" id="c1-high" placeholder="52.88" step="0.01"></div>
-        <div class="input-group"><label class="input-label">أدنى سنوياً</label><input type="number" class="input-field" id="c1-low" placeholder="20.01" step="0.01"></div>
-      </div>
-      <div class="input-group">
-        <label class="input-label">متوافق مع الشريعة؟</label>
-        <select class="input-field" id="c1-sharia">
-          <option value="">اختر...</option>
-          <option value="yes">✅ نعم</option>
-          <option value="no">❌ لأ</option>
-          <option value="check">⚠️ غير متأكد</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="compare-vs">
-      <div style="height:1px;flex:1;background:var(--gold-dim);"></div>
-      <div class="compare-vs-badge">VS</div>
-      <div style="height:1px;flex:1;background:var(--gold-dim);"></div>
-    </div>
-
-    <!-- السهم الثاني -->
-    <div class="card">
-      <div class="card-title">🔴 السهم الثاني</div>
-      <div class="input-group">
-        <label class="input-label">ابحث عن السهم</label>
-        <div class="search-wrapper">
-          <input type="text" class="input-field" id="c2-symbol" placeholder="مثال: TMGH" oninput="searchStocks(this.value,'c2')" autocomplete="off">
-          <div class="search-results search-hidden" id="c2-results"></div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="input-group"><label class="input-label">السعر الحالي</label><input type="number" class="input-field" id="c2-price" placeholder="99.71" step="0.01"></div>
-        <div class="input-group"><label class="input-label">عائد 5 سنين (%)</label><input type="number" class="input-field" id="c2-5y" placeholder="1284"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="input-group"><label class="input-label">أعلى سنوياً</label><input type="number" class="input-field" id="c2-high" placeholder="101.15" step="0.01"></div>
-        <div class="input-group"><label class="input-label">أدنى سنوياً</label><input type="number" class="input-field" id="c2-low" placeholder="52.99" step="0.01"></div>
-      </div>
-      <div class="input-group">
-        <label class="input-label">متوافق مع الشريعة؟</label>
-        <select class="input-field" id="c2-sharia">
-          <option value="">اختر...</option>
-          <option value="yes">✅ نعم</option>
-          <option value="no">❌ لأ</option>
-          <option value="check">⚠️ غير متأكد</option>
-        </select>
-      </div>
-    </div>
-
-    <button class="btn-primary" onclick="compareStocks()">⚡ قارن دلوقتي</button>
-
-    <!-- نتيجة المقارنة -->
-    <div class="result-box result-hidden" id="compare-result" style="margin-top:14px;">
-      <div class="section-title">📊 جدول المقارنة</div>
-      <table class="compare-table" id="compare-table"></table>
-      <div class="compare-final" id="compare-final"></div>
-    </div>
-  </div>
-</div>
-
 <!-- PAGE: إعدادات -->
 <div class="page" id="page-settings">
   <div>
@@ -912,10 +691,10 @@
     <!-- قاموس المصطلحات -->
     <div class="card">
       <div class="card-title">📚 قاموس مصطلحات البورصة</div>
-      <div style="font-size:12px;color:var(--gray);margin-bottom:14px;">اضغط على أي مصطلح لتعرف معناه</div>
+      <div style="font-size:14px;color:var(--gray);margin-bottom:14px;">اضغط على أي مصطلح لتعرف معناه</div>
 
       <!-- التداول -->
-      <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px;">⏱️ مصطلحات التداول</div>
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px;">⏱️ مصطلحات التداول</div>
 
       <div onclick="toggleTerm('t1')" class="term-header">
         <span>T+0 / T+1 / T+2</span><span id="t1-icon">＋</span>
@@ -972,7 +751,7 @@
       </div>
 
       <!-- أنواع المتداولين -->
-      <div style="font-size:11px;font-weight:700;color:var(--gold);margin:14px 0 8px;">👥 أنواع المتداولين</div>
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin:14px 0 8px;">👥 أنواع المتداولين</div>
 
       <div onclick="toggleTerm('t6')" class="term-header">
         <span>مضارب vs مستثمر</span><span id="t6-icon">＋</span>
@@ -1000,7 +779,7 @@
       </div>
 
       <!-- التحليل المالي -->
-      <div style="font-size:11px;font-weight:700;color:var(--gold);margin:14px 0 8px;">📊 التحليل المالي</div>
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin:14px 0 8px;">📊 التحليل المالي</div>
 
       <div onclick="toggleTerm('t8')" class="term-header">
         <span>P/E — نسبة السعر للربح</span><span id="t8-icon">＋</span>
@@ -1037,7 +816,7 @@
       </div>
 
       <!-- الاستراتيجيات -->
-      <div style="font-size:11px;font-weight:700;color:var(--gold);margin:14px 0 8px;">🎯 الاستراتيجيات</div>
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin:14px 0 8px;">🎯 الاستراتيجيات</div>
 
       <div onclick="toggleTerm('t11')" class="term-header">
         <span>DCA — الشراء المتدرج</span><span id="t11-icon">＋</span>
@@ -1112,17 +891,17 @@
     <!-- Claude API Key -->
     <div class="card">
       <div class="card-title">🤖 Claude AI Key</div>
-      <div style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">
+      <div style="font-size:14px;color:var(--gray);margin-bottom:12px;line-height:1.6;">
         الـ Key بيتحفظ في متصفحك بس — مش على GitHub ✅
       </div>
       <div class="input-group">
         <label class="input-label">Anthropic API Key</label>
         <div style="position:relative;">
           <input type="password" class="input-field" id="settings-api-key" placeholder="sk-ant-api03-..." style="padding-left:48px;" autocomplete="off">
-          <button onclick="toggleSettingsKey()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray);" id="toggle-key-btn">👁️</button>
+          <button onclick="toggleSettingsKey()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:19px;color:var(--gray);" id="toggle-key-btn">👁️</button>
         </div>
       </div>
-      <div id="key-status" style="font-size:12px;margin-bottom:12px;"></div>
+      <div id="key-status" style="font-size:14px;margin-bottom:12px;"></div>
       <button class="btn-primary" onclick="saveAPIKey()">💾 حفظ الـ Key</button>
       <button class="btn-danger" onclick="deleteAPIKey()" style="width:100%;margin-top:8px;padding:12px;">🗑️ مسح الـ Key</button>
     </div>
@@ -1147,14 +926,14 @@
     <!-- دليل الاستخدام -->
     <div class="card">
       <div class="card-title">❓ دليل الاستخدام</div>
-      <div style="font-size:12px;color:var(--gray);margin-bottom:12px;">اضغط على أي قسم عشان تشوف الشرح</div>
+      <div style="font-size:14px;color:var(--gray);margin-bottom:12px;">اضغط على أي قسم عشان تشوف الشرح</div>
 
       <!-- قسم التحليل -->
       <div onclick="toggleGuide('g1')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">🔍 تحليل سهم</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">🔍 تحليل سهم</span>
         <span id="g1-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g1" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g1" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">الخطوات:</strong><br>
         <strong style="color:var(--white);">1.</strong> افتح ثاندر وادخل على السهم اللي عايزه<br>
         <strong style="color:var(--white);">2.</strong> ارجع للأداة واكتب اسم السهم في البحث<br>
@@ -1170,10 +949,10 @@
 
       <!-- قسم المحفظة -->
       <div onclick="toggleGuide('g2')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">💼 المحفظة</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">💼 المحفظة</span>
         <span id="g2-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g2" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g2" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">إضافة سهم للمحفظة:</strong><br>
         <strong style="color:var(--white);">1.</strong> اشتري السهم فعلاً في ثاندر<br>
         <strong style="color:var(--white);">2.</strong> اضغط <strong style="color:var(--gold);">+ أضف صفقة جديدة</strong><br>
@@ -1191,10 +970,10 @@
 
       <!-- قسم المراقبة -->
       <div onclick="toggleGuide('g3')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">⭐ المراقبة</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">⭐ المراقبة</span>
         <span id="g3-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g3" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g3" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">للأسهم اللي عايز تشتريها بسعر أقل:</strong><br>
         <strong style="color:var(--white);">1.</strong> حلل السهم في صفحة التحليل<br>
         <strong style="color:var(--white);">2.</strong> اطلب توصية AI<br>
@@ -1207,10 +986,10 @@
 
       <!-- قسم المقارنة -->
       <div onclick="toggleGuide('g4')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">📊 مقارنة سهمين</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">📊 مقارنة سهمين</span>
         <span id="g4-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g4" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g4" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">لما تتردد بين سهمين:</strong><br>
         <strong style="color:var(--white);">1.</strong> روح تبويب <strong style="color:var(--gold);">📊 مقارنة</strong><br>
         <strong style="color:var(--white);">2.</strong> ادخل بيانات السهم الأول من ثاندر<br>
@@ -1222,10 +1001,10 @@
 
       <!-- قسم الحاسبة -->
       <div onclick="toggleGuide('g5')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">🧮 الحاسبة</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">🧮 الحاسبة</span>
         <span id="g5-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g5" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g5" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">قبل ما تشتري أي سهم:</strong><br>
         <strong style="color:var(--white);">1.</strong> ادخل <strong style="color:var(--gold);">سعر الشراء</strong> من ثاندر<br>
         <strong style="color:var(--white);">2.</strong> ادخل <strong style="color:var(--gold);">المبلغ المتاح</strong><br>
@@ -1239,10 +1018,10 @@
 
       <!-- قسم الذهب -->
       <div onclick="toggleGuide('g6')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">🥇 تحليل الذهب</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">🥇 تحليل الذهب</span>
         <span id="g6-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g6" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g6" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">لمتابعة Thndr Gold:</strong><br>
         <strong style="color:var(--white);">1.</strong> روح تبويب <strong style="color:var(--gold);">🔍 تحليل</strong> ← اختار <strong style="color:var(--gold);">🥇 ذهب</strong><br>
         <strong style="color:var(--white);">2.</strong> ادخل سعر الجرام الحالي من ثاندر<br>
@@ -1255,10 +1034,10 @@
 
       <!-- قسم التقرير -->
       <div onclick="toggleGuide('g7')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">📈 التقرير الشهري</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">📈 التقرير الشهري</span>
         <span id="g7-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g7" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g7" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">في آخر كل شهر:</strong><br>
         <strong style="color:var(--white);">1.</strong> روح تبويب <strong style="color:var(--gold);">📈 تقرير</strong><br>
         <strong style="color:var(--white);">2.</strong> شوف الشارت الدائري لتوزيع محفظتك<br>
@@ -1269,10 +1048,10 @@
 
       <!-- قسم البوت -->
       <div onclick="toggleGuide('g8')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">🤖 Telegram Bot</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">🤖 Telegram Bot</span>
         <span id="g8-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g8" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g8" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">البوت: @RSThndrAssistantBot</strong><br><br>
 
         <strong style="color:var(--gold);">📋 الأوامر:</strong><br>
@@ -1303,10 +1082,10 @@
 
       <!-- قسم الذهب -->
       <div onclick="toggleGuide('g9')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:var(--white);">🥇 تبويب الذهب</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">🥇 تبويب الذهب</span>
         <span id="g9-icon" style="color:var(--gold);">＋</span>
       </div>
-      <div id="g9" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g9" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:var(--gold);">تتابع ذهبك في ثاندر:</strong><br>
         <strong style="color:var(--white);">1.</strong> روح <strong style="color:var(--gold);">💼 محفظتي</strong> ← تبويب <strong style="color:var(--gold);">🥇 ذهب</strong><br>
         <strong style="color:var(--white);">2.</strong> اضغط <strong style="color:var(--gold);">أضف/حدّث ذهبك</strong><br>
@@ -1318,10 +1097,10 @@
 
       <!-- قسم جديد: توصيات AI -->
       <div onclick="toggleGuide('g10')" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;">
-        <span style="font-size:13px;font-weight:700;color:#a78bfa;">🤖 توصيات الذكاء الاصطناعي</span>
+        <span style="font-size:14px;font-weight:700;color:#a78bfa;">🤖 توصيات الذكاء الاصطناعي</span>
         <span id="g10-icon" style="color:#a78bfa;">＋</span>
       </div>
-      <div id="g10" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:13px;color:var(--gray);line-height:2;">
+      <div id="g10" style="display:none;background:var(--navy);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;font-size:14px;color:var(--gray);line-height:2;">
         <strong style="color:#a78bfa;">في التحليل 🔍:</strong><br>
         <strong style="color:var(--white);">•</strong> بعد التحليل اضغط <strong style="color:var(--gold);">🤖 اطلب توصية AI</strong><br>
         <strong style="color:var(--white);">•</strong> AI بيبحث في الإنترنت عن أخبار الشركة وP/E ونسبة الديون<br>
@@ -1362,7 +1141,7 @@
     </div>
     <div style="display:flex;gap:10px;margin-top:4px;">
       <button class="btn-secondary" onclick="closeGoldModal()" style="flex:1;">إلغاء</button>
-      <button class="btn-primary" onclick="saveGoldPortfolio()" style="flex:2;background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0a1628;">💾 حفظ</button>
+      <button class="btn-primary" onclick="saveGoldPortfolio()" style="flex:2;background:linear-gradient(135deg,#d4b45a,#ecd08c);color:#1c2b42;">💾 حفظ</button>
     </div>
   </div>
 </div>
@@ -1411,7 +1190,7 @@
       <div class="input-group"><label class="input-label">وقف الخسارة (%)</label><input type="number" class="input-field" id="m-stop" placeholder="10" value="10"></div>
     </div>
     <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;">
-      <div style="font-size:12px;color:var(--gold);font-weight:700;margin-bottom:10px;">🔔 تنبيهات السعر</div>
+      <div style="font-size:14px;color:var(--gold);font-weight:700;margin-bottom:10px;">🔔 تنبيهات السعر</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div class="input-group" style="margin-bottom:0;">
           <label class="input-label">🟢 تنبيه صعود (ج.م)</label>
@@ -1435,8 +1214,6 @@
 <div class="bottom-nav">
   <button class="nav-btn active" id="navbtn-analyze" onclick="showPage('analyze', this)"><span class="nav-icon">🔍</span><span class="nav-label">تحليل</span></button>
   <button class="nav-btn" id="navbtn-portfolio" onclick="showPage('portfolio', this)"><span class="nav-icon">💼</span><span class="nav-label">محفظتي</span></button>
-  <button class="nav-btn" id="navbtn-compare" onclick="showPage('compare', this)"><span class="nav-icon">📊</span><span class="nav-label">مقارنة</span></button>
-  <button class="nav-btn" id="navbtn-report" onclick="showPage('report', this)"><span class="nav-icon">📈</span><span class="nav-label">تقرير</span></button>
   <button class="nav-btn" id="navbtn-settings" onclick="showPage('settings', this)"><span class="nav-icon">⚙️</span><span class="nav-label">إعدادات</span></button>
 </div>
 
@@ -1469,18 +1246,6 @@ window.switchPortTab = function(tab) {
   if (tab==='watchlist' && typeof window.renderWatchlist === 'function') window.renderWatchlist();
   if (tab==='gold-port' && typeof window.renderGoldPortfolio === 'function') window.renderGoldPortfolio();
 };
-window.switchReportTab = function(tab) {
-  var sr = document.getElementById('section-report');
-  var sj = document.getElementById('section-journal');
-  if (sr) sr.style.display = tab==='report' ? 'block' : 'none';
-  if (sj) sj.style.display = tab==='journal' ? 'block' : 'none';
-  var tr = document.getElementById('tab-report');
-  var tj = document.getElementById('tab-journal');
-  if (tr) tr.classList.toggle('active', tab==='report');
-  if (tj) tj.classList.toggle('active', tab==='journal');
-  if (tab==='report' && typeof window.renderReport === 'function') window.renderReport();
-  if (tab==='journal' && typeof window.renderJournal === 'function') window.renderJournal();
-};
 window.showPage = function(name, btn) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -1488,7 +1253,6 @@ window.showPage = function(name, btn) {
   if (page) page.classList.add('active');
   if (btn) btn.classList.add('active');
   if (name==='portfolio' && typeof window.renderPortfolio === 'function') window.renderPortfolio();
-  if (name==='report') { if (typeof window.renderReport === 'function') window.renderReport(); window.switchReportTab('report'); }
   if (name==='settings' && typeof window.updateSettingsStatus === 'function') window.updateSettingsStatus();
 };
 </script>
@@ -1543,16 +1307,6 @@ onValue(portfolioRef, (snap) => {
   }, 100);
 });
 
-// Listen journal realtime
-const journalRef = ref(db, 'journal');
-onValue(journalRef, (snap) => {
-  var data = snap.val();
-  window._journal = data ? Object.entries(data).map(([k,v]) => ({...v, _key: k})).reverse() : [];
-  setTimeout(function() {
-    if (typeof window.renderJournal === 'function') window.renderJournal();
-  }, 100);
-});
-
 // Listen gold portfolio
 const goldRef = ref(db, 'gold_portfolio');
 window.goldRef = goldRef;
@@ -1587,7 +1341,7 @@ onValue(watchlistRef, (snap) => {
       if (tabBtn) {
         badge = document.createElement('span');
         badge.id = 'watch-badge';
-        badge.style.cssText = 'background:var(--green);color:white;font-size:9px;font-weight:900;padding:1px 5px;border-radius:10px;margin-right:4px;';
+        badge.style.cssText = 'background:var(--green);color:white;font-size:12px;font-weight:900;padding:1px 5px;border-radius:10px;margin-right:4px;';
         tabBtn.prepend(badge);
       }
     }
@@ -1666,33 +1420,6 @@ window.updatePrice = function(key, newPrice) {
   if (!newPrice) return;
   set(ref(db, 'portfolio/' + key + '/currentPrice'), newPrice)
     .then(() => showToast('✅ تم تحديث السعر'))
-    .catch(() => showToast('❌ خطأ'));
-};
-
-// ADD JOURNAL
-window.addJournalEntry = function() {
-  var symbol = document.getElementById('j-symbol').value.trim().toUpperCase();
-  var decision = document.getElementById('j-decision').value;
-  var price = document.getElementById('j-price').value;
-  var reason = document.getElementById('j-reason').value.trim();
-  var goal = document.getElementById('j-goal').value.trim();
-  if (!symbol || !reason) { showToast('⚠️ أدخل الرمز والسبب'); return; }
-  var newRef = push(journalRef);
-  set(newRef, { symbol, decision, price, reason, goal, date: new Date().toLocaleDateString('ar-EG'), time: new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) })
-    .then(() => {
-      document.getElementById('j-symbol').value = '';
-      document.getElementById('j-reason').value = '';
-      document.getElementById('j-goal').value = '';
-      document.getElementById('j-price').value = '';
-      showToast('✅ تم التسجيل');
-    })
-    .catch(() => showToast('❌ خطأ في الحفظ'));
-};
-
-// DELETE JOURNAL
-window.deleteJournal = function(key) {
-  remove(ref(db, 'journal/' + key))
-    .then(() => showToast('🗑️ تم الحذف'))
     .catch(() => showToast('❌ خطأ'));
 };
 
@@ -2046,17 +1773,17 @@ window.checkSharia = function(symbolParam, nameParam) {
   resultDiv.style.display = 'block';
   resultDiv.innerHTML =
     '<div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:var(--radius-sm);padding:12px;">' +
-      '<div style="font-size:13px;color:var(--white);margin-bottom:10px;">🔍 تحقق من <strong style="color:var(--green);">' + raw + '</strong> على kasheif:</div>' +
+      '<div style="font-size:14px;color:var(--white);margin-bottom:10px;">🔍 تحقق من <strong style="color:var(--green);">' + raw + '</strong> على kasheif:</div>' +
       '<a href="' + kasheifUrl + '" target="_blank" style="text-decoration:none;">' +
         '<div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">' +
           '<div>' +
-            '<div style="font-size:13px;font-weight:700;color:var(--green);">☪️ ابحث عن ' + raw + ' في kasheif</div>' +
-            '<div style="font-size:11px;color:var(--gray);margin-top:3px;">' + name + '</div>' +
+            '<div style="font-size:14px;font-weight:700;color:var(--green);">☪️ ابحث عن ' + raw + ' في kasheif</div>' +
+            '<div style="font-size:13px;color:var(--gray);margin-top:3px;">' + name + '</div>' +
           '</div>' +
-          '<span style="font-size:20px;">🔗</span>' +
+          '<span style="font-size:21px;">🔗</span>' +
         '</div>' +
       '</a>' +
-      '<div style="font-size:11px;color:var(--gray);margin-top:8px;">لو مش لاقيه — ابحث باسمه بالعربي في kasheif.com مباشرة</div>' +
+      '<div style="font-size:13px;color:var(--gray);margin-top:8px;">لو مش لاقيه — ابحث باسمه بالعربي في kasheif.com مباشرة</div>' +
     '</div>';
 };
 
@@ -2073,39 +1800,6 @@ window._portfolio = [];
 window._journal = [];
 window._watchlist = [];
 
-// Toggle Report List
-window.toggleReportList = function(type) {
-  var types = ['all', 'buy', 'sell', 'watch'];
-  types.forEach(function(t) {
-    var el = document.getElementById('report-list-' + t);
-    if (!el) return;
-    if (t === type) {
-      el.style.display = el.style.display === 'none' ? 'block' : 'none';
-    } else {
-      el.style.display = 'none';
-    }
-  });
-};
-window.toggleJournalEntry = function(key) {
-  var detail = document.getElementById('j-detail-'+key);
-  var icon = document.getElementById('j-icon-'+key);
-  if (!detail) return;
-  if (detail.style.display === 'none') {
-    detail.style.display = 'block';
-    if (icon) icon.textContent = '－';
-  } else {
-    detail.style.display = 'none';
-    if (icon) icon.textContent = '＋';
-  }
-};
-window.switchReportTab = function(tab) {
-  document.getElementById('section-report').style.display = tab==='report' ? 'block' : 'none';
-  document.getElementById('section-journal').style.display = tab==='journal' ? 'block' : 'none';
-  document.getElementById('tab-report').classList.toggle('active', tab==='report');
-  document.getElementById('tab-journal').classList.toggle('active', tab==='journal');
-  if (tab==='report') renderReport();
-  if (tab==='journal') renderJournal();
-};
 window.switchPortTab = function(tab) {
   document.getElementById('section-portfolio').style.display = tab==='portfolio' ? 'block' : 'none';
   document.getElementById('section-watchlist').style.display = tab==='watchlist' ? 'block' : 'none';
@@ -2166,7 +1860,7 @@ window.renderGoldPortfolio = function() {
   container.innerHTML =
     '<div class="portfolio-summary" style="background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border-color:var(--gold-dim);">' +
       '<div class="summary-label">🥇 ذهبك في ثاندر</div>' +
-      '<div style="font-size:32px;font-weight:900;color:var(--gold);">' + g.grams + ' <span style="font-size:16px;">جرام</span></div>' +
+      '<div style="font-size:32px;font-weight:900;color:var(--gold);">' + g.grams + ' <span style="font-size:17px;">جرام</span></div>' +
       '<div class="summary-pnl"><span class="'+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+pnl.toFixed(2)+' ج.م ('+(pct>=0?'+':'')+pct.toFixed(1)+'%)</span></div>' +
       '<div class="summary-row">' +
         '<div class="summary-item"><div class="summary-item-val gold">' + totalCurrent.toFixed(2) + '</div><div class="summary-item-lbl">القيمة الحالية</div></div>' +
@@ -2186,10 +1880,10 @@ window.renderGoldPortfolio = function() {
       '<div class="input-label" style="margin-bottom:6px;">تحديث السعر الحالي:</div>' +
       '<div style="display:flex;gap:8px;">' +
         '<input type="number" class="update-price-input" id="gold-update-price" placeholder="' + g.currentPrice + '" step="0.01" style="flex:1;">' +
-        '<button class="btn-secondary" style="padding:8px 12px;font-size:12px;" onclick="updateGoldPrice()">تحديث</button>' +
+        '<button class="btn-secondary" style="padding:8px 12px;font-size:14px;" onclick="updateGoldPrice()">تحديث</button>' +
       '</div>' +
     '</div>' +
-    '<button onclick="getGoldAdvice()" style="width:100%;padding:13px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);color:#a78bfa;font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🤖 AI ينصحني — أزود ولا أبيع؟</button>';
+    '<button onclick="getGoldAdvice()" style="width:100%;padding:13px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);color:#a78bfa;font-family:Cairo,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">🤖 AI ينصحني — أزود ولا أبيع؟</button>';
 };
 
 window.updateGoldPrice = async function() {
@@ -2218,7 +1912,7 @@ window.getGoldAdvice = async function() {
   var pct = totalBuy > 0 ? pnl/totalBuy*100 : 0;
 
   var aiDiv = document.getElementById('gold-port-ai');
-  aiDiv.innerHTML = '<div style="text-align:center;padding:14px;background:rgba(99,102,241,0.08);border-radius:var(--radius-sm);margin-top:8px;"><div style="font-size:16px;">🤖</div><div style="font-size:11px;color:#a78bfa;margin-top:4px;">AI بيبحث عن أسعار الذهب العالمية...</div></div>';
+  aiDiv.innerHTML = '<div style="text-align:center;padding:14px;background:rgba(99,102,241,0.08);border-radius:var(--radius-sm);margin-top:8px;"><div style="font-size:17px;">🤖</div><div style="font-size:13px;color:#a78bfa;margin-top:4px;">AI بيبحث عن أسعار الذهب العالمية...</div></div>';
 
   var prompt = `أنت مستشار استثماري متخصص. المستثمر عنده ذهب في تطبيق ثاندر المصري.
 
@@ -2279,12 +1973,12 @@ ${pct > 10 ?
 
     aiDiv.innerHTML =
       '<div style="background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(232,201,122,0.05));border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:14px;margin-top:8px;">' +
-        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">🤖 AI — أزود ولا أبيع؟</div>' +
-        '<div style="font-size:13px;color:var(--white);line-height:1.9;">' + text.replace(/\n/g,'<br>') + '</div>' +
-        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ استرشادي — القرار النهائي ليك أنت</div>' +
+        '<div style="font-size:13px;color:var(--gold);font-weight:700;margin-bottom:8px;">🤖 AI — أزود ولا أبيع؟</div>' +
+        '<div style="font-size:14px;color:var(--white);line-height:1.9;">' + text.replace(/\n/g,'<br>') + '</div>' +
+        '<div style="font-size:13px;color:var(--gray);margin-top:8px;">⚠️ استرشادي — القرار النهائي ليك أنت</div>' +
       '</div>';
   } catch(e) {
-    aiDiv.innerHTML = '<div style="color:var(--red);font-size:13px;margin-top:8px;">❌ خطأ — جرب تاني</div>';
+    aiDiv.innerHTML = '<div style="color:var(--red);font-size:14px;margin-top:8px;">❌ خطأ — جرب تاني</div>';
   }
 };
 
@@ -2319,23 +2013,23 @@ window.renderWatchlist = function() {
         '<div class="watch-status"><div class="watch-current">'+w.current.toFixed(2)+' ج.م</div><div class="watch-target-label">الهدف: '+w.target.toFixed(2)+' ج.م</div></div>' +
       '</div>' +
       '<div class="watch-progress"><div class="watch-progress-bar '+barClass+'" style="width:'+progress+'%"></div></div>' +
-      '<div style="font-size:12px;font-weight:700;color:'+statusColor+';margin-bottom:10px;">'+statusText+'</div>' +
+      '<div style="font-size:14px;font-weight:700;color:'+statusColor+';margin-bottom:10px;">'+statusText+'</div>' +
 
       // تنبيه لما السهم يطلع عن الهدف
       (wentUp ?
         '<div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px;margin-bottom:10px;">' +
-          '<div style="font-size:12px;color:var(--orange);font-weight:700;margin-bottom:6px;">⚠️ السهم طلع +'+diff.toFixed(1)+'% عن هدفك!</div>' +
-          '<div style="font-size:11px;color:var(--gray);margin-bottom:8px;">هدفك الأصلي كان '+w.target.toFixed(2)+' ج.م — دلوقتي '+w.current.toFixed(2)+' ج.م</div>' +
-          '<button onclick="getUpdatedRecommendation(\''+w._key+'\')" style="width:100%;padding:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:8px;color:white;font-family:Cairo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">🔄 حدّث التوصية بالسعر الجديد</button>' +
+          '<div style="font-size:14px;color:var(--orange);font-weight:700;margin-bottom:6px;">⚠️ السهم طلع +'+diff.toFixed(1)+'% عن هدفك!</div>' +
+          '<div style="font-size:13px;color:var(--gray);margin-bottom:8px;">هدفك الأصلي كان '+w.target.toFixed(2)+' ج.م — دلوقتي '+w.current.toFixed(2)+' ج.م</div>' +
+          '<button onclick="getUpdatedRecommendation(\''+w._key+'\')" style="width:100%;padding:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:8px;color:white;font-family:Cairo,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">🔄 حدّث التوصية بالسعر الجديد</button>' +
         '</div>' : '') +
 
       '<div id="updated-rec-'+w._key+'" style="display:none;margin-bottom:10px;"></div>' +
 
-      (w.note?'<div style="font-size:12px;color:var(--gray);margin-bottom:10px;">📝 '+w.note+'</div>':'')+
+      (w.note?'<div style="font-size:14px;color:var(--gray);margin-bottom:10px;">📝 '+w.note+'</div>':'')+
       '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">' +
         '<input type="number" class="update-price-input" id="wp-'+w._key+'" value="'+w.current+'" step="0.01" style="flex:1;min-width:80px;">' +
-        '<button class="btn-secondary" style="padding:8px 12px;font-size:12px;" onclick="updateWatchPrice(\''+w._key+'\',document.getElementById(\'wp-'+w._key+'\').value)">تحديث</button>' +
-        (reached?'<button class="btn-primary" style="padding:8px 12px;font-size:12px;width:auto;" onclick="moveToPortfolio(\''+w._key+'\')">اشتري ✅</button>':'')+
+        '<button class="btn-secondary" style="padding:8px 12px;font-size:14px;" onclick="updateWatchPrice(\''+w._key+'\',document.getElementById(\'wp-'+w._key+'\').value)">تحديث</button>' +
+        (reached?'<button class="btn-primary" style="padding:8px 12px;font-size:14px;width:auto;" onclick="moveToPortfolio(\''+w._key+'\')">اشتري ✅</button>':'')+
         '<button class="btn-danger" onclick="deleteWatch(\''+w._key+'\')">🗑️</button>' +
       '</div>' +
       '<div style="margin-top:8px;"><span class="tag">'+w.date+'</span></div>' +
@@ -2356,8 +2050,8 @@ window.getUpdatedRecommendation = async function(key) {
   recDiv.style.display = 'block';
   recDiv.innerHTML =
     '<div style="text-align:center;padding:12px;background:rgba(99,102,241,0.08);border-radius:8px;">' +
-      '<div style="font-size:14px;">🔄</div>' +
-      '<div style="font-size:11px;color:#a78bfa;margin-top:4px;">AI بيحسب التوصية الجديدة...</div>' +
+      '<div style="font-size:15px;">🔄</div>' +
+      '<div style="font-size:13px;color:#a78bfa;margin-top:4px;">AI بيحسب التوصية الجديدة...</div>' +
     '</div>';
 
   var diff = ((w.current - w.target) / w.target * 100).toFixed(1);
@@ -2410,12 +2104,12 @@ window.getUpdatedRecommendation = async function(key) {
 
     recDiv.innerHTML =
       '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.05));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:12px;">' +
-        '<div style="font-size:11px;color:#a78bfa;font-weight:700;margin-bottom:8px;">🔄 توصية محدثة — '+w.symbol+' بعد الارتفاع</div>' +
-        '<div style="font-size:12px;color:var(--white);line-height:1.8;">'+text.replace(/\n/g,'<br>')+'</div>' +
-        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ استرشادي — القرار ليك أنت</div>' +
+        '<div style="font-size:13px;color:#a78bfa;font-weight:700;margin-bottom:8px;">🔄 توصية محدثة — '+w.symbol+' بعد الارتفاع</div>' +
+        '<div style="font-size:14px;color:var(--white);line-height:1.8;">'+text.replace(/\n/g,'<br>')+'</div>' +
+        '<div style="font-size:13px;color:var(--gray);margin-top:8px;">⚠️ استرشادي — القرار ليك أنت</div>' +
       '</div>';
   } catch(e) {
-    recDiv.innerHTML = '<div style="color:var(--red);font-size:12px;">❌ خطأ — جرب تاني</div>';
+    recDiv.innerHTML = '<div style="color:var(--red);font-size:14px;">❌ خطأ — جرب تاني</div>';
   }
 };
 window.moveToPortfolio = function(key) {
@@ -2453,7 +2147,6 @@ window.showPage = window.showPage || function(name, btn) {
   if (page) page.classList.add('active');
   if (btn) btn.classList.add('active');
   if (name==='portfolio' && typeof window.renderPortfolio === 'function') window.renderPortfolio();
-  if (name==='report') { if (typeof window.renderReport === 'function') window.renderReport(); window.switchReportTab('report'); }
   if (name==='settings' && typeof window.updateSettingsStatus === 'function') window.updateSettingsStatus();
 };
 
@@ -2490,7 +2183,7 @@ window.analyzeStock = function() {
       '<div class="tag" style="cursor:pointer;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--orange);">⚠️ تحقق من kasheif.com — اضغط هنا 🔗</div>' +
     '</a>';
   }
-  document.getElementById('result-score-badge').innerHTML='<div class="score-badge '+scoreClass+'">'+score+'</div><div style="font-size:13px;color:var(--gray);margin-bottom:12px;">'+symbol+' — '+(name||'السهم')+'</div>';
+  document.getElementById('result-score-badge').innerHTML='<div class="score-badge '+scoreClass+'">'+score+'</div><div style="font-size:14px;color:var(--gray);margin-bottom:12px;">'+symbol+' — '+(name||'السهم')+'</div>';
   document.getElementById('result-position').innerHTML='<div class="info-row"><span class="info-label">السعر الحالي</span><span class="info-value gold">'+price.toFixed(2)+' ج.م</span></div><div class="info-row"><span class="info-label">أعلى سنوياً</span><span class="info-value">'+high.toFixed(2)+'</span></div><div class="info-row"><span class="info-label">أدنى سنوياً</span><span class="info-value">'+low.toFixed(2)+'</span></div><div class="info-row"><span class="info-label">عائد 5 سنين</span><span class="info-value green">+'+(fiveY||'—')+'%</span></div><div class="info-row"><span class="info-label">الموقف</span><span class="info-value orange">'+posText+'</span></div>';
   document.getElementById('result-strategy').innerHTML='<div class="strategy-step"><div class="step-num step-1">1</div><div class="step-info"><div class="step-label">الشراء الأول — دلوقتي</div><div class="step-price">'+buy1.toFixed(2)+' ج.م</div><div class="step-shares">'+s1+' سهم ≈ '+(budget?Math.round(budget*0.33):'—')+' ج.م</div></div></div><div class="strategy-step"><div class="step-num step-2">2</div><div class="step-info"><div class="step-label">الشراء الثاني — لو نزل 10%</div><div class="step-price">'+buy2.toFixed(2)+' ج.م</div><div class="step-shares">'+s2+' سهم</div></div></div><div class="strategy-step"><div class="step-num step-3">3</div><div class="step-info"><div class="step-label">الشراء الثالث — لو نزل 20%</div><div class="step-price">'+buy3.toFixed(2)+' ج.م</div><div class="step-shares">'+s3+' سهم</div></div></div>';
   document.getElementById('result-targets').innerHTML='<div class="info-row"><span class="info-label">🎯 هدف 1 (+15%)</span><span class="info-value green">'+t1+' ج.م</span></div><div class="info-row"><span class="info-label">🎯 هدف 2 (+25%)</span><span class="info-value green">'+t2+' ج.م</span></div><div class="info-row"><span class="info-label">🎯 هدف 3 (+40%)</span><span class="info-value green">'+t3+' ج.م</span></div><div class="info-row"><span class="info-label">🛑 وقف (-10%)</span><span class="info-value red">'+st1+' ج.م</span></div><div class="info-row"><span class="info-label">🛑 وقف (-15%)</span><span class="info-value red">'+st2+' ج.م</span></div>';
@@ -2508,15 +2201,6 @@ window.saveToPortfolio = function() {
   document.getElementById('m-shares').value=lastAnalysis.shares1||1;
   document.getElementById('m-current-price').value=lastAnalysis.price;
   openAddStockModal();
-};
-
-window.saveToJournal = function() {
-  if(!lastAnalysis) return;
-  showPage('journal', document.getElementById('navbtn-report'));
-  document.getElementById('j-symbol').value=lastAnalysis.symbol;
-  document.getElementById('j-price').value=lastAnalysis.buy1;
-  document.getElementById('j-decision').value='buy';
-  showToast('✅ اكتب سبب قرارك وسجل');
 };
 
 // Calculator
@@ -2612,7 +2296,7 @@ window.getSellPlan = async function(key) {
     planDiv.style.display = 'none'; return;
   }
   planDiv.style.display = 'block';
-  planDiv.innerHTML = '<div style="text-align:center;padding:12px;background:rgba(99,102,241,0.08);border-radius:8px;"><div style="font-size:16px;">🤖</div><div style="font-size:11px;color:#a78bfa;margin-top:4px;">AI بيحلل وضعك...</div></div>';
+  planDiv.innerHTML = '<div style="text-align:center;padding:12px;background:rgba(99,102,241,0.08);border-radius:8px;"><div style="font-size:17px;">🤖</div><div style="font-size:13px;color:#a78bfa;margin-top:4px;">AI بيحلل وضعك...</div></div>';
 
   var current = s.currentPrice || s.buyPrice;
   var pnl = (current - s.buyPrice) * s.shares;
@@ -2664,12 +2348,12 @@ window.getSellPlan = async function(key) {
     var text = data.content?.[0]?.text || 'مش قادر أحلل دلوقتي';
     planDiv.innerHTML =
       '<div style="background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(239,68,68,0.03));border:1px solid rgba(239,68,68,0.25);border-radius:var(--radius-sm);padding:14px;">'+
-        '<div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:8px;">🤖 خطة البيع — '+s.symbol+'</div>'+
-        '<div style="font-size:13px;color:var(--white);line-height:1.8;">'+text.replace(/\n/g,'<br>')+'</div>'+
-        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ استرشادي — القرار ليك أنت</div>'+
+        '<div style="font-size:13px;color:var(--red);font-weight:700;margin-bottom:8px;">🤖 خطة البيع — '+s.symbol+'</div>'+
+        '<div style="font-size:14px;color:var(--white);line-height:1.8;">'+text.replace(/\n/g,'<br>')+'</div>'+
+        '<div style="font-size:13px;color:var(--gray);margin-top:8px;">⚠️ استرشادي — القرار ليك أنت</div>'+
       '</div>';
   } catch(e) {
-    planDiv.innerHTML = '<div style="color:var(--red);font-size:13px;">❌ خطأ — جرب تاني</div>';
+    planDiv.innerHTML = '<div style="color:var(--red);font-size:14px;">❌ خطأ — جرب تاني</div>';
   }
 };
 
@@ -2715,13 +2399,13 @@ window.renderPortfolio = function() {
         '<div class="input-label" style="margin-bottom:6px;">تحديث السعر الحالي:</div>'+
         '<div style="display:flex;gap:8px;align-items:center;">'+
           '<input type="number" class="update-price-input" id="up-'+s._key+'" value="'+s.currentPrice+'" step="0.01" style="flex:1;">'+
-          '<button class="btn-secondary" style="padding:8px 12px;font-size:12px;" onclick="updatePrice(\''+s._key+'\',document.getElementById(\'up-'+s._key+'\').value)">تحديث</button>'+
+          '<button class="btn-secondary" style="padding:8px 12px;font-size:14px;" onclick="updatePrice(\''+s._key+'\',document.getElementById(\'up-'+s._key+'\').value)">تحديث</button>'+
           '<button class="btn-danger" onclick="deleteStock(\''+s._key+'\')">🗑️</button>'+
         '</div>'+
       '</div>'+
 
       // زرار خطة البيع
-      '<button onclick="getSellPlan(\''+s._key+'\')" style="width:100%;margin-top:10px;padding:11px;background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);color:var(--red);font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">'+
+      '<button onclick="getSellPlan(\''+s._key+'\')" style="width:100%;margin-top:10px;padding:11px;background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);color:var(--red);font-family:Cairo,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">'+
         '🤖 خطة البيع الذكية'+
       '</button>'+
       '<div id="sell-plan-'+s._key+'" style="display:none;margin-top:8px;"></div>'+
@@ -2743,411 +2427,6 @@ window.renderPortfolio = function() {
   checkAlerts();
 };
 
-// Journal render
-window.renderJournal = function() {
-  var j = window._journal || [];
-  var list = document.getElementById('journal-list');
-  if(!list) return;
-  if(j.length===0){
-    list.innerHTML='<div class="empty-state"><div class="empty-icon">📓</div><div class="empty-text">ما فيش قرارات لسه<br>سجل أول قرار استثماري</div></div>';
-    return;
-  }
-  var dl={buy:'🟢 شراء',sell:'🔴 بيع',watch:'🟡 مراقبة'};
-  var dc={buy:'decision-buy',sell:'decision-sell',watch:'decision-watch'};
-  var html='';
-  j.forEach(function(e){
-    var isAI = e.isAI;
-    html+=
-      '<div class="journal-entry" style="cursor:pointer;'+(isAI?'border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.05);':'')+'" onclick="toggleJournalEntry(\''+e._key+'\')">' +
-        '<div class="journal-header">' +
-          '<div class="journal-symbol">'+e.symbol+(e.price?' — '+e.price+' ج.م':'')+
-          (isAI?' <span style="font-size:10px;background:rgba(99,102,241,0.2);color:#a78bfa;padding:2px 8px;border-radius:10px;margin-right:4px;">🤖 AI</span>':'')+'</div>'+
-          '<div style="display:flex;align-items:center;gap:8px;">'+
-            '<div class="journal-date">'+e.date+' '+e.time+'</div>'+
-            '<span id="j-icon-'+e._key+'" style="color:var(--gold);font-size:14px;">＋</span>'+
-          '</div>'+
-        '</div>'+
-        '<div class="journal-decision '+(dc[e.decision]||'decision-watch')+'">'+(dl[e.decision]||e.decision)+'</div>'+
-
-        // المحتوى المخفي
-        '<div id="j-detail-'+e._key+'" style="display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px;">'+
-          '<div class="journal-note" style="white-space:pre-wrap;margin-bottom:8px;">'+e.reason+'</div>'+
-          (e.goal&&!isAI?'<div style="background:rgba(201,168,76,0.08);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--gold);margin-bottom:8px;">🎯 '+e.goal+'</div>':'')+
-          '<button class="btn-danger" onclick="event.stopPropagation();deleteJournal(\''+e._key+'\')" style="margin-top:4px;">🗑️ حذف</button>'+
-        '</div>'+
-      '</div>';
-  });
-  list.innerHTML=html;
-};
-
-// Modal
-window.openAddStockModal = function(){ document.getElementById('addStockModal').classList.add('open'); };
-window.closeModal = function(){ document.getElementById('addStockModal').classList.remove('open'); };
-
-// ===== MONTHLY REPORT =====
-window.renderReport = function() {
-  var port = window._portfolio || [];
-  var watches = window._watchlist || [];
-  var journal = window._journal || [];
-  var container = document.getElementById('report-content');
-  if (!container) return;
-
-  var now = new Date();
-  var monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  var monthName = monthNames[now.getMonth()];
-  var year = now.getFullYear();
-
-  // Portfolio stats
-  var totalCost=0, totalValue=0, winners=0, losers=0;
-  var bestStock=null, bestPct=-999, worstStock=null, worstPct=999;
-
-  port.forEach(function(s) {
-    var cost = s.buyPrice * s.shares;
-    var value = s.currentPrice * s.shares;
-    var pct = cost>0 ? (value-cost)/cost*100 : 0;
-    totalCost += cost;
-    totalValue += value;
-    if (pct>=0) winners++; else losers++;
-    if (pct>bestPct) { bestPct=pct; bestStock=s; }
-    if (pct<worstPct) { worstPct=pct; worstStock=s; }
-  });
-
-  var totalPnl = totalValue - totalCost;
-  var totalPct = totalCost>0 ? totalPnl/totalCost*100 : 0;
-
-  // Journal stats
-  var buyCount = journal.filter(function(j){ return j.decision==='buy'; }).length;
-  var sellCount = journal.filter(function(j){ return j.decision==='sell'; }).length;
-  var watchCount = journal.filter(function(j){ return j.decision==='watch'; }).length;
-
-  // Watchlist stats
-  var watchReached = watches.filter(function(w){ return w.current<=w.target; }).length;
-
-  // Smart tip
-  var tip = '';
-  if (port.length === 0) {
-    tip = '<strong>ابدأ رحلتك!</strong> لسه ما أضفتش أي سهم في محفظتك. جرب تبدأ بمبلغ صغير وتتعلم.';
-  } else if (totalPct > 15) {
-    tip = '<strong>أداء ممتاز! 🏆</strong> محفظتك بتحقق أكثر من 15% ربح. فكر في تأمين جزء من الأرباح.';
-  } else if (totalPct > 0) {
-    tip = '<strong>أداء كويس! ✅</strong> محفظتك في المنطقة الخضرا. استمر في التنويع والصبر.';
-  } else if (totalPct > -10) {
-    tip = '<strong>خسارة بسيطة ⚠️</strong> السوق بيتقلب — لو الأساسيات كويسة استمر في الخطة.';
-  } else {
-    tip = '<strong>مراجعة مطلوبة 🔴</strong> الخسارة تجاوزت 10% — راجع أسباب الهبوط وقيّم وقف الخسارة.';
-  }
-
-  var html = '';
-
-  // Header
-  html += '<div class="report-card">'+
-    '<div class="report-header">'+
-      '<div style="font-size:28px;margin-bottom:8px;">📊</div>'+
-      '<div class="report-title">تقرير '+monthName+' '+year+'</div>'+
-      '<div class="report-date">تم الإنشاء: '+now.toLocaleDateString('ar-EG')+'</div>'+
-    '</div>';
-
-  // Portfolio summary
-  if (port.length > 0) {
-    html += '<div class="report-section">'+
-      '<div class="report-section-title">💼 المحفظة</div>'+
-      '<div class="report-big-number '+(totalPnl>=0?'green':'red')+'">'+(totalPnl>=0?'+':'')+totalPnl.toFixed(2)+' ج.م</div>'+
-      '<div style="text-align:center;font-size:14px;color:'+(totalPct>=0?'var(--green)':'var(--red)')+';margin-bottom:12px;">'+(totalPct>=0?'+':'')+totalPct.toFixed(2)+'% عائد إجمالي</div>'+
-      '<div class="report-grid">'+
-        '<div class="report-item"><div class="report-item-val gold">'+totalCost.toFixed(0)+' ج.م</div><div class="report-item-lbl">إجمالي الاستثمار</div></div>'+
-        '<div class="report-item"><div class="report-item-val">'+totalValue.toFixed(0)+' ج.م</div><div class="report-item-lbl">القيمة الحالية</div></div>'+
-        '<div class="report-item"><div class="report-item-val green">'+winners+'</div><div class="report-item-lbl">أسهم رابحة</div></div>'+
-        '<div class="report-item"><div class="report-item-val red">'+losers+'</div><div class="report-item-lbl">أسهم خاسرة</div></div>'+
-      '</div>'+
-    '</div>';
-
-    // Best & Worst
-    if (bestStock || worstStock) {
-      html += '<div class="report-section">'+
-        '<div class="report-section-title">🏆 أبرز الأسهم</div>';
-      if (bestStock) html += '<div class="report-highlight"><span class="report-highlight-label">🟢 أفضل سهم</span><span class="report-highlight-val green">'+bestStock.symbol+' ('+(bestPct>=0?'+':'')+bestPct.toFixed(1)+'%)</span></div>';
-      if (worstStock && worstStock.symbol!==bestStock?.symbol) html += '<div class="report-highlight"><span class="report-highlight-label">🔴 أضعف سهم</span><span class="report-highlight-val red">'+worstStock.symbol+' ('+(worstPct>=0?'+':'')+worstPct.toFixed(1)+'%)</span></div>';
-      html += '</div>';
-    }
-  } else {
-    html += '<div class="report-section"><div class="report-section-title">💼 المحفظة</div><div style="text-align:center;color:var(--gray);padding:20px;">لسه ما أضفتش أي سهم</div></div>';
-  }
-
-  // Watchlist
-  html += '<div class="report-section">'+
-    '<div class="report-section-title">⭐ المراقبة</div>'+
-    '<div class="report-grid">'+
-      '<div class="report-item"><div class="report-item-val gold">'+watches.length+'</div><div class="report-item-lbl">سهم تتابعه</div></div>'+
-      '<div class="report-item"><div class="report-item-val green">'+watchReached+'</div><div class="report-item-lbl">وصل سعر الشراء</div></div>'+
-    '</div>'+
-  '</div>';
-
-  // Journal
-  // بناء قوائم القرارات
-  var allItems = (window._journal || []);
-  var buyItems = allItems.filter(function(j){ return j.decision==='buy'; });
-  var sellItems = allItems.filter(function(j){ return j.decision==='sell'; });
-  var watchItems = allItems.filter(function(j){ return j.decision==='watch'; });
-
-  function buildMiniList(items, color) {
-    if (items.length === 0) return '<div style="font-size:12px;color:var(--gray);padding:8px;">مفيش قرارات</div>';
-    return items.map(function(e) {
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;">' +
-        '<span style="font-weight:700;color:#fff;">' + e.symbol + '</span>' +
-        '<span style="color:var(--gray);">' + (e.price ? e.price + ' ج.م' : '') + '</span>' +
-        '<span style="color:var(--gray);font-size:10px;">' + e.date + '</span>' +
-      '</div>';
-    }).join('');
-  }
-
-  html += '<div class="report-section">'+
-    '<div class="report-section-title">📓 قراراتك</div>'+
-    '<div class="report-grid">'+
-
-      // كل القرارات
-      '<div class="report-item" style="border:1px solid rgba(201,168,76,0.2);cursor:pointer;" onclick="toggleReportList(\'all\')">' +
-        '<div class="report-item-val">'+journal.length+'</div>' +
-        '<div class="report-item-lbl">كل القرارات</div>' +
-      '</div>'+
-
-      // شراء
-      '<div class="report-item" style="border:1px solid rgba(34,197,94,0.2);cursor:pointer;" onclick="toggleReportList(\'buy\')">' +
-        '<div class="report-item-val green">'+buyCount+'</div>' +
-        '<div class="report-item-lbl">شراء</div>' +
-      '</div>'+
-
-      // بيع
-      '<div class="report-item" style="border:1px solid rgba(239,68,68,0.2);cursor:pointer;" onclick="toggleReportList(\'sell\')">' +
-        '<div class="report-item-val red">'+sellCount+'</div>' +
-        '<div class="report-item-lbl">بيع</div>' +
-      '</div>'+
-
-      // مراقبة
-      '<div class="report-item" style="border:1px solid rgba(245,158,11,0.2);cursor:pointer;" onclick="toggleReportList(\'watch\')">' +
-        '<div class="report-item-val orange">'+watchCount+'</div>' +
-        '<div class="report-item-lbl">مراقبة</div>' +
-      '</div>'+
-
-    '</div>'+
-
-    // القوائم المنسدلة
-    '<div id="report-list-all" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
-      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--gold);background:rgba(201,168,76,0.08);">📋 كل القرارات</div>'+
-      buildMiniList(allItems, '--gold')+
-    '</div>'+
-
-    '<div id="report-list-buy" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
-      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--green);background:rgba(34,197,94,0.08);">🟢 قرارات الشراء</div>'+
-      buildMiniList(buyItems, '--green')+
-    '</div>'+
-
-    '<div id="report-list-sell" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
-      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--red);background:rgba(239,68,68,0.08);">🔴 قرارات البيع</div>'+
-      buildMiniList(sellItems, '--red')+
-    '</div>'+
-
-    '<div id="report-list-watch" style="display:none;background:var(--navy);border-radius:var(--radius-sm);margin-top:8px;overflow:hidden;">'+
-      '<div style="padding:8px 10px;font-size:11px;font-weight:700;color:var(--orange);background:rgba(245,158,11,0.08);">🟡 قرارات المراقبة</div>'+
-      buildMiniList(watchItems, '--orange')+
-    '</div>'+
-
-  '</div>';
-
-  // Smart tip
-  html += '<div class="report-section">'+
-    '<div class="report-section-title">💡 نصيحة الشهر</div>'+
-    '<div class="report-tip">'+tip+'</div>'+
-  '</div>';
-
-  html += '</div>';
-
-  // Share button
-  html += '<button class="btn-share" onclick="shareReport()">📤 شارك التقرير</button>';
-
-  // AI Analysis Button
-  if (port.length > 0) {
-    html += '<button class="btn-primary" onclick="getAIPortfolioAnalysis()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);margin-top:10px;">🤖 AI يحلل محفظتك ويقارنها بالسوق</button>';
-  }
-
-  container.innerHTML = html;
-
-  // رسم الشارتات بعد ما الـ HTML يتحمل
-  if (port.length > 0) {
-    renderPortfolioCharts(port, totalCost, totalValue);
-  }
-};
-
-// ===== PORTFOLIO CHARTS =====
-window.renderPortfolioCharts = function(port, totalCost, totalValue) {
-  if (!port || port.length === 0) return;
-
-  var colors = ['#c9a84c','#22c55e','#6366f1','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316'];
-
-  // شارت دائري للتوزيع
-  var donutSize = 120;
-  var cx = donutSize/2, cy = donutSize/2, r = 45, strokeW = 18;
-  var circ = 2 * Math.PI * r;
-  var donutHTML = '<svg width="'+donutSize+'" height="'+donutSize+'" class="donut-svg" viewBox="0 0 '+donutSize+' '+donutSize+'">';
-  donutHTML += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#1a3458" stroke-width="'+strokeW+'"/>';
-
-  var offset = 0;
-  var legendHTML = '';
-  port.forEach(function(s, i) {
-    var val = (s.currentPrice || s.buyPrice) * s.shares;
-    var pct = totalValue > 0 ? val/totalValue : 0;
-    var dash = pct * circ;
-    var gap = circ - dash;
-    var color = colors[i % colors.length];
-    donutHTML += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+strokeW+'" stroke-dasharray="'+dash.toFixed(1)+' '+gap.toFixed(1)+'" stroke-dashoffset="'+(-(offset * circ)).toFixed(1)+'" transform="rotate(-90 '+cx+' '+cy+')" style="transition:stroke-dasharray 0.5s"/>';
-    offset += pct;
-    var pnl = val - s.buyPrice * s.shares;
-    var pnlPct = s.buyPrice > 0 ? pnl/(s.buyPrice*s.shares)*100 : 0;
-    legendHTML += '<div class="legend-item">'+
-      '<div class="legend-dot" style="background:'+color+'"></div>'+
-      '<span class="legend-name">'+s.symbol+'</span>'+
-      '<span class="legend-val '+(pnlPct>=0?'green':'red')+'">'+(pnlPct>=0?'+':'')+pnlPct.toFixed(1)+'%</span>'+
-    '</div>';
-  });
-
-  // المجموع في المنتصف
-  var totalPnl = totalValue - totalCost;
-  var totalPct = totalCost > 0 ? totalPnl/totalCost*100 : 0;
-  donutHTML += '<text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" fill="'+(totalPnl>=0?'#22c55e':'#ef4444')+'" font-size="11" font-weight="bold" font-family="Cairo">'+(totalPnl>=0?'+':'')+totalPct.toFixed(1)+'%</text>';
-  donutHTML += '<text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" fill="#8899aa" font-size="8" font-family="Cairo">العائد</text>';
-  donutHTML += '</svg>';
-
-  // شارت الأعمدة للأداء
-  var barsHTML = '<div class="bars-wrap">';
-  var maxPct = 0;
-  var stockData = port.map(function(s) {
-    var pnl = (s.currentPrice - s.buyPrice) / s.buyPrice * 100;
-    if (Math.abs(pnl) > maxPct) maxPct = Math.abs(pnl);
-    return { symbol: s.symbol, pct: pnl };
-  });
-  if (maxPct === 0) maxPct = 1;
-
-  stockData.forEach(function(s, i) {
-    var color = s.pct >= 0 ? '#22c55e' : '#ef4444';
-    var width = Math.abs(s.pct) / maxPct * 100;
-    barsHTML += '<div class="bar-item">'+
-      '<div class="bar-label">'+s.symbol+'</div>'+
-      '<div class="bar-track"><div class="bar-fill" style="width:'+width+'%;background:'+color+'"></div></div>'+
-      '<div class="bar-val" style="color:'+color+'">'+(s.pct>=0?'+':'')+s.pct.toFixed(1)+'%</div>'+
-    '</div>';
-  });
-  barsHTML += '</div>';
-
-  // إضافة الشارتات في التقرير
-  var chartHTML =
-    '<div class="chart-container" style="margin-top:14px;">'+
-      '<div class="chart-title">🍩 توزيع المحفظة والعائد</div>'+
-      '<div class="donut-wrap">'+donutHTML+legendHTML+'</div>'+
-    '</div>'+
-    '<div class="chart-container">'+
-      '<div class="chart-title">📊 أداء كل سهم</div>'+
-      barsHTML+
-    '</div>';
-
-  var aiDiv = document.getElementById('ai-portfolio-result');
-  if (aiDiv) aiDiv.innerHTML = chartHTML;
-};
-
-// ===== AI PORTFOLIO ANALYSIS =====
-window.getAIPortfolioAnalysis = async function() {
-  var port = window._portfolio || [];
-  var watches = window._watchlist || [];
-  if (port.length === 0) { showToast('⚠️ المحفظة فاضية'); return; }
-
-  var apiKey = localStorage.getItem('rs_claude_key') || CLAUDE_API_KEY;
-  if (!apiKey) { showToast('⚠️ أضف API Key في الإعدادات'); return; }
-
-  var btn = document.querySelector('#report-content button.btn-primary');
-  if (btn) { btn.textContent = '⏳ AI بيحلل محفظتك...'; btn.disabled = true; }
-
-  // تجميع بيانات المحفظة
-  var portfolioData = port.map(function(s) {
-    var pnl = (s.currentPrice - s.buyPrice) / s.buyPrice * 100;
-    return s.symbol + ': اشتريت بـ ' + s.buyPrice + ' دلوقتي ' + s.currentPrice + ' (' + (pnl>=0?'+':'') + pnl.toFixed(1) + '%)';
-  }).join('\n');
-
-  var watchData = watches.length > 0 ? watches.map(function(w) {
-    return w.symbol + ': بتراقبه عند ' + w.target + ' ج.م';
-  }).join('\n') : 'مفيش أسهم في المراقبة';
-
-  var prompt = `أنت مستشار استثماري متخصص في البورصة المصرية. حلل محفظة المستثمر التالية وقارنها بأداء السوق المصري:
-
-محفظتي:
-${portfolioData}
-
-أسهم المراقبة:
-${watchData}
-
-مؤشر EGX30 السوق المصري: أداء متذبذب في 2026
-
-قدم تحليلاً مختصراً وعملياً باللغة العربية يشمل:
-
-1. 📊 تقييم المحفظة (جملتين)
-2. 💪 أقوى سهم عندك ولية
-3. ⚠️ أضعف سهم يحتاج مراجعة
-4. 🎯 توصية واحدة عملية لتحسين المحفظة
-5. 📈 هل محفظتك أحسن أو أضعف من السوق؟
-
-اجعل ردك مختصراً وعملياً في 8 أسطر كحد أقصى.`;
-
-  try {
-    var response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1200,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    var data = await response.json();
-    var text = data.content?.[0]?.text || 'مش قادر أحلل دلوقتي';
-
-    var aiDiv = document.getElementById('ai-portfolio-result');
-    var existingCharts = aiDiv ? aiDiv.querySelector('.chart-container') : null;
-    var chartsHTML = existingCharts ? existingCharts.parentElement.innerHTML.split('<div style="background')[0] : '';
-
-    if (aiDiv) {
-      aiDiv.innerHTML = (chartsHTML || '') +
-        '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:16px;margin-top:14px;">'+
-          '<div style="font-size:12px;color:#8b5cf6;font-weight:700;margin-bottom:10px;">🤖 تحليل AI لمحفظتك</div>'+
-          '<div style="font-size:13px;color:var(--white);line-height:1.9;">' + text.replace(/\n/g, '<br>') + '</div>'+
-          '<div style="font-size:10px;color:var(--gray);margin-top:10px;">⚠️ تحليل استرشادي — القرار النهائي ليك أنت</div>'+
-        '</div>';
-    }
-    if (btn) { btn.textContent = '🤖 AI يحلل محفظتك ويقارنها بالسوق'; btn.disabled = false; }
-  } catch(e) {
-    showToast('❌ خطأ في الاتصال — جرب تاني');
-    if (btn) { btn.textContent = '🤖 AI يحلل محفظتك ويقارنها بالسوق'; btn.disabled = false; }
-  }
-};
-window.shareReport = function() {
-  var port = window._portfolio || [];
-  var totalCost=0, totalValue=0;
-  port.forEach(function(s){ totalCost+=s.buyPrice*s.shares; totalValue+=s.currentPrice*s.shares; });
-  var pnl = totalValue-totalCost;
-  var pct = totalCost>0 ? pnl/totalCost*100 : 0;
-  var now = new Date();
-  var text = '📊 تقرير محفظتي — '+now.toLocaleDateString('ar-EG')+'\n\n'+
-    '💰 إجمالي الاستثمار: '+totalCost.toFixed(0)+' ج.م\n'+
-    '📈 القيمة الحالية: '+totalValue.toFixed(0)+' ج.م\n'+
-    (pnl>=0?'✅':'❌')+' الربح/الخسارة: '+(pnl>=0?'+':'')+pnl.toFixed(2)+' ج.م ('+(pct>=0?'+':'')+pct.toFixed(1)+'%)\n'+
-    '📱 مساعد ثاندر RS';
-  if (navigator.share) {
-    navigator.share({ title:'تقرير محفظتي', text:text }).catch(function(){});
-  } else {
-    navigator.clipboard.writeText(text).then(function(){ showToast('✅ تم النسخ — الصق في أي مكان'); });
-  }
-};
 
 // ===== AI RECOMMENDATION =====
 var CLAUDE_API_KEY = localStorage.getItem('rs_claude_key') || '';
@@ -3194,8 +2473,8 @@ window.getAIRecommendation = async function() {
   document.getElementById('ai-result').innerHTML =
     '<div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:16px;text-align:center;">' +
       '<div style="font-size:24px;margin-bottom:8px;">🤖</div>' +
-      '<div style="font-size:13px;color:#a78bfa;font-weight:700;margin-bottom:4px;">AI بيبحث عن ' + lastAnalysis.symbol + '</div>' +
-      '<div id="ai-progress" style="font-size:11px;color:var(--gray);">جاري البحث عن أخبار الشركة...</div>' +
+      '<div style="font-size:14px;color:#a78bfa;font-weight:700;margin-bottom:4px;">AI بيبحث عن ' + lastAnalysis.symbol + '</div>' +
+      '<div id="ai-progress" style="font-size:13px;color:var(--gray);">جاري البحث عن أخبار الشركة...</div>' +
     '</div>';
 
   var steps = [
@@ -3337,26 +2616,26 @@ ${extra.volume ? '\n📈 التحليل الفني:\n[تحليل حجم التد
 
     document.getElementById('ai-result').innerHTML =
       '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-sm);padding:14px;">' +
-        '<div style="font-size:11px;color:#8b5cf6;font-weight:700;margin-bottom:8px;">🤖 Claude AI</div>' +
-        '<div style="font-size:13px;color:var(--white);line-height:1.8;">' + text.replace(/\n/g, '<br>') + '</div>' +
-        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ هذا رأي استرشادي — القرار النهائي ليك أنت</div>' +
+        '<div style="font-size:13px;color:#8b5cf6;font-weight:700;margin-bottom:8px;">🤖 Claude AI</div>' +
+        '<div style="font-size:14px;color:var(--white);line-height:1.8;">' + text.replace(/\n/g, '<br>') + '</div>' +
+        '<div style="font-size:13px;color:var(--gray);margin-top:8px;">⚠️ هذا رأي استرشادي — القرار النهائي ليك أنت</div>' +
       '</div>' +
       '<div style="background:var(--navy-light);border-radius:var(--radius-sm);padding:12px;margin-top:10px;">' +
-        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">📌 الأسعار المستخرجة تلقائياً:</div>' +
+        '<div style="font-size:13px;color:var(--gold);font-weight:700;margin-bottom:8px;">📌 الأسعار المستخرجة تلقائياً:</div>' +
         '<div style="display:flex;gap:8px;margin-bottom:8px;">' +
           '<div style="flex:1;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:8px;text-align:center;">' +
-            '<div style="font-size:10px;color:var(--gray);">🎯 هدف الربح</div>' +
-            '<div style="font-size:15px;font-weight:900;color:var(--green);">' + targetPrice + '</div>' +
+            '<div style="font-size:13px;color:var(--gray);">🎯 هدف الربح</div>' +
+            '<div style="font-size:16px;font-weight:900;color:var(--green);">' + targetPrice + '</div>' +
           '</div>' +
           '<div style="flex:1;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:8px;text-align:center;">' +
-            '<div style="font-size:10px;color:var(--gray);">🔔 سعر الدخول</div>' +
-            '<div style="font-size:15px;font-weight:900;color:var(--red);">' + correctionPrice + '</div>' +
+            '<div style="font-size:13px;color:var(--gray);">🔔 سعر الدخول</div>' +
+            '<div style="font-size:16px;font-weight:900;color:var(--red);">' + correctionPrice + '</div>' +
           '</div>' +
         '</div>' +
       '</div>' +
       '<div style="margin-top:8px;display:flex;gap:8px;">' +
-        '<button onclick="addAIToPortfolioAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💼 أضف للمحفظة مع تنبيهات</button>' +
-        '<button onclick="addAIWatchAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">⭐ أضف للمراقبة عند ' + correctionPrice + '</button>' +
+        '<button onclick="addAIToPortfolioAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#34d16f,#22b35f);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">💼 أضف للمحفظة مع تنبيهات</button>' +
+        '<button onclick="addAIWatchAlert()" style="flex:1;padding:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:var(--radius-sm);color:white;font-family:Cairo,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">⭐ أضف للمراقبة عند ' + correctionPrice + '</button>' +
       '</div>';
 
     // حفظ التوصية تلقائياً في اليوميات
@@ -3380,7 +2659,7 @@ ${extra.volume ? '\n📈 التحليل الفني:\n[تحليل حجم التد
     clearInterval(progressInterval);
     console.error('AI error:', e);
     document.getElementById('ai-result').innerHTML =
-      '<div style="color:var(--red);font-size:13px;padding:12px;background:rgba(239,68,68,0.1);border-radius:8px;">❌ خطأ في الاتصال — تأكد من الـ API Key وجرب تاني</div>' +
+      '<div style="color:var(--red);font-size:14px;padding:12px;background:rgba(239,68,68,0.1);border-radius:8px;">❌ خطأ في الاتصال — تأكد من الـ API Key وجرب تاني</div>' +
       '<button class="btn-primary" onclick="getAIRecommendation()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);margin-top:8px;">🔄 جرب تاني</button>';
   }
 };
@@ -3519,10 +2798,10 @@ window.analyzeGold = function() {
       '<div class="section-title">💰 بمبلغ '+budget+' ج.م تقدر تشتري</div>' +
       '<div style="text-align:center;padding:16px;background:var(--navy-light);border-radius:var(--radius-sm);">' +
         '<div style="font-size:32px;font-weight:900;color:var(--gold);">'+grams+'</div>' +
-        '<div style="font-size:13px;color:var(--gray);">جرام ذهب</div>' +
+        '<div style="font-size:14px;color:var(--gray);">جرام ذهب</div>' +
       '</div>' : '') +
     '<div class="divider"></div>' +
-    '<div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--gray);line-height:1.7;">' +
+    '<div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-sm);padding:12px;font-size:14px;color:var(--gray);line-height:1.7;">' +
       '<strong style="color:var(--gold);">💡 نصيحة الذهب:</strong><br>' +
       'الذهب استثمار تأمين مش مضاربة — أحسن استراتيجية هي الشراء الشهري المنتظم بغض النظر عن السعر (DCA)' +
     '</div>';
@@ -3556,8 +2835,8 @@ window.analyzeGoldAI = async function() {
 
   document.getElementById('gold-ai-result').innerHTML =
     '<div style="text-align:center;padding:16px;background:rgba(99,102,241,0.1);border-radius:var(--radius-sm);">' +
-      '<div style="font-size:20px;margin-bottom:8px;">🤖</div>' +
-      '<div style="font-size:12px;color:#a78bfa;">AI بيبحث عن أسعار الذهب العالمية...</div>' +
+      '<div style="font-size:21px;margin-bottom:8px;">🤖</div>' +
+      '<div style="font-size:14px;color:#a78bfa;">AI بيبحث عن أسعار الذهب العالمية...</div>' +
     '</div>';
 
   var portfolioSection = hasPortfolio ?
@@ -3640,13 +2919,13 @@ ${g.budget ? `• كيف تستثمر الـ ${g.budget} جنيه في الذه�
 
     document.getElementById('gold-ai-result').innerHTML =
       '<div style="background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(232,201,122,0.1));border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:14px;">' +
-        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">🤖 Claude AI — تحليل الذهب</div>' +
-        '<div style="font-size:13px;color:var(--white);line-height:1.9;">' + text.replace(/\n/g, '<br>') + '</div>' +
-        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ تحليل استرشادي — القرار النهائي ليك أنت</div>' +
+        '<div style="font-size:13px;color:var(--gold);font-weight:700;margin-bottom:8px;">🤖 Claude AI — تحليل الذهب</div>' +
+        '<div style="font-size:14px;color:var(--white);line-height:1.9;">' + text.replace(/\n/g, '<br>') + '</div>' +
+        '<div style="font-size:13px;color:var(--gray);margin-top:8px;">⚠️ تحليل استرشادي — القرار النهائي ليك أنت</div>' +
       '</div>';
   } catch(e) {
     document.getElementById('gold-ai-result').innerHTML =
-      '<div style="color:var(--red);font-size:13px;">❌ خطأ — جرب تاني</div>';
+      '<div style="color:var(--red);font-size:14px;">❌ خطأ — جرب تاني</div>';
   }
 };
 
@@ -3801,90 +3080,14 @@ window.getStockNews = async function() {
 
     document.getElementById('news-result').innerHTML =
       '<div style="background:var(--navy-light);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius-sm);padding:14px;">' +
-        '<div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:8px;">📰 ' + (lastAnalysis.name || lastAnalysis.symbol) + '</div>' +
-        '<div style="font-size:13px;color:var(--white);line-height:2;">' + text.replace(/\n/g, '<br>') + '</div>' +
-        '<div style="font-size:10px;color:var(--gray);margin-top:8px;">⚠️ المعلومات من Claude AI — تحقق من المصادر الرسمية</div>' +
+        '<div style="font-size:13px;color:var(--gold);font-weight:700;margin-bottom:8px;">📰 ' + (lastAnalysis.name || lastAnalysis.symbol) + '</div>' +
+        '<div style="font-size:14px;color:var(--white);line-height:2;">' + text.replace(/\n/g, '<br>') + '</div>' +
+        '<div style="font-size:13px;color:var(--gray);margin-top:8px;">⚠️ المعلومات من Claude AI — تحقق من المصادر الرسمية</div>' +
       '</div>';
   } catch(e) {
     document.getElementById('news-result').innerHTML =
-      '<div style="color:var(--red);font-size:13px;">❌ خطأ في الاتصال — جرب تاني</div>';
+      '<div style="color:var(--red);font-size:14px;">❌ خطأ في الاتصال — جرب تاني</div>';
   }
-};
-
-// ===== COMPARE STOCKS =====
-window.compareStocks = function() {
-  var s1 = document.getElementById('c1-symbol').value.trim().toUpperCase();
-  var s2 = document.getElementById('c2-symbol').value.trim().toUpperCase();
-  var p1 = parseFloat(document.getElementById('c1-price').value);
-  var p2 = parseFloat(document.getElementById('c2-price').value);
-  var y1 = parseFloat(document.getElementById('c1-5y').value);
-  var y2 = parseFloat(document.getElementById('c2-5y').value);
-  var h1 = parseFloat(document.getElementById('c1-high').value);
-  var h2 = parseFloat(document.getElementById('c2-high').value);
-  var l1 = parseFloat(document.getElementById('c1-low').value);
-  var l2 = parseFloat(document.getElementById('c2-low').value);
-  var sh1 = document.getElementById('c1-sharia').value;
-  var sh2 = document.getElementById('c2-sharia').value;
-  if (!s1||!s2||!p1||!p2) { showToast('⚠️ أدخل بيانات السهمين'); return; }
-
-  var pos1 = (h1&&l1) ? ((p1-l1)/(h1-l1)*100) : null;
-  var pos2 = (h2&&l2) ? ((p2-l2)/(h2-l2)*100) : null;
-
-  function posText(pos) {
-    if (pos===null) return '—';
-    if (pos>=85) return '⚠️ قمة';
-    if (pos>=50) return '🟡 منتصف';
-    if (pos>=25) return '✅ قريب القاع';
-    return '🟢 قاع';
-  }
-  function posScore(pos) {
-    if (pos===null) return 0;
-    if (pos>=85) return 1; if (pos>=50) return 2;
-    if (pos>=25) return 3; return 4;
-  }
-  function shariaText(sh) {
-    if (sh==='yes') return '✅ متوافق';
-    if (sh==='no') return '❌ غير متوافق';
-    if (sh==='check') return '⚠️ غير متأكد';
-    return '—';
-  }
-
-  var score1=0, score2=0, reasons1=[], reasons2=[];
-  if (y1&&y2) {
-    if (y1>y2) { score1+=3; reasons1.push('عائد 5 سنين أعلى'); }
-    else if (y2>y1) { score2+=3; reasons2.push('عائد 5 سنين أعلى'); }
-  }
-  var ps1=posScore(pos1), ps2=posScore(pos2);
-  if (ps1>ps2) { score1+=2; reasons1.push('موقف أفضل في النطاق'); }
-  else if (ps2>ps1) { score2+=2; reasons2.push('موقف أفضل في النطاق'); }
-  if (sh1==='yes'&&sh2!=='yes') { score1+=1; reasons1.push('متوافق مع الشريعة'); }
-  else if (sh2==='yes'&&sh1!=='yes') { score2+=1; reasons2.push('متوافق مع الشريعة'); }
-
-  var winner = score1>score2 ? s1 : score2>score1 ? s2 : 'تعادل';
-  var winnerReasons = score1>=score2 ? reasons1 : reasons2;
-  var yBetter = (y1&&y2) ? (y1>y2?'1':'2') : '';
-  var pBetter = ps1!==ps2 ? (ps1>ps2?'1':'2') : '';
-
-  function wCell(v1,v2,better) {
-    var b1=better==='1'?'<span class="winner-badge">🏆</span>':'';
-    var b2=better==='2'?'<span class="winner-badge">🏆</span>':'';
-    return '<td>'+b1+v1+'</td><td>'+b2+v2+'</td>';
-  }
-
-  document.getElementById('compare-table').innerHTML =
-    '<tr><th>المعيار</th><th style="color:var(--gold)">'+s1+'</th><th style="color:#ef4444">'+s2+'</th></tr>'+
-    '<tr class="'+(yBetter==='1'?'compare-winner':'')+'"><td>عائد 5 سنين</td>'+wCell(y1?'+'+y1+'%':'—',y2?'+'+y2+'%':'—',yBetter)+'</tr>'+
-    '<tr><td>السعر الحالي</td><td>'+p1.toFixed(2)+' ج.م</td><td>'+p2.toFixed(2)+' ج.م</td></tr>'+
-    '<tr class="'+(pBetter==='1'?'compare-winner':'')+'"><td>موقف السهم</td>'+wCell(posText(pos1),posText(pos2),pBetter)+'</tr>'+
-    '<tr><td>الشريعة</td><td>'+shariaText(sh1)+'</td><td>'+shariaText(sh2)+'</td></tr>'+
-    '<tr style="font-weight:900;border-top:1px solid rgba(201,168,76,0.2)"><td>النقاط</td><td style="color:var(--gold);font-size:16px">'+score1+'</td><td style="color:#ef4444;font-size:16px">'+score2+'</td></tr>';
-
-  document.getElementById('compare-final').innerHTML = winner==='تعادل' ?
-    '<div class="compare-final-title">النتيجة</div><div class="compare-final-winner">🤝 تعادل!</div><div class="compare-final-reason">السهمين متقاربين — راجع عوامل أخرى</div>' :
-    '<div class="compare-final-title">🏆 الأفضل بناءً على التحليل</div><div class="compare-final-winner">'+winner+'</div><div class="compare-final-reason">'+(winnerReasons.join(' — ') || 'أداء أفضل عموماً')+'</div><div style="font-size:11px;color:var(--gray);margin-top:8px;">⚠️ التحليل استرشادي — القرار النهائي ليك أنت</div>';
-
-  document.getElementById('compare-result').classList.remove('result-hidden');
-  document.getElementById('compare-result').scrollIntoView({behavior:'smooth',block:'start'});
 };
 
 // Toast
