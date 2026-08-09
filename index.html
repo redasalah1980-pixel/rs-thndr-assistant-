@@ -406,6 +406,7 @@
       <div class="input-group">
         <label class="input-label">السعر الحالي (جنيه)</label>
         <input type="number" class="input-field" id="a-price" placeholder="53.20" step="0.01">
+        <div id="a-price-hint" style="font-size:12px;color:var(--gray);margin-top:4px;"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div class="input-group">
@@ -1726,6 +1727,32 @@ window.selectStock = function(symbol, name, prefix) {
   } else {
     showToast('✅ تم اختيار ' + symbol);
   }
+  if (prefix === 'a') { fetchAndFillPrice(symbol); }
+};
+
+// جلب السعر الحالي والأعلى/الأدنى السنوي تلقائياً من Twelve Data
+window.fetchAndFillPrice = async function(symbol) {
+  var hint = document.getElementById('a-price-hint');
+  if (hint) hint.textContent = '⏳ بيجيب السعر...';
+  try {
+    var res = await fetch('https://api.twelvedata.com/quote?symbol=' + encodeURIComponent(symbol) + '&exchange=XCAI&apikey=' + TWELVE_KEY);
+    var data = await res.json();
+    if (data.status === 'error' || !data.close) {
+      if (hint) hint.textContent = '⚠️ مش لاقي سعر — اكتبه يدوي';
+      return;
+    }
+    var priceEl = document.getElementById('a-price');
+    var highEl = document.getElementById('a-high');
+    var lowEl = document.getElementById('a-low');
+    if (priceEl && data.close) priceEl.value = parseFloat(data.close).toFixed(2);
+    if (data.fifty_two_week) {
+      if (highEl && data.fifty_two_week.high) highEl.value = parseFloat(data.fifty_two_week.high).toFixed(2);
+      if (lowEl && data.fifty_two_week.low) lowEl.value = parseFloat(data.fifty_two_week.low).toFixed(2);
+    }
+    if (hint) hint.textContent = '⏱ سعر متأخر ~15 دقيقة من Twelve Data — راجعه في ثاندر قبل أي قرار';
+  } catch (e) {
+    if (hint) hint.textContent = '⚠️ مش قادر أجيب السعر — اكتبه يدوي';
+  }
 };
 
 window.clearStockSearch = function() {
@@ -1737,6 +1764,8 @@ window.clearStockSearch = function() {
   // مسح باقي الحقول الأساسية
   var fields = ['a-price','a-high','a-low','a-5y','a-budget'];
   fields.forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  var priceHint = document.getElementById('a-price-hint');
+  if (priceHint) priceHint.textContent = '';
   // إعادة الشريعة للافتراضي
   var sh = document.getElementById('a-sharia'); if(sh) sh.value='';
   // مسح البيانات الإضافية
